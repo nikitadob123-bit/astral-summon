@@ -112,7 +112,6 @@ const RAW=[
  ['goku','Гоку',5,'Berserker','atkUp','Камехамеха','B',1],
  ['luffy','Монки Д. Луффи',5,'Rider','atkUp','Гому-Гому Ган','B',0],
  ['levi','Леви Аккерман',5,'Saber','npUp','Вихрь клинков','Q',0],
- ['saitama','Сайтама',5,'Berserker','npUp','Серьёзный удар','B',0],
  ['megumin','Мегумин',5,'Caster','heal','Эксплозия!','A',1],
  ['naruto','Наруто Удзумаки',4,'Rider','atkUp','Расенган','B',0],
  ['ichigo','Ичиго Куросаки',4,'Saber','atkUp','Гетсуга Теншо','B',0],
@@ -349,7 +348,12 @@ const RAW=[
  ['sakura_matou','Сакура Мато',3,'Caster','heal','Тень','A',0],
  ['kiritsugu','Эмия Киритсугу',3,'Archer','npUp','Времени быстрее','A',0],
  ['merlin','Мерлин',3,'Caster','heal','Сад Авалона','A',1],
- ['ishtar','Иштар',3,'Archer','atkUp','Ворота небес','Q',1],
+ ['ishtar','Иштар',5,'Archer','atkUp','Ворота небес','Q',1],
+ ['broly','Броли',5,'Berserker','atkUp','Гнев Легендарного','B',1],
+ ['jotaro','Джотаро Куджо',5,'Berserker','atkUp','Стар Платинум: Останови время','B',0],
+ ['dio','Дио Брандо',5,'Lancer','npUp','Мир: Время остановись','A',0],
+ ['accelerator','Аксельратор',5,'Caster','npUp','Векторный шторм','A',1],
+ ['esdeath','Эсдес',5,'Caster','atkUp','Мир Абсолютного Нуля','A',1],
 ]
 const MYTH_RAW=[
  ['gojo','Годзё Сатору',6,'Caster','godUp','Пустотный Фиолетовый: Бесконечность','A',1],
@@ -358,6 +362,12 @@ const MYTH_RAW=[
  ['naruto_bm','Наруто: Барионный режим',6,'Lancer','godUp','Барионный Расенган Отрицания','Q',1],
  ['ichigo_tybw','Ичиго: Тысячелетняя Кровавая Война',6,'Saber','godUp','Мугецу: Последний Гетсуга','B',1],
  ['rimuru','Римуру Темпест: Истинный Повелитель',6,'Archer','godUp','Абсолютный Пожиратель: Бельзебуб','A',1],
+ ['zeno','Зено-сама: Король Всего',6,'Caster','godUp','Стирание Всех Вселенных','A',1],
+ ['anos','Анос Вольдигод: Король Демонов',6,'Caster','godUp','Перерождение: Абсолютное Разрушение','A',1],
+ ['yhwach','Йохвах: Всемогущий',6,'Caster','godUp','Всезнание: Абсолютный Приказ','Q',1],
+ ['kaguya','Кагуя Оцуцуки: Богиня Кроликов',6,'Caster','godUp','Бесконечное Цукуёми','A',1],
+ ['saitama','Сайтама: Герой ради Веселья',6,'Berserker','godUp','Серьёзный Удар: Разрыв Реальности','B',1],
+ ['giorno','Джорно: Золотой Реквием',6,'Rider','godUp','Золотой Опыт Реквием: Возврат к Нулю','B',1],
 ]
 // Пассивы мификов: npStart — NP в начале боя, npGain — множитель набора NP, atkMul — множитель атаки,
 // dmgTaken — множитель входящего урона, regen — лечение себя в долях макс. HP за ход, teamNp — NP всему отряду за ход, leech — вампиризм
@@ -368,11 +378,19 @@ const MYTH={
  naruto_bm:{npStart:70,teamNp:25,atkMul:1.3,d:'Барион: весь отряд получает +25% NP каждый ход, старт с 70% NP'},
  ichigo_tybw:{npStart:100,atkMul:1.8,d:'Последний Гетсуга: старт со 100% NP, атака +80%'},
  rimuru:{npStart:80,leech:.25,npGain:2,atkMul:1.4,d:'Пожиратель: 25% нанесённого урона лечит его, набор NP ×2, старт с 80% NP'},
+ zeno:{npStart:100,dmgTaken:.25,atkMul:2,npGain:2,d:'Всемогущество: старт со 100% NP, входящий урон −75%, атака +100%, набор NP ×2'},
+ anos:{npStart:100,leech:.3,atkMul:1.6,dmgTaken:.6,d:'Король Демонов: старт со 100% NP, 30% урона лечит его, атака +60%, входящий урон −40%'},
+ yhwach:{npStart:80,regen:.1,atkMul:1.5,dmgTaken:.5,d:'Всезнание: старт с 80% NP, лечение 10% HP за ход, атака +50%, входящий урон −50%'},
+ kaguya:{npStart:100,teamNp:30,atkMul:1.3,d:'Праматерь: старт со 100% NP, весь отряд получает +30% NP каждый ход, атака +30%'},
+ saitama:{npStart:100,npGain:2,atkMul:2.2,d:'Один удар: старт со 100% NP, набор NP ×2, атака +120%'},
+ giorno:{npStart:60,regen:.2,dmgTaken:.5,atkMul:1.4,d:'Золотой Реквием: старт с 60% NP, лечение 20% HP за ход, входящий урон −50%, атака +40%'},
 };
 const CLS_BASE={Saber:[1300,160,'BBAQQ'],Archer:[1150,175,'BAAQQ'],Lancer:[1250,165,'BAAQQ'],Caster:[1050,140,'BAAAQ'],Rider:[1200,150,'BBAQQ'],Berserker:[1400,175,'BBBAQ']};
 const RMUL={3:.8,4:1,5:1.25,6:4};
 const NPM={3:3.5,4:4,5:4.5,6:10};
 const SKN={atkUp:'Боевой дух',heal:'Поддержка',npUp:'Концентрация',godUp:'Мифическая мощь'};
+const RMAP={"madara": 5, "jiren": 5, "beerus": 5, "whis": 5, "obito": 5, "pain": 5, "nagato": 5, "muzan": 5, "kokushibo": 5, "meruem": 5, "cell": 5, "frieza": 5, "gohan": 5, "whitebeard": 5, "mihawk": 5, "shanks": 5, "yamamoto": 5, "kenpachi": 5, "byakuya": 5, "jiraiya": 5, "tsunade": 5, "yuta": 5, "saber_alt": 5, "merlin": 5, "scathach": 5, "netero": 5, "guts": 5, "ainz": 5, "alucard": 5, "orochimaru": 4, "sasori": 4, "deidara": 4, "kisame": 4, "konan": 4, "ulquiorra": 4, "grimmjow": 4, "urahara": 4, "yoruichi": 4, "renji": 4, "hit": 4, "android18": 4, "krillin": 4, "geto": 4, "mahito": 4, "kenjaku": 4, "shigaraki": 4, "dabi": 4, "hange": 4, "zeke": 4, "sanemi": 4, "gyomei": 4, "crocodile": 4, "kid": 4, "sabo": 4, "jinbe": 4, "cu": 4, "emiya": 4, "kiritsugu": 4, "medusa": 4, "ling": 4, "greed": 4, "hohenheim": 4, "roswaal": 4, "echidna": 4, "beatrice": 4, "schneizel": 4, "roshi": 4, "guy": 4, "light": 4, "edward": 4, "bakugo": 4, "yor": 4, "ace": 4, "mikasa": 4, "annie": 3, "ram": 3, "aqua": 3, "darkness": 3, "hinata": 3, "misato": 3, "power": 3, "aki": 3, "nobara": 3, "shinji": 3};
+RAW.forEach(x=>{if(RMAP[x[0]])x[2]=RMAP[x[0]]});
 const HEROES=[...RAW,...MYTH_RAW].map((x,i)=>{const b=CLS_BASE[x[3]],m=RMUL[x[2]];
  return{id:x[0],name:x[1],r:x[2],cls:x[3],hue:(i*47)%360,hp:Math.round(b[0]*m),atk:Math.round(b[1]*m),deck:b[2],myth:MYTH[x[0]]||null,
   skill:{n:SKN[x[4]],t:x[4]},
@@ -544,7 +562,7 @@ const ACH=[
  {id:'a9',t:'Получить 100 героев',g:3000,f:()=>Object.keys(S.owned).length>=100},
  {id:'a10',t:'Получить 200 героев',g:6000,f:()=>Object.keys(S.owned).length>=200},
  {id:'a11',t:'Получить мифического 6★ героя',g:3000,f:()=>(S.st.sixes||0)>=1||HEROES.some(h=>h.r===6&&S.owned[h.id])},
- {id:'a12',t:'Собрать всех 6 мифических героев',g:15000,f:()=>HEROES.filter(h=>h.r===6).every(h=>S.owned[h.id])},
+ {id:'a12',t:'Собрать всех мифических героев',g:15000,f:()=>HEROES.filter(h=>h.r===6).every(h=>S.owned[h.id])},
  {id:'a13',t:'Вознести героя до максимума',g:2000,f:()=>Object.values(S.owned).some(o=>(o.asc||0)>=ASC_MAX)},
  {id:'a14',t:'Победить Владыку Вселенной',g:4000,f:()=>S.cleared>=12},
  {id:'a15',t:'Совершить 300 призывов',g:3000,f:()=>S.st.summons>=300},
