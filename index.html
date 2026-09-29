@@ -42,6 +42,17 @@ input{user-select:text;-webkit-user-select:text}
 .pt .nm{position:absolute;bottom:0;left:0;right:0;font-size:10px;padding:14px 3px 3px;background:linear-gradient(transparent,#000d);color:#fff;line-height:1.1}
 .r5 .pt::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,#fff5 50%,transparent 60%);background-size:250% 100%;animation:sh 2.5s infinite}
 @keyframes sh{from{background-position:150% 0}to{background-position:-100% 0}}
+.r6{border:3px solid transparent!important;background:linear-gradient(#1a0b2e,#0d0a24) padding-box,conic-gradient(from var(--a,0deg),#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c) border-box!important;box-shadow:0 0 16px #ff3df2aa,0 0 30px #00cfff66;animation:spin6 3s linear infinite,glow6 2s ease-in-out infinite}
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes spin6{to{--a:360deg}}
+@keyframes glow6{0%,100%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(60deg) brightness(1.15)}}
+.r6 .pt img{animation:hue6 4s linear infinite}
+@keyframes hue6{0%{filter:saturate(1.15) hue-rotate(0deg)}100%{filter:saturate(1.15) hue-rotate(360deg)}}
+.r6 .pt::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,#ff004c55 38%,#f6ff0066 44%,#22ff7766 50%,#00cfff66 56%,#ff3df255 62%,transparent 70%);background-size:250% 100%;animation:sh 1.8s infinite;mix-blend-mode:screen}
+.r6 .stars{background:linear-gradient(90deg,#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rb 2s linear infinite;font-size:12px;letter-spacing:-1px}
+@keyframes rb{to{background-position:200% 0}}
+.rbt{background:linear-gradient(90deg,#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800;animation:rb 2s linear infinite}
+.r6.lock{animation:none}.r6.lock .pt img{animation:none}
 .stars{color:#ffd76a;font-size:11px}
 .card b{font-size:12px;display:block;line-height:1.15}
 .banner{text-align:center;padding:22px 12px;background:linear-gradient(135deg,#3b1d6ecc,#123a6ecc);border:1px solid #ffd76a88;box-shadow:0 0 30px #a855f766;border-radius:14px;margin-bottom:12px}
@@ -122,18 +133,263 @@ const RAW=[
  ['yuji','Юдзи Итадори',3,'Saber','atkUp','Чёрная вспышка','B',0],
  ['anya','Аня Форджер',3,'Caster','npUp','Чтение мыслей','A',1],
  ['zenitsu','Зеницу Агацума',3,'Archer','npUp','Гром и молния','Q',0],
+ ['vegeta','Вегета',5,'Berserker','atkUp','Финал Флэш','B',0],
+ ['zoro','Ророноа Зоро',5,'Saber','atkUp','Асура: Три меча','B',0],
+ ['ace','Портгас Д. Эйс',5,'Caster','heal','Хикен','B',0],
+ ['mikasa','Микаса Аккерман',5,'Saber','atkUp','Клинки Аккерман','B',0],
+ ['itachi','Итачи Учиха',5,'Caster','npUp','Аматерасу','A',0],
+ ['sasuke','Саске Учиха',5,'Saber','atkUp','Чидори','B',0],
+ ['kakashi','Какаши Хатаке',5,'Lancer','atkUp','Райкири','Q',0],
+ ['minato','Минато Намикадзе',5,'Rider','atkUp','Летящий бог грома','A',0],
+ ['aizen','Соскэ Айзен',5,'Caster','heal','Кёка Суигэцу','Q',0],
+ ['light','Лайт Ягами',5,'Caster','npUp','Тетрадь смерти','A',0],
+ ['edward','Эдвард Элрик',5,'Lancer','heal','Алхимический клинок','A',0],
+ ['alucard','Алукард',5,'Archer','heal','Касулл','A',1],
+ ['escanor','Эсканор',5,'Berserker','npUp','Саншайн','B',0],
+ ['meliodas','Мелиодас',5,'Saber','heal','Полный шок','A',0],
+ ['natsu','Нацу Драгнил',5,'Berserker','atkUp','Рёв огненного дракона','Q',0],
+ ['erza','Эрза Скарлет',5,'Saber','atkUp','Армия клинков','A',0],
+ ['gilgamesh','Гильгамеш',5,'Archer','atkUp','Врата Вавилона','A',0],
+ ['yor','Йор Форджер',5,'Lancer','heal','Роза убийцы','Q',0],
+ ['denji','Дэндзи',5,'Berserker','atkUp','Человек-бензопила','A',1],
+ ['makima','Макима',5,'Caster','heal','Контракт контроля','A',0],
+ ['allmight','Всемогущий',5,'Berserker','npUp','Юнайтед Стейтс оф Смэш','B',1],
+ ['bakugo','Кацуки Бакуго',5,'Archer','npUp','Взрывной удар','A',0],
+ ['frieren','Фрирен',5,'Caster','heal','Зольтраак','Q',1],
+ ['sukuna','Рёмен Сукуна',5,'Berserker','atkUp','Расчленение','B',1],
+ ['toji','Тоджи Фусигуро',5,'Lancer','atkUp','Небесное копьё','A',0],
+ ['sanji','Санджи',4,'Lancer','atkUp','Дьябль Жамб','A',1],
+ ['robin','Нико Робин',4,'Caster','heal','Гигантская рука','A',1],
+ ['law','Трафальгар Ло',4,'Caster','npUp','Рум','Q',1],
+ ['shanks','Шанкс',4,'Saber','atkUp','Королевская воля','Q',0],
+ ['hancock','Боа Хэнкок',4,'Archer','npUp','Мэро Мэро Мело','B',0],
+ ['hinata','Хината Хьюга',4,'Lancer','npUp','Мягкий кулак','A',0],
+ ['gaara','Гаара',4,'Caster','heal','Песчаный щит','A',0],
+ ['jiraiya','Джирайя',4,'Caster','atkUp','Расенган Жабы','A',1],
+ ['tsunade','Цунаде',4,'Berserker','npUp','Сокрушающий кулак','B',0],
+ ['lee','Рок Ли',4,'Berserker','atkUp','Восемь врат','Q',0],
+ ['neji','Неджи Хьюга',4,'Lancer','heal','Вращение небес','Q',1],
+ ['obito','Обито Учиха',4,'Caster','npUp','Камуи','A',0],
+ ['rukia','Рукия Кучики',4,'Caster','npUp','Сода-но-Сирайуки','A',0],
+ ['byakuya','Бякуя Кучики',4,'Saber','atkUp','Сенбонзакура','B',1],
+ ['kenpachi','Кенпачи Зараки',4,'Berserker','atkUp','Жажда битвы','A',1],
+ ['toshiro','Тосиро Хицугая',4,'Caster','atkUp','Хёринмару','B',1],
+ ['orihime','Орихиме Иноуэ',4,'Caster','heal','Сантэн Кэссюн','A',1],
+ ['gohan','Сон Гохан',4,'Berserker','atkUp','Особая пушка','Q',0],
+ ['piccolo','Пикколо',4,'Caster','heal','Масенко','Q',0],
+ ['trunks','Транкс',4,'Saber','npUp','Меч Будущего','B',0],
+ ['frieza','Фриза',4,'Caster','heal','Смертельный шар','A',0],
+ ['erwin','Эрвин Смит',4,'Saber','atkUp','Последний рывок','A',0],
+ ['reiner','Райнер Браун',4,'Berserker','atkUp','Бронированный титан','B',0],
+ ['annie','Энни Леонхарт',4,'Lancer','npUp','Кристалл','Q',0],
+ ['todoroki','Шото Тодороки',4,'Caster','heal','Огонь и лёд','A',0],
+ ['endeavor','Эндевор',4,'Berserker','atkUp','Прометей','B',1],
+ ['hawks','Хоукс',4,'Rider','npUp','Клыки-перья','A',0],
+ ['giyu','Гию Томиока',4,'Saber','heal','Штиль воды','B',0],
+ ['shinobu','Шинобу Кочо',4,'Lancer','npUp','Танец бабочки','Q',0],
+ ['rengoku','Кёджуро Ренгоку',4,'Saber','atkUp','Девятый оплот','Q',0],
+ ['tengen','Тэнген Узуй',4,'Archer','npUp','Громовой взрыв','Q',0],
+ ['muichiro','Муичиро Токито',4,'Rider','heal','Туманный шаг','Q',1],
+ ['mitsuri','Мицури Канроджи',4,'Saber','atkUp','Любовный клинок','B',0],
+ ['akaza','Аказа',4,'Berserker','npUp','Разрушение','B',0],
+ ['megumi','Мегуми Фушигуро',4,'Caster','npUp','Десять теней','A',0],
+ ['nobara','Нобара Кугисаки',4,'Lancer','heal','Соломенная кукла','A',0],
+ ['nanami','Кенто Нанами',4,'Saber','atkUp','Соотношение 7:3','Q',0],
+ ['maki','Маки Дзенин',4,'Lancer','npUp','Проклятые орудия','Q',1],
+ ['kurapika','Курапика',4,'Lancer','atkUp','Цепь-судья','A',0],
+ ['hisoka','Хисока',4,'Caster','heal','Банджи-гам','Q',0],
+ ['chrollo','Хроло Люцифер',4,'Caster','atkUp','Книга бандита','Q',0],
+ ['meruem','Мерюэм',4,'Berserker','npUp','Королевская мощь','A',0],
+ ['mustang','Рой Мустанг',4,'Caster','heal','Пламенная алхимия','A',0],
+ ['alphonse','Альфонс Элрик',4,'Berserker','atkUp','Доспех души','Q',0],
+ ['scar','Скар',4,'Berserker','atkUp','Разрушающая рука','Q',0],
+ ['asuna','Асуна Юки',4,'Saber','atkUp','Звёздный шквал','B',0],
+ ['emilia','Эмилия',4,'Caster','heal','Ледяной шторм','B',1],
+ ['ram','Рам',4,'Caster','heal','Фура','Q',0],
+ ['aqua','Аква',4,'Caster','npUp','Исцеление','A',0],
+ ['darkness','Даркнесс',4,'Saber','heal','Непоколебимый щит','Q',1],
+ ['rei','Рэй Аянами',4,'Caster','atkUp','Копьё Лонгина','B',0],
+ ['shinji','Синдзи Икари',4,'Rider','heal','Ева-01','Q',0],
+ ['misato','Мисато Кацураги',4,'Archer','npUp','Огонь на поражение','B',1],
+ ['cc','Си Си',4,'Caster','heal','Код','B',0],
+ ['suzaku','Судзаку Куруруги',4,'Saber','heal','Ланселот','B',0],
+ ['kallen','Каллен Кодзуки',4,'Lancer','npUp','Гуренский удар','Q',1],
+ ['rin','Рин Тосака',4,'Caster','heal','Драгоценные камни','A',1],
+ ['jeanne','Жанна д\'Арк',4,'Saber','atkUp','Знамя веры','B',0],
+ ['astolfo','Астольфо',4,'Rider','heal','Гиппогриф','A',1],
+ ['nero','Нерон Клавдий',4,'Saber','atkUp','Аэстус Домус','B',1],
+ ['mordred','Мордред',4,'Saber','atkUp','Клеймор Пламя','Q',0],
+ ['scathach','Скатах',4,'Lancer','atkUp','Врата смерти','Q',1],
+ ['genos','Генос',4,'Caster','heal','Испепеление','A',1],
+ ['tatsumaki','Тацумаки',4,'Caster','heal','Телекинез','A',0],
+ ['power','Пауэр',4,'Berserker','atkUp','Кровавый молот','B',0],
+ ['aki','Аки Хаякава',4,'Saber','atkUp','Контракт с Лисой','B',0],
+ ['lucy','Люси Хартфилия',4,'Caster','heal','Звёздные духи','A',1],
+ ['gray','Грей Фуллбастер',4,'Caster','npUp','Ледяной клинок','A',1],
+ ['ban','Бан',4,'Berserker','atkUp','Похититель','Q',0],
+ ['diane','Диана',4,'Berserker','atkUp','Гигантский молот','B',0],
+ ['zerotwo','Зеро Ту',4,'Lancer','npUp','Клык Дарлинг','Q',0],
+ ['ainz','Айнз Ооал Гоун',4,'Caster','atkUp','Смерть','A',0],
+ ['kaneki','Кэн Канеки',4,'Berserker','atkUp','Кагуне','A',0],
+ ['spike','Спайк Шпигель',4,'Archer','atkUp','Ковбой Космоса','A',0],
+ ['guts','Гатс',4,'Berserker','atkUp','Убийца драконов','B',1],
+ ['chopper','Тони Тони Чоппер',3,'Caster','npUp','Рамбл-болл','B',0],
+ ['franky','Фрэнки',3,'Berserker','atkUp','Радикальный луч','A',0],
+ ['brook','Брук',3,'Saber','heal','Песнь души','Q',1],
+ ['jinbe','Дзимбэй',3,'Berserker','npUp','Каратэ рыболюдей','Q',0],
+ ['buggy','Багги',3,'Caster','heal','Багги-шар','A',1],
+ ['smoker','Смокер',3,'Lancer','npUp','Белый взрыв','A',0],
+ ['koby','Коби',3,'Saber','atkUp','Хаки наблюдения','B',0],
+ ['vivi','Небахантра Вивиль',3,'Caster','npUp','Пав-пав','B',0],
+ ['bellamy','Беллами',3,'Lancer','npUp','Пружинный удар','A',1],
+ ['crocodile','Крокодайл',3,'Caster','npUp','Песчаная буря','A',1],
+ ['sabo','Сабо',3,'Lancer','heal','Дракон Пламени','Q',0],
+ ['mihawk','Дракуль Михок',3,'Saber','heal','Чёрный клинок','Q',1],
+ ['whitebeard','Эдвард Ньюгейт',3,'Berserker','atkUp','Землетрясение','A',1],
+ ['kid','Юстасс Кидд',3,'Berserker','npUp','Магнитный удар','B',0],
+ ['shikamaru','Шикамару Нара',3,'Caster','npUp','Теневая хватка','A',1],
+ ['choji','Чоджи Акимичи',3,'Berserker','npUp','Человек-бомба','B',0],
+ ['ino','Ино Яманака',3,'Caster','heal','Обмен разумом','A',1],
+ ['tenten','Тентен',3,'Archer','npUp','Дождь оружия','A',0],
+ ['kiba','Киба Инузука',3,'Rider','atkUp','Двуглавый волк','Q',0],
+ ['shino','Шино Абурамэ',3,'Caster','npUp','Жуки-разрушители','A',0],
+ ['konohamaru','Конохамару',3,'Rider','atkUp','Гарем-джутсу','Q',0],
+ ['guy','Майто Гай',3,'Berserker','atkUp','Утренний павлин','B',0],
+ ['orochimaru','Орочимару',3,'Caster','npUp','Змеиный призыв','A',1],
+ ['deidara','Дейдара',3,'Archer','npUp','Искусство — это взрыв','B',1],
+ ['sasori','Сасори',3,'Caster','npUp','Красный песок','Q',0],
+ ['kisame','Кисамэ Хошигаки',3,'Berserker','atkUp','Самехада','Q',1],
+ ['pain','Пейн',3,'Caster','heal','Шинра Тенсей','A',1],
+ ['konan','Конан',3,'Caster','heal','Бумажные крылья','A',0],
+ ['madara','Мадара Учиха',3,'Berserker','npUp','Сусаноо','B',0],
+ ['nagato','Нагато',3,'Caster','heal','Цепи Узумаки','B',0],
+ ['ishida','Урю Исида',3,'Archer','npUp','Синего лука','A',1],
+ ['chad','Ясутора Садо',3,'Berserker','npUp','Правая рука Дьявола','A',0],
+ ['renji','Ренджи Абарай',3,'Saber','heal','Хиконзакура','Q',0],
+ ['yoruichi','Йоруичи Сихоин',3,'Rider','heal','Шунко','B',0],
+ ['urahara','Киске Урахара',3,'Caster','atkUp','Бенихиме','Q',1],
+ ['ulquiorra','Улькиорра Шиффер',3,'Caster','atkUp','Черо Оскурас','Q',0],
+ ['grimmjow','Гриммджоу',3,'Berserker','atkUp','Гран Рей Серо','Q',1],
+ ['yamamoto','Генрюсай Ямамото',3,'Caster','npUp','Рюдзин Дзякка','B',0],
+ ['kon','Кон',3,'Rider','atkUp','Львиный прыжок','Q',0],
+ ['krillin','Кулилин',3,'Saber','atkUp','Диск уничтожения','A',0],
+ ['tien','Тяодзы',3,'Archer','atkUp','Тайокен','Q',0],
+ ['yamcha','Ямча',3,'Saber','heal','Волчий клык','A',1],
+ ['bulma','Бульма',3,'Archer','heal','Гениальный гаджет','Q',1],
+ ['gotenks','Готэнкс',3,'Rider','atkUp','Призрачный камикадзе','A',1],
+ ['cell','Селл',3,'Berserker','npUp','Совершенная форма','B',0],
+ ['android18','Андроид 18',3,'Lancer','heal','Барьер','A',1],
+ ['roshi','Мастер Роси',3,'Caster','atkUp','Волна Камехамехи','A',1],
+ ['beerus','Бирус',3,'Berserker','atkUp','Разрушение','Q',1],
+ ['whis','Уиз',3,'Caster','heal','Ангельская мощь','B',0],
+ ['jiren','Джирен',3,'Berserker','npUp','Сила серости','B',0],
+ ['hit','Хит',3,'Archer','atkUp','Остановка времени','A',1],
+ ['hange','Ханджи Зоэ',3,'Caster','atkUp','Титаний эксперимент','A',0],
+ ['armin','Армин Арлерт',3,'Caster','heal','Стратегия','Q',1],
+ ['jean','Жан Кирштейн',3,'Saber','heal','Маневр','Q',1],
+ ['sasha','Саша Браус',3,'Archer','atkUp','Стрела','A',0],
+ ['connie','Конни Спрингер',3,'Saber','atkUp','Клинки','B',0],
+ ['historia','Хистория Рейсс',3,'Caster','atkUp','Королевская речь','A',0],
+ ['zeke','Зик Йегер',3,'Archer','npUp','Крик Титана','Q',0],
+ ['ochako','Урарака Очако',3,'Rider','heal','Невесомость','Q',1],
+ ['iida','Тенья Иида',3,'Rider','atkUp','Рецифай','B',0],
+ ['tsuyu','Цую Асуи',3,'Rider','npUp','Лягушачий прыжок','B',1],
+ ['kirishima','Эйдзиро Киришима',3,'Berserker','atkUp','Красный бунтарь','B',1],
+ ['momo','Момо Яойорозу',3,'Caster','heal','Творение','A',1],
+ ['shigaraki','Томура Шигараки',3,'Berserker','npUp','Распад','B',1],
+ ['dabi','Даби',3,'Caster','npUp','Синее пламя','Q',0],
+ ['toga','Химико Тога',3,'Lancer','atkUp','Кровь','A',0],
+ ['eri','Эри',3,'Caster','atkUp','Возврат','A',1],
+ ['aizawa','Шота Айзава',3,'Rider','npUp','Стирание','Q',0],
+ ['inosuke','Иноскэ Хашибира',3,'Berserker','atkUp','Зверь клыков','A',0],
+ ['kanao','Канао Цуюри',3,'Saber','atkUp','Цветочное дыхание','Q',0],
+ ['sanemi','Санеми Шинадзугава',3,'Berserker','atkUp','Ураган','B',1],
+ ['gyomei','Гёмэй Химэджима',3,'Berserker','atkUp','Каменное дыхание','Q',1],
+ ['obanai','Обанай Игуро',3,'Saber','npUp','Змеиное дыхание','Q',0],
+ ['muzan','Мудзан Кибуцудзи',3,'Caster','heal','Кровавое проклятие','A',0],
+ ['kokushibo','Кокусибо',3,'Saber','heal','Лунное дыхание','Q',0],
+ ['daki','Даки',3,'Rider','atkUp','Поясные ленты','B',0],
+ ['yuta','Юта Оккоцу',3,'Saber','atkUp','Рика','B',1],
+ ['panda','Панда',3,'Berserker','atkUp','Гориллья сила','B',1],
+ ['inumaki','Тоге Инумаки',3,'Caster','heal','Проклятая речь','A',0],
+ ['geto','Сугуру Гето',3,'Caster','heal','Проклятые духи','A',0],
+ ['mahito','Махито',3,'Berserker','npUp','Преображение души','Q',0],
+ ['todo','Аои Тодо',3,'Berserker','atkUp','Бугги-вуги','Q',0],
+ ['mai','Мэй Дзэнин',3,'Archer','heal','Стрела судьбы','B',0],
+ ['kenjaku','Кэндзяку',3,'Caster','heal','Мозг Древний','A',1],
+ ['leorio','Леорио',3,'Lancer','atkUp','Медик-кулак','Q',0],
+ ['feitan','Фэйтань',3,'Rider','heal','Красная пыль','Q',1],
+ ['nobunaga','Нобунага',3,'Saber','heal','Иайдо','B',0],
+ ['netero','Айзек Нетеро',3,'Berserker','atkUp','Бодхисаттва','Q',0],
+ ['ging','Гин Фрикс',3,'Rider','atkUp','Зов Джунглей','Q',0],
+ ['alluka','Аллука Золдик',3,'Caster','heal','Желание','A',0],
+ ['winry','Уинри Рокбелл',3,'Archer','heal','Ключ механика','A',0],
+ ['riza','Риза Хоукай',3,'Archer','atkUp','Меткость','Q',0],
+ ['hohenheim','Ван Хоэнхайм',3,'Caster','npUp','Круг преображения','A',0],
+ ['greed','Грид',3,'Berserker','atkUp','Абсолютная защита','B',0],
+ ['ling','Лин Яо',3,'Saber','atkUp','Меч из Синь','Q',0],
+ ['sinon','Синон',3,'Archer','atkUp','Хекате','A',0],
+ ['leafa','Лифа',3,'Rider','npUp','Крылья ветра','Q',0],
+ ['klein','Кляйн',3,'Saber','atkUp','Катана самурая','Q',0],
+ ['yui','Юи',3,'Caster','atkUp','Ассистент','A',1],
+ ['subaru','Нацуки Субару',3,'Lancer','heal','Возврат смертью','Q',0],
+ ['beatrice','Беатриче',3,'Caster','heal','Минья','B',1],
+ ['roswaal','Розваль',3,'Caster','heal','Мана-взрыв','A',0],
+ ['felix','Феликс Аргайл',3,'Caster','heal','Исцеление','A',1],
+ ['echidna','Эхидна',3,'Caster','heal','Ведьма Жадности','Q',1],
+ ['yunyun','Юн-Юн',3,'Caster','heal','Молния','B',0],
+ ['kazuma','Кадзума Сато',3,'Archer','heal','Кража','B',0],
+ ['nunnally','Нунналли',3,'Caster','heal','Голос Ветра','B',0],
+ ['euphie','Юфемия',3,'Caster','npUp','Принцесса','A',0],
+ ['schneizel','Шнайзель',3,'Caster','npUp','Шахматы','B',0],
+ ['saber_alt','Артурия Пендрагон',3,'Saber','npUp','Эксколибур','A',1],
+ ['emiya','Эмия',3,'Archer','npUp','Безграничные клинки','Q',0],
+ ['cu','Ку Хулин',3,'Lancer','npUp','Гэ Болг','A',0],
+ ['medusa','Медуза',3,'Rider','npUp','Беллерофонт','Q',1],
+ ['sakura_matou','Сакура Мато',3,'Caster','heal','Тень','A',0],
+ ['kiritsugu','Эмия Киритсугу',3,'Archer','npUp','Времени быстрее','A',0],
+ ['merlin','Мерлин',3,'Caster','heal','Сад Авалона','A',1],
+ ['ishtar','Иштар',3,'Archer','atkUp','Ворота небес','Q',1],
 ]
+const MYTH_RAW=[
+ ['gojo','Годзё Сатору',6,'Caster','godUp','Пустотный Фиолетовый: Бесконечность','A',1],
+ ['goku_ui','Гоку: Совершенный Ультра-инстинкт',6,'Berserker','godUp','Камехамеха Божественного Предела','B',1],
+ ['luffy_nika','Луффи: Гир 5 — Бог Солнца Нику',6,'Rider','godUp','Гому-Гому Буцуэй Джет Пистол','B',1],
+ ['naruto_bm','Наруто: Барионный режим',6,'Lancer','godUp','Барионный Расенган Отрицания','Q',1],
+ ['ichigo_tybw','Ичиго: Тысячелетняя Кровавая Война',6,'Saber','godUp','Мугецу: Последний Гетсуга','B',1],
+ ['rimuru','Римуру Темпест: Истинный Повелитель',6,'Archer','godUp','Абсолютный Пожиратель: Бельзебуб','A',1],
+]
+// Пассивы мификов: npStart — NP в начале боя, npGain — множитель набора NP, atkMul — множитель атаки,
+// dmgTaken — множитель входящего урона, regen — лечение себя в долях макс. HP за ход, teamNp — NP всему отряду за ход, leech — вампиризм
+const MYTH={
+ gojo:{npStart:100,dmgTaken:.4,atkMul:1.3,d:'Бесконечность: старт со 100% NP, входящий урон −60%, атака +30%'},
+ goku_ui:{npStart:60,npGain:3,atkMul:1.5,d:'Инстинкт: набор NP ×3, атака +50%, старт с 60% NP'},
+ luffy_nika:{npStart:100,regen:.15,atkMul:1.4,d:'Освобождение: старт со 100% NP, лечение 15% HP за ход, атака +40%'},
+ naruto_bm:{npStart:70,teamNp:25,atkMul:1.3,d:'Барион: весь отряд получает +25% NP каждый ход, старт с 70% NP'},
+ ichigo_tybw:{npStart:100,atkMul:1.8,d:'Последний Гетсуга: старт со 100% NP, атака +80%'},
+ rimuru:{npStart:80,leech:.25,npGain:2,atkMul:1.4,d:'Пожиратель: 25% нанесённого урона лечит его, набор NP ×2, старт с 80% NP'},
+};
 const CLS_BASE={Saber:[1300,160,'BBAQQ'],Archer:[1150,175,'BAAQQ'],Lancer:[1250,165,'BAAQQ'],Caster:[1050,140,'BAAAQ'],Rider:[1200,150,'BBAQQ'],Berserker:[1400,175,'BBBAQ']};
-const RMUL={3:.8,4:1,5:1.25};
-const HEROES=RAW.map((x,i)=>{const b=CLS_BASE[x[3]],m=RMUL[x[2]];
- return{id:x[0],name:x[1],r:x[2],cls:x[3],hue:(i*47)%360,hp:Math.round(b[0]*m),atk:Math.round(b[1]*m),deck:b[2],
-  skill:{n:({atkUp:'Боевой дух',heal:'Поддержка',npUp:'Концентрация'})[x[4]],t:x[4]},
-  np:{n:x[5],t:x[6],m:x[2]===5?4.5:x[2]===4?4:3.5,aoe:x[7]}}});
+const RMUL={3:.8,4:1,5:1.25,6:4};
+const NPM={3:3.5,4:4,5:4.5,6:10};
+const SKN={atkUp:'Боевой дух',heal:'Поддержка',npUp:'Концентрация',godUp:'Мифическая мощь'};
+const HEROES=[...RAW,...MYTH_RAW].map((x,i)=>{const b=CLS_BASE[x[3]],m=RMUL[x[2]];
+ return{id:x[0],name:x[1],r:x[2],cls:x[3],hue:(i*47)%360,hp:Math.round(b[0]*m),atk:Math.round(b[1]*m),deck:b[2],myth:MYTH[x[0]]||null,
+  skill:{n:SKN[x[4]],t:x[4]},
+  np:{n:x[5],t:x[6],m:NPM[x[2]],aoe:x[7]}}});
 
 const ADV={Saber:'Lancer',Lancer:'Archer',Archer:'Saber',Caster:'Rider',Rider:'Caster'};
 const CLS_IC={Saber:'⚔',Archer:'🏹',Lancer:'🔱',Caster:'📖',Rider:'🐴',Berserker:'💢'};
 const CARD={B:{n:'Buster',m:1.5,np:0},A:{n:'Arts',m:1,np:12},Q:{n:'Quick',m:0.8,np:4}};
-const SKD={atkUp:'Атака +50% на 3 хода',heal:'Лечит весь отряд на 30%',npUp:'+50% к шкале NP'};
+function sk(o){return Math.max(1,(o&&o.sk)||1)}
+function skDesc(h,o){const l=sk(o);return ({atkUp:`Атака +${50+(l-1)*5}% на 3 хода`,heal:`Лечит весь отряд на ${30+(l-1)*3}%`,npUp:`+${50+(l-1)*5}% к шкале NP`,godUp:`Атака +${100+(l-1)*10}% на 3 хода, лечит отряд на ${30+(l-1)*3}%, +${50+(l-1)*5}% NP`})[h.skill.t]}
+const CAP=[60,70,80,90,100,110],ASC_MAX=5;
+function lvCap(o){return CAP[Math.min(ASC_MAX,(o&&o.asc)||0)]}
+function lvCost(lv){return 50*lv+Math.floor(lv*lv/2)}
+function ascCost(a){return [4000+a*0,9000,20000,45000,90000][a]}
+function ascGems(a){return [100,200,400,700,1200][a]}
+function npMul(o){return 1+(((o&&o.npl)||1)-1)*.15}
+
 const STAGES=[
  {n:'1. Окраина',en:[['Слизень','🟢','Rider',900,60],['Слизень','🟢','Rider',900,60]],g:30},
  {n:'2. Тёмный лес',en:[['Волк','🐺','Lancer',1500,90],['Гоблин','👺','Saber',1400,95],['Волк','🐺','Lancer',1500,90]],g:40},
@@ -143,6 +399,10 @@ const STAGES=[
  {n:'6. Вулкан',en:[['Огненный волк','🔥','Lancer',6000,190],['Саламандра','🦎','Caster',5500,200],['Огненный волк','🔥','Lancer',6000,190]],g:80},
  {n:'7. Небесный замок',en:[['Страж','🛡️','Saber',9000,230],['Валькирия','🪽','Lancer',8000,250],['Страж','🛡️','Archer',9000,230]],g:100},
  {n:'8. БОСС: Повелитель Тьмы',en:[['Повелитель Тьмы','😈','Berserker',48000,330]],g:250,boss:1},
+ {n:'9. Ледяная цитадель',en:[['Ледяной рыцарь','🧊','Saber',30000,420],['Йети','🦣','Berserker',36000,450],['Ледяной маг','❄️','Caster',26000,460]],g:180},
+ {n:'10. Бездна',en:[['Тень','👤','Archer',50000,520],['Хтонический зверь','🐙','Berserker',70000,560],['Тень','👤','Archer',50000,520]],g:220},
+ {n:'11. Трон богов',en:[['Серафим','👼','Lancer',90000,650],['Архангел','🪽','Saber',110000,700],['Серафим','👼','Lancer',90000,650]],g:300},
+ {n:'12. БОСС: Владыка Вселенной',en:[['Владыка Вселенной','🌌','Berserker',900000,1300]],g:800,boss:1},
 ];
 const DAILY=[[150,500],[150,500],[200,800],[200,800],[300,1200],[300,1200],[900,3000]];
 const QDEF=[
@@ -150,6 +410,8 @@ const QDEF=[
  {id:'win',t:'Победить в 2 боях',n:2,g:0,c:600},
  {id:'lvl',t:'Прокачать героя 2 раза',n:2,g:50,c:0},
  {id:'battle',t:'Провести 4 боя',n:4,g:100,c:300},
+ {id:'skl',t:'Улучшить навык или NP героя',n:1,g:80,c:0},
+ {id:'summon10',t:'Совершить 10 призывов',n:10,g:200,c:0},
 ];
 const AVS=['av_m1','av_m2','av_m3','av_m4','av_m5','av_m6','av_f1','av_f2','av_f3','av_f4','av_f5','av_f6'];
 
@@ -163,7 +425,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
 function modal(h){$('modal').innerHTML=`<div class="modal" onclick="if(event.target===this)closeM()"><div class="inner">${h}</div></div>`}
 function closeM(){$('modal').innerHTML=''}
-function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} src="img/${h.id}.jpg" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
+function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} loading="lazy" src="img/${h.id}.jpg" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
 function portrait(h){return `<div class="pt">${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}<span class="nm">${esc(h.name)}</span></div>`}
 function stars(r){return '★'.repeat(r)}
 
@@ -222,22 +484,23 @@ function render(){
 function go(k){if(B&&k!=='battle'&&!confirm('Выйти из боя? Прогресс боя будет потерян.'))return;if(k!=='battle')B=null;tab=k;render();window.scrollTo(0,0)}
 
 // ====== ПРИЗЫВ ======
-function roll(){S.pity++;let r;const x=Math.random()*100;
- if(S.pity>=90||x<3){r=5;S.pity=0}else if(x<18)r=4;else r=3;
+function roll(){S.pity++;S.pity6=(S.pity6||0)+1;let r;const x=Math.random()*100;
+ if(S.pity6>=300||x<.6){r=6;S.pity6=0;S.pity=0}else if(S.pity>=90||x<3.6){r=5;S.pity=0}else if(x<18.6)r=4;else r=3;
  const pool=HEROES.filter(h=>h.r===r);return pool[Math.floor(Math.random()*pool.length)]}
-function giveHero(h){if(S.owned[h.id]){S.owned[h.id].dup=Math.min(5,(S.owned[h.id].dup||0)+1);S.gold+=h.r*20;return false}S.owned[h.id]={lv:1,dup:0};if(S.team.length<3)S.team.push(h.id);return true}
+function giveHero(h){if(S.owned[h.id]){S.owned[h.id].dup=Math.min(5,(S.owned[h.id].dup||0)+1);S.gold+=h.r*20*(h.r===6?5:1);return false}S.owned[h.id]={lv:1,dup:0,asc:0,sk:1,npl:1};if(S.team.length<3)S.team.push(h.id);return true}
 function summon(n){const cost=n===1?300:2700;if(S.gems<cost)return toast('Не хватает 💎 — проходите бои и задания');
  S.gems-=cost;const got=[];
  for(let i=0;i<n;i++){let h=roll();if(n===10&&i===9&&!got.some(g=>g.h.r>=4)){const p=HEROES.filter(x=>x.r===4);h=p[Math.floor(Math.random()*p.length)]}
-  got.push({h,isNew:giveHero(h)});S.st.summons++;if(h.r===5)S.st.fives++}
- prog('summon',n);save();
- modal(`<h2 style="text-align:center;margin-bottom:10px">Результат призыва</h2><div class="grid">${got.map((g,i)=>`<div class="card r${g.h.r} pop" style="animation-delay:${i*.1}s">${portrait(g.h)}<div class="stars">${stars(g.h.r)}</div>${g.isNew?'<div class="small" style="color:#7cf">NEW!</div>':`<div class="small">повтор +🪙${g.h.r*20}</div>`}</div>`).join('')}</div><div class="row c" style="margin-top:12px"><button class="btn" onclick="closeM();render()">OK</button></div>`)}
-function vSummon(){return `<div class="banner"><h2>🌟 Баннер «Звёздные Герои» 🌟</h2><p class="small" style="margin:8px 0 16px">5★ — 3% · 4★ — 15% · 3★ — 82%<br>Гарант 5★ на 90-й крутке (сейчас ${S.pity}/90). Десятикратный призыв гарантирует 4★+</p>
+  got.push({h,isNew:giveHero(h)});S.st.summons++;if(h.r===5)S.st.fives++;if(h.r===6){S.st.sixes=(S.st.sixes||0)+1;S.st.fives++}}
+ prog('summon',n);prog('summon10',n);save();
+ modal(`<h2 style="text-align:center;margin-bottom:10px">Результат призыва</h2><div class="grid">${got.map((g,i)=>`<div class="card r${g.h.r} pop" style="animation-delay:${i*.1}s">${portrait(g.h)}<div class="stars">${stars(g.h.r)}</div>${g.isNew?'<div class="small" style="color:#7cf">NEW!</div>':`<div class="small">повтор +🪙${g.h.r*20*(g.h.r===6?5:1)}</div>`}</div>`).join('')}</div><div class="row c" style="margin-top:12px"><button class="btn" onclick="closeM();render()">OK</button></div>`)}
+function vSummon(){return `<div class="banner"><h2>🌟 Баннер «Звёздные Герои» 🌟</h2><p class="small" style="margin:8px 0 6px"><span class="rbt">6★ МИФИК — 0.6%</span> · 5★ — 3% · 4★ — 15% · 3★ — 81.4%<br>Гарант 5★+ на 90-й крутке (сейчас ${S.pity}/90). Гарант 6★ на 300-й (сейчас ${S.pity6||0}/300). Десятикратный призыв гарантирует 4★+</p>
+<div class="small" style="margin-bottom:12px">Мифики: ${HEROES.filter(h=>h.r===6).map(h=>esc(h.name.split(':')[0])).join(', ')}</div>
 <div class="row c"><button class="btn" onclick="summon(1)">Призыв ×1 · 💎300</button><button class="btn gold" onclick="summon(10)">Призыв ×10 · 💎2700</button></div></div>
 <div class="panel small">Повтор героя усиливает его на 5% (до 5 раз) и даёт 🪙. Кристаллы 💎 дают бои, задания и ежедневный вход.</div>`}
 
 // ====== ГЕРОИ ======
-function stats(id){const o=S.owned[id],h=H(id),b=1+(o.lv-1)*0.06+(o.dup||0)*0.05;return{hp:Math.round(h.hp*b),atk:Math.round(h.atk*b)}}
+function stats(id){const o=S.owned[id],h=H(id),b=1+(o.lv-1)*0.06+(o.dup||0)*0.05+(o.asc||0)*0.25;return{hp:Math.round(h.hp*b),atk:Math.round(h.atk*b)}}
 function vHeroes(){
  const slots=[0,1,2].map(i=>{const id=S.team[i];if(!id)return `<div class="card" style="opacity:.5"><div class="pt" style="display:flex;align-items:center;justify-content:center;font-size:30px">＋</div><div class="small">пусто</div></div>`;const h=H(id);return `<div class="card r${h.r}" onclick="hero('${id}')">${portrait(h)}<div class="small">ур.${S.owned[id].lv}</div></div>`}).join('');
  const list=[...HEROES].sort((a,b)=>(!!S.owned[b.id]-!!S.owned[a.id])||b.r-a.r);
@@ -245,12 +508,21 @@ function vHeroes(){
  return `<div class="panel"><h3>👥 Отряд (${S.team.length}/3)</h3><div class="grid" style="grid-template-columns:repeat(3,1fr)">${slots}</div><div class="small" style="margin-top:6px">Нажмите на героя, чтобы прокачать или изменить состав отряда.</div></div>
  <div class="panel"><h3>📚 Коллекция ${own}/${HEROES.length}</h3><div class="bar xp"><i style="width:${own/HEROES.length*100}%"></i></div></div>
  <div class="grid">${list.map(h=>S.owned[h.id]?`<div class="card r${h.r} ${S.team.includes(h.id)?'sel':''}" onclick="hero('${h.id}')">${portrait(h)}<div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ур.${S.owned[h.id].lv}${S.owned[h.id].dup?' +'+S.owned[h.id].dup:''}</div></div>`:`<div class="card lock">${portrait(h)}<div class="stars">${stars(h.r)}</div><div class="small">не получен</div></div>`).join('')}</div>`}
-function hero(id){const h=H(id),o=S.owned[id];if(!o)return;const s=stats(id),c=o.lv*50,inT=S.team.includes(id);
- modal(`<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div style="width:42%;flex:none" class="card r${h.r}">${portrait(h)}</div><div style="flex:1;min-width:0"><h2 style="font-size:18px">${esc(h.name)}</h2><div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ${h.cls} · ур.${o.lv}/60 · копий +${o.dup||0}</div>
+function hero(id){const h=H(id),o=S.owned[id];if(!o)return;const s=stats(id),c=lvCost(o.lv),inT=S.team.includes(id),cap=lvCap(o),asc=o.asc||0,skl=sk(o),npl=o.npl||1;
+ const mp=h.myth?`<div class="small rbt" style="margin-top:6px">✦ ${h.myth.d}</div>`:'';
+ const atMax=o.lv>=cap,canAsc=atMax&&asc<ASC_MAX;
+ modal(`<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div style="width:42%;flex:none" class="card r${h.r}">${portrait(h)}</div><div style="flex:1;min-width:0"><h2 style="font-size:17px">${esc(h.name)}</h2><div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ${h.cls} · ур.${o.lv}/${cap} · вознесение ${asc}/${ASC_MAX} · копий +${o.dup||0}</div>
  <div class="kv"><span>❤ HP</span><b>${s.hp}</b></div><div class="kv"><span>⚔ Атака</span><b>${s.atk}</b></div>
- <div class="small" style="margin-top:8px"><b>Навык «${h.skill.n}»:</b> ${SKD[h.skill.t]}</div><div class="small" style="margin-top:4px"><b>NP «${h.np.n}»:</b> ${h.np.aoe?'урон по всем врагам':'урон по цели'}, тип ${CARD[h.np.t].n}</div></div></div>
- <div class="row c" style="margin-top:12px"><button class="btn" ${S.gold<c||o.lv>=60?'disabled':''} onclick="lvUp('${id}')">Уровень ↑ · 🪙${c}</button><button class="btn ${inT?'':'gold'}" onclick="togT('${id}')">${inT?'Убрать из отряда':'В отряд'}</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
-function lvUp(id){const o=S.owned[id],c=o.lv*50;if(S.gold<c)return;S.gold-=c;o.lv++;prog('lvl');save();hero(id);render()}
+ <div class="small" style="margin-top:8px"><b>Навык «${h.skill.n}» ур.${skl}:</b> ${skDesc(h,o)}</div><div class="small" style="margin-top:4px"><b>NP «${h.np.n}» ур.${npl}:</b> ${h.np.aoe?'урон по всем врагам':'урон по цели'}, тип ${CARD[h.np.t].n}, мощность ×${(h.np.m*npMul(o)).toFixed(1)}</div>${mp}</div></div>
+ <div class="row c" style="margin-top:12px"><button class="btn" ${S.gold<c||atMax?'disabled':''} onclick="lvUp('${id}',1)">Ур. ↑ · 🪙${c}</button><button class="btn" ${atMax?'disabled':''} onclick="lvUp('${id}',10)">Ур. ↑×10</button>${canAsc?`<button class="btn gold" onclick="ascend('${id}')">Вознесение · 🪙${ascCost(asc)}</button>`:''}</div>
+ <div class="row c" style="margin-top:6px"><button class="btn" ${skl>=10||S.gold<skCost(skl)?'disabled':''} onclick="skUp('${id}')">Навык ↑ ${skl>=10?'МАКС':'🪙'+skCost(skl)}</button><button class="btn" ${npl>=5||S.gold<npCost(npl)?'disabled':''} onclick="npUpg('${id}')">NP ↑ ${npl>=5?'МАКС':'🪙'+npCost(npl)}</button></div>
+ <div class="row c" style="margin-top:6px"><button class="btn ${inT?'':'gold'}" onclick="togT('${id}')">${inT?'Убрать из отряда':'В отряд'}</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function skCost(l){return 300*l*l}
+function npCost(l){return 1500*l*l}
+function lvUp(id,n){n=n||1;const o=S.owned[id];let k=0;while(k<n&&o.lv<lvCap(o)&&S.gold>=lvCost(o.lv)){S.gold-=lvCost(o.lv);o.lv++;k++;prog('lvl')}if(!k)return toast(o.lv>=lvCap(o)?'Нужно вознесение':'Не хватает 🪙');save();hero(id);render()}
+function ascend(id){const o=S.owned[id],a=o.asc||0;if(o.lv<lvCap(o)||a>=ASC_MAX)return;const c=ascCost(a);if(S.gold<c)return toast('Не хватает 🪙');S.gold-=c;S.gems+=ascGems(a);o.asc=a+1;save();toast(`✦ Вознесение ${o.asc}! Лимит ур. ${lvCap(o)}, +25% статов, +💎${ascGems(a)}`);hero(id);render()}
+function skUp(id){const o=S.owned[id],l=sk(o);if(l>=10||S.gold<skCost(l))return;S.gold-=skCost(l);o.sk=l+1;prog('skl');save();hero(id);render()}
+function npUpg(id){const o=S.owned[id],l=o.npl||1;if(l>=5||S.gold<npCost(l))return;S.gold-=npCost(l);o.npl=l+1;prog('skl');save();hero(id);render()}
 function togT(id){const i=S.team.indexOf(id);if(i>=0){if(S.team.length<=1)return toast('В отряде должен остаться хотя бы один герой');S.team.splice(i,1)}else{if(S.team.length>=3)return toast('Отряд полон (3 героя). Сначала уберите кого-то.');S.team.push(id)}save();closeM();render()}
 
 // ====== ЗАДАНИЯ ======
@@ -268,13 +540,21 @@ const ACH=[
  {id:'a5',t:'Победить Падшего Короля',g:600,f:()=>S.cleared>=5},
  {id:'a6',t:'Победить Повелителя Тьмы',g:1500,f:()=>S.cleared>=8},
  {id:'a7',t:'Совершить 50 призывов',g:700,f:()=>S.st.summons>=50},
+ {id:'a8',t:'Получить 50 героев',g:1500,f:()=>Object.keys(S.owned).length>=50},
+ {id:'a9',t:'Получить 100 героев',g:3000,f:()=>Object.keys(S.owned).length>=100},
+ {id:'a10',t:'Получить 200 героев',g:6000,f:()=>Object.keys(S.owned).length>=200},
+ {id:'a11',t:'Получить мифического 6★ героя',g:3000,f:()=>(S.st.sixes||0)>=1||HEROES.some(h=>h.r===6&&S.owned[h.id])},
+ {id:'a12',t:'Собрать всех 6 мифических героев',g:15000,f:()=>HEROES.filter(h=>h.r===6).every(h=>S.owned[h.id])},
+ {id:'a13',t:'Вознести героя до максимума',g:2000,f:()=>Object.values(S.owned).some(o=>(o.asc||0)>=ASC_MAX)},
+ {id:'a14',t:'Победить Владыку Вселенной',g:4000,f:()=>S.cleared>=12},
+ {id:'a15',t:'Совершить 300 призывов',g:3000,f:()=>S.st.summons>=300},
 ];
 function claimDaily(){const t=today(),d=S.daily;if(d.last===t)return;d.streak=d.last===yesterday()?d.streak+1:1;d.last=t;const r=DAILY[(d.streak-1)%7];S.gems+=r[0];S.gold+=r[1];save();toast(`Награда: 💎${r[0]} 🪙${r[1]}`);render()}
 function claimQ(id){const q=QDEF.find(x=>x.id===id);if(S.q.claimed[id]||(S.q.prog[id]||0)<q.n)return;S.q.claimed[id]=1;S.gems+=q.g;S.gold+=q.c;addXp(30);save();toast(`Получено: ${q.g?'💎'+q.g+' ':''}${q.c?'🪙'+q.c:''}`);render()}
 function claimA(id){const a=ACH.find(x=>x.id===id);S.ach=S.ach||{};if(S.ach[id]||!a.f())return;S.ach[id]=1;S.gems+=a.g;addXp(60);save();toast('Достижение! +💎'+a.g);render()}
 
 // ====== МАГАЗИН ======
-const HPRICE={3:1500,4:5000,5:20000};
+const HPRICE={3:1500,4:5000,5:20000,6:400000};
 function vShop(){return `<div class="panel"><h3>💱 Обмен</h3>
  <div class="q"><div>💎100 → 🪙600</div><button class="btn sm" style="width:auto;margin:0" onclick="ex(100,0,0,600)">Обменять</button></div>
  <div class="q"><div>💎500 → 🪙3500</div><button class="btn sm" style="width:auto;margin:0" onclick="ex(500,0,0,3500)">Обменять</button></div>
@@ -289,7 +569,7 @@ function vProfile(){const own=Object.keys(S.owned).length,exp=S.xp%250;
  return `<div class="panel"><div class="row" style="flex-wrap:nowrap"><img class="av" style="width:70px;height:70px" src="img/${S.av}.jpg"><div style="flex:1;min-width:0"><h2 style="font-size:20px">${esc(S.name)}</h2><div class="small">Уровень аккаунта ${accLv()}</div><div class="bar xp"><i style="width:${exp/250*100}%"></i></div><div class="small">${exp}/250 опыта</div></div></div>
  <div class="small" style="margin-top:12px">Сменить аватар:</div><div class="avs">${AVS.map(a=>`<img src="img/${a}.jpg" class="${a===S.av?'sel':''}" onclick="S.av='${a}';save();render()">`).join('')}</div></div>
  <div class="panel"><h3>📊 Статистика</h3>
- <div class="kv"><span>Героев в коллекции</span><b>${own}/${HEROES.length}</b></div><div class="kv"><span>Призывов</span><b>${S.st.summons}</b></div><div class="kv"><span>5★ получено</span><b>${S.st.fives}</b></div><div class="kv"><span>Боёв / побед</span><b>${S.st.battles} / ${S.st.wins}</b></div><div class="kv"><span>Пройдено этапов</span><b>${S.cleared}/${STAGES.length}</b></div><div class="kv"><span>Гарант 5★ через</span><b>${90-S.pity} круток</b></div><div class="kv"><span>Дата регистрации</span><b>${new Date(S.created).toLocaleDateString('ru-RU')}</b></div></div>
+ <div class="kv"><span>Героев в коллекции</span><b>${own}/${HEROES.length}</b></div><div class="kv"><span>Призывов</span><b>${S.st.summons}</b></div><div class="kv"><span>5★ получено</span><b>${S.st.fives}</b></div><div class="kv"><span>6★ мификов</span><b>${S.st.sixes||0}</b></div><div class="kv"><span>Боёв / побед</span><b>${S.st.battles} / ${S.st.wins}</b></div><div class="kv"><span>Пройдено этапов</span><b>${S.cleared}/${STAGES.length}</b></div><div class="kv"><span>Гарант 5★ через</span><b>${90-S.pity} круток</b></div><div class="kv"><span>Гарант 6★ через</span><b>${300-(S.pity6||0)} круток</b></div><div class="kv"><span>Дата регистрации</span><b>${new Date(S.created).toLocaleDateString('ru-RU')}</b></div></div>
  <div class="panel"><h3>💾 Сохранение</h3><div class="small" style="margin-bottom:8px">Прогресс хранится в браузере этого устройства. Чтобы перенести на другой телефон — скопируйте код и вставьте на втором.</div>
  <div class="row"><button class="btn" onclick="expSave()">Экспорт кода</button><button class="btn" onclick="impSave()">Импорт кода</button></div></div>
  <div class="row c"><button class="btn" onclick="logout()">Выйти</button><button class="btn" style="background:#5b1a2a" onclick="delAcc()">Удалить аккаунт</button></div>`}
@@ -314,38 +594,42 @@ function vBattle(){
  <div class="fighters">${f}</div><div class="log">${B.log.slice(0,30).join('<br>')}</div>`}
 function startB(i){const st=STAGES[i];
  B={si:i,st,turn:1,tgt:0,pick:[],log:['Бой начался!'],
- team:S.team.map(id=>{const s=stats(id);return{h:H(id),hp:s.hp,max:s.hp,atk:s.atk,np:0,cd:0,buff:0}}),
+ team:S.team.map(id=>{const s=stats(id),h=H(id),o=S.owned[id],m=h.myth||{};return{h,o,hp:s.hp,max:s.hp,atk:Math.round(s.atk*(m.atkMul||1)),np:m.npStart||0,cd:0,buff:0,m}}),
  en:st.en.map(e=>({n:e[0],e:e[1],cls:e[2],hp:e[3],max:e[3],atk:e[4]}))};deal();render();window.scrollTo(0,0)}
 function deal(){const deck=[];B.team.forEach((u,i)=>{if(u.hp>0)[...u.h.deck].forEach(t=>deck.push({t,u:i}))});deck.sort(()=>Math.random()-.5);B.hand=deck.slice(0,5);B.pick=[]}
 function pickC(i){const k=B.pick.findIndex(p=>p.i===i);if(k>=0)B.pick.splice(k,1);else if(B.pick.length<3)B.pick.push({i,u:B.hand[i].u,t:B.hand[i].t});render()}
 function pickNP(u){if(B.pick.length<3)B.pick.push({np:1,u,t:B.team[u].h.np.t});render()}
-function useSkill(i){const u=B.team[i],t=u.h.skill.t;
- if(t==='atkUp'){u.buff=3;L(`${u.h.name}: атака +50% (3 хода)`)}
- if(t==='heal'){B.team.forEach(x=>{if(x.hp>0)x.hp=Math.min(x.max,x.hp+Math.round(x.max*.3))});L(`${u.h.name}: отряд вылечен на 30%`)}
- if(t==='npUp'){u.np=Math.min(100,u.np+50);L(`${u.h.name}: NP +50%`)}
- u.cd=4;render()}
+function useSkill(i){const u=B.team[i],t=u.h.skill.t,l=sk(u.o),up=x=>{if(x>0)return x};
+ const atk=()=>{u.buff=3;u.bm=1+(t==='godUp'?1+(l-1)*.1:.5+(l-1)*.05)};
+ const heal=()=>{const p=.3+(l-1)*.03;B.team.forEach(x=>{if(x.hp>0)x.hp=Math.min(x.max,x.hp+Math.round(x.max*p))})};
+ const np=()=>{u.np=Math.min(100,u.np+50+(l-1)*5);if(t==='godUp')B.team.forEach(x=>{if(x.hp>0)x.np=Math.min(100,x.np+50)})};
+ if(t==='atkUp'){atk();L(`${u.h.name}: атака +${Math.round((u.bm-1)*100)}% (3 хода)`)}
+ if(t==='heal'){heal();L(`${u.h.name}: отряд вылечен на ${Math.round((.3+(l-1)*.03)*100)}%`)}
+ if(t==='npUp'){np();L(`${u.h.name}: NP +${50+(l-1)*5}%`)}
+ if(t==='godUp'){atk();heal();np();L(`✦ ${u.h.name}: МИФИЧЕСКАЯ МОЩЬ — атака ×${u.bm.toFixed(1)}, отряд вылечен, NP отряда +50%`)}
+ u.cd=t==='godUp'?3:4;render()}
 function mult(a,d){if(a==='Berserker'||d==='Berserker')return 2;if(ADV[a]===d)return 2;if(ADV[d]===a)return .5;return 1}
 function L(t){B.log.unshift(t)}
 function alive(a){return a.filter(x=>x.hp>0)}
 function hit(u,m,label){if(!alive(B.en).length)return;let tg=B.en[B.tgt];if(!tg||tg.hp<=0){tg=alive(B.en)[0];B.tgt=B.en.indexOf(tg)}
- const cm=mult(u.h.cls,tg.cls),d=Math.round(u.atk*m*cm*(u.buff?1.5:1)*(.9+Math.random()*.2)*2);tg.hp-=d;
+ const cm=mult(u.h.cls,tg.cls),d=Math.round(u.atk*m*cm*(u.buff?(u.bm||1.5):1)*(.9+Math.random()*.2)*2);tg.hp-=d;if(u.m&&u.m.leech&&u.hp>0)u.hp=Math.min(u.max,u.hp+Math.round(d*u.m.leech));
  L(`${u.h.name} · ${label} → ${tg.e}: <b>${d}</b>${cm>1?' 🔺':cm<1?' 🔻':''}${tg.hp<=0?' 💥':''}`)}
 function attack(){
  const same=B.pick.every(p=>p.u===B.pick[0].u)&&B.pick.length===3;
  B.pick.forEach((p,k)=>{const u=B.team[p.u];if(u.hp<=0)return;
-  if(p.np){const np=u.h.np,m=np.m*(np.t==='B'?1.2:1);u.np=0;L(`🌟 ${u.h.name} — «${np.n}»!`);
+  if(p.np){const np=u.h.np,m=np.m*npMul(u.o)*(np.t==='B'?1.2:1);u.np=0;L(`🌟 ${u.h.name} — «${np.n}»!`);
    if(np.aoe){B.en.forEach((e,j)=>{if(e.hp>0){B.tgt=j;hit(u,m*0.7,'NP')}})}else hit(u,m,'NP')}
-  else{const c=CARD[p.t];hit(u,c.m*(1+k*.2),c.n);u.np=Math.min(100,u.np+c.np+(p.t==='A'&&B.pick[0].t==='A'?5:0))}});
+  else{const c=CARD[p.t];hit(u,c.m*(1+k*.2),c.n);u.np=Math.min(100,u.np+Math.round((c.np+(p.t==='A'&&B.pick[0].t==='A'?5:0))*((u.m&&u.m.npGain)||1)))}});
  if(same){const u=B.team[B.pick[0].u];if(u.hp>0)hit(u,1.5,'Extra')}
  if(!alive(B.en).length)return win();
- alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);const d=Math.round(e.atk*cm*(.85+Math.random()*.3));v.hp-=d;v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
- B.team.forEach(u=>{if(u.cd)u.cd--;if(u.buff)u.buff--});
+ alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);const d=Math.round(e.atk*cm*(.85+Math.random()*.3)*((v.m&&v.m.dmgTaken)||1));v.hp-=d;v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
+ B.team.forEach(u=>{if(u.cd)u.cd--;if(u.buff)u.buff--;if(u.hp>0&&u.m){if(u.m.regen)u.hp=Math.min(u.max,u.hp+Math.round(u.max*u.m.regen));if(u.m.teamNp)B.team.forEach(x=>{if(x.hp>0)x.np=Math.min(100,x.np+u.m.teamNp)})}});
  if(!alive(B.team).length){S.st.battles++;prog('battle');save();B=null;modal(`<h2>💀 Поражение</h2><p style="margin:10px 0">Прокачайте героев или соберите отряд с преимуществом по классу (Saber → Lancer → Archer → Saber, Caster ↔ Rider).</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);return}
  B.turn++;deal();render()}
 function win(){const st=B.st,first=B.si>=S.cleared,gm=first?st.g*10:Math.round(st.g*3),gd=st.g*5;
  S.gems+=gm;S.gold+=gd;S.st.battles++;S.st.wins++;prog('battle');prog('win');addXp(20+B.si*10);if(first)S.cleared=B.si+1;
  const last=B.si===STAGES.length-1&&first;B=null;save();
- modal(`<h2>🏆 Победа!</h2><p style="margin:10px 0">Награда: 💎${gm} 🪙${gd}${first?' (первое прохождение)':''}</p>${last?'<p>Вы победили Повелителя Тьмы и прошли игру! Теперь собирайте всех героев и ищите 5★.</p>':''}<div class="row c"><button class="btn gold" onclick="closeM();render()">Дальше</button></div>`)}
+ modal(`<h2>🏆 Победа!</h2><p style="margin:10px 0">Награда: 💎${gm} 🪙${gd}${first?' (первое прохождение)':''}</p>${last?'<p>Вы победили Владыку Вселенной и прошли игру! Теперь собирайте всех героев и охотьтесь на мифических 6★.</p>':''}<div class="row c"><button class="btn gold" onclick="closeM();render()">Дальше</button></div>`)}
 
 // ====== СТАРТ ======
 (function(){const cur=localStorage.getItem(K_CUR),u=users();if(cur&&u[cur])login(cur);else{authMode=Object.keys(u).length?'in':'reg';vAuth()}})();
