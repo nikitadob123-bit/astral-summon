@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0b0a2b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Astral Summon</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#07081a url(img/bg.jpg) center/cover fixed;color:#eef;overflow-x:hidden;user-select:none;-webkit-user-select:none}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(#07081acc,#0b0a2bee);z-index:-1}
+input{user-select:text;-webkit-user-select:text}
+#hdr{display:flex;justify-content:space-between;align-items:center;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:#0009;backdrop-filter:blur(8px);border-bottom:1px solid #ffd76a55;position:sticky;top:0;z-index:5}
+.me{display:flex;align-items:center;gap:8px;min-width:0}
+.av{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid #ffd76a;flex:none;background:#222}
+.me b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
+.me small{font-size:11px;opacity:.8}
+.cur{font-weight:700;font-size:14px;text-align:right;white-space:nowrap}
+#app{padding:12px 12px calc(84px + env(safe-area-inset-bottom));max-width:1000px;margin:auto}
+#nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#0b0a2bf2;backdrop-filter:blur(10px);border-top:1px solid #ffd76a55;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+#nav button{flex:1;background:none;border:0;color:#aab;padding:8px 0 6px;font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+#nav button i{font-style:normal;font-size:20px}
+#nav button.on{color:#ffd76a}
+.btn{background:#2a2f6b;border:1px solid #4b52b0;color:#fff;padding:11px 16px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:600;min-height:44px}
+.btn:active{transform:scale(.97)}
+.btn.gold{background:linear-gradient(#e8b53a,#a3700c);border-color:#ffd76a}
+.btn.pink{background:linear-gradient(#ec4899,#9d174d);border-color:#f9a8d4}
+.btn.sm{padding:6px 8px;font-size:12px;min-height:32px;width:100%;margin-top:4px}
+.btn:disabled{opacity:.4;cursor:default}
+.panel{background:#0f1230cc;border:1px solid #333a80;border-radius:14px;padding:14px;margin-bottom:12px;backdrop-filter:blur(6px)}
+.panel h3{margin-bottom:8px}
+.small{font-size:12px;opacity:.8}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px}
+.card{border-radius:12px;padding:6px;background:#141838;border:2px solid #333a80;text-align:center;cursor:pointer;position:relative;backdrop-filter:blur(6px)}
+.card.sel{outline:3px solid #7cf}
+.card.lock{filter:grayscale(1) brightness(.5)}
+.r5{border-color:#ffd76a;box-shadow:0 0 12px #ffd76a66;background:linear-gradient(#3a2a08,#141838)}.r4{border-color:#c68cff}.r3{border-color:#6ab0ff}
+.pt{position:relative;overflow:hidden;width:100%;aspect-ratio:3/4;border-radius:9px;margin-bottom:4px;background:#111}
+.pt img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.pt .nm{position:absolute;bottom:0;left:0;right:0;font-size:10px;padding:14px 3px 3px;background:linear-gradient(transparent,#000d);color:#fff;line-height:1.1}
+.r5 .pt::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,#fff5 50%,transparent 60%);background-size:250% 100%;animation:sh 2.5s infinite}
+@keyframes sh{from{background-position:150% 0}to{background-position:-100% 0}}
+.stars{color:#ffd76a;font-size:11px}
+.card b{font-size:12px;display:block;line-height:1.15}
+.banner{text-align:center;padding:22px 12px;background:linear-gradient(135deg,#3b1d6ecc,#123a6ecc);border:1px solid #ffd76a88;box-shadow:0 0 30px #a855f766;border-radius:14px;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.c{justify-content:center}.row.sb{justify-content:space-between;flex-wrap:nowrap}
+.bar{height:7px;background:#222;border-radius:4px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;transition:width .3s}
+.hp i{background:#4ade80}.np i{background:#facc15}.ehp i{background:#f43f5e}.xp i{background:#38bdf8}
+.fighters{display:flex;gap:6px;justify-content:center}
+.f{flex:1;max-width:170px;min-width:0;background:#141838cc;border-radius:12px;padding:5px;border:2px solid #333a80;text-align:center}
+.f .pt{aspect-ratio:1}
+.f b{font-size:11px;display:block;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f.dead{opacity:.3}
+.f .small{font-size:10px}
+.cmd{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.cc{flex:1;max-width:80px;aspect-ratio:3/4;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-weight:700;font-size:11px;border:2px solid #fff3;gap:3px}
+.cc img{width:70%;aspect-ratio:1;object-fit:cover;object-position:top;border-radius:8px}
+.cc.B{background:linear-gradient(#b91c1c,#450a0a)}.cc.A{background:linear-gradient(#1d4ed8,#0c1a4a)}.cc.Q{background:linear-gradient(#15803d,#052e16)}
+.cc.picked{outline:3px solid #fff;transform:translateY(-8px)}
+.log{height:110px;overflow:auto;font-size:12px;background:#0007;border-radius:10px;padding:8px;margin-top:10px}
+.modal{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;z-index:20;padding:12px}
+.modal .inner{max-width:760px;width:100%;background:#12153a;border:1px solid #ffd76a55;border-radius:16px;padding:14px;max-height:90vh;overflow:auto}
+@keyframes pop{from{transform:scale(.3) rotate(-10deg);opacity:0}to{transform:none;opacity:1}}
+.pop{animation:pop .45s ease both}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:#000d;border:1px solid #ffd76a;padding:10px 16px;border-radius:12px;z-index:30;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+/* auth */
+#auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+#auth .box{width:100%;max-width:400px;background:#0f1230e6;border:1px solid #ffd76a88;border-radius:18px;padding:20px;box-shadow:0 0 40px #a855f766;backdrop-filter:blur(8px)}
+#auth h1{text-align:center;font-size:30px;background:linear-gradient(90deg,#ffd76a,#ff7ad9);-webkit-background-clip:text;color:transparent;margin-bottom:4px}
+input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;background:#0a0c26;color:#fff;font-size:16px;margin:6px 0}
+.tabs2{display:flex;gap:6px;margin:14px 0 6px}.tabs2 button{flex:1}
+.avs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
+.avs img{width:100%;aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:top;border:3px solid transparent;cursor:pointer}
+.avs img.sel{border-color:#ffd76a;box-shadow:0 0 10px #ffd76a}
+.err{color:#fda4af;font-size:13px;min-height:18px;margin:4px 0}
+.q{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff14}
+.q:last-child{border:0}
+.kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #ffffff10;font-size:14px}
+@media(min-width:700px){#nav button{font-size:12px}#nav button i{font-size:22px}.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.log{height:150px}.f b{font-size:13px}}
+</style>
+</head>
+<body>
+<div id="auth" style="display:none"></div>
+<div id="game" style="display:none">
+<div id="hdr"></div>
+<div id="app"></div>
+<div id="nav"></div>
+</div>
+<div id="modal"></div>
+<div id="toast"></div>
+<script>
+// ====== ПЕРСОНАЖИ ======
+// Чтобы поставить настоящий арт: положите картинку в папку img/ с именем <id>.jpg (например img/goku.jpg) — она подхватится сама.
+// Если файла нет, показывается арт класса. Формат: [id, имя, звёзды, класс, навык(atkUp|heal|npUp), название NP, тип NP(B|A|Q), урон по всем(0/1)]
+const RAW=[
+ ['goku','Гоку',5,'Berserker','atkUp','Камехамеха','B',1],
+ ['luffy','Монки Д. Луффи',5,'Rider','atkUp','Гому-Гому Ган','B',0],
+ ['levi','Леви Аккерман',5,'Saber','npUp','Вихрь клинков','Q',0],
+ ['saitama','Сайтама',5,'Berserker','npUp','Серьёзный удар','B',0],
+ ['megumin','Мегумин',5,'Caster','heal','Эксплозия!','A',1],
+ ['naruto','Наруто Удзумаки',4,'Rider','atkUp','Расенган','B',0],
+ ['ichigo','Ичиго Куросаки',4,'Saber','atkUp','Гетсуга Теншо','B',0],
+ ['gon','Гон Фрикс',4,'Lancer','npUp','Джанкен','B',0],
+ ['killua','Киллуа Золдик',4,'Archer','npUp','Годспид','Q',0],
+ ['tanjiro','Тандзиро Камадо',4,'Saber','heal','Хиноками Кагура','A',0],
+ ['rem','Рем',4,'Lancer','heal','Морнинг Стар','A',0],
+ ['lelouch','Лелуш Ламперуж',4,'Caster','npUp','Приказ Гиасса','A',1],
+ ['eren','Эрен Йегер',4,'Berserker','atkUp','Титан-разрушитель','B',1],
+ ['kirito','Кирито',4,'Saber','atkUp','Старбёрст Стрим','Q',0],
+ ['asuka','Аска Лэнгли',4,'Lancer','atkUp','Красный Эва-удар','B',0],
+ ['madoka','Мадока Канаме',4,'Archer','heal','Стрела надежды','A',1],
+ ['deku','Идзуку Мидория',3,'Rider','atkUp','Смэш','B',0],
+ ['usopp','Усопп',3,'Archer','npUp','Пушка Кабуто','Q',0],
+ ['nami','Нами',3,'Caster','heal','Гроза Клима-такта','A',1],
+ ['sakura','Сакура Харуно',3,'Lancer','heal','Сокрушающий удар','B',0],
+ ['nezuko','Незуко Камадо',3,'Rider','atkUp','Кровавый пинок','B',0],
+ ['yuji','Юдзи Итадори',3,'Saber','atkUp','Чёрная вспышка','B',0],
+ ['anya','Аня Форджер',3,'Caster','npUp','Чтение мыслей','A',1],
+ ['zenitsu','Зеницу Агацума',3,'Archer','npUp','Гром и молния','Q',0],
+]
+const CLS_BASE={Saber:[1300,160,'BBAQQ'],Archer:[1150,175,'BAAQQ'],Lancer:[1250,165,'BAAQQ'],Caster:[1050,140,'BAAAQ'],Rider:[1200,150,'BBAQQ'],Berserker:[1400,175,'BBBAQ']};
+const RMUL={3:.8,4:1,5:1.25};
+const HEROES=RAW.map((x,i)=>{const b=CLS_BASE[x[3]],m=RMUL[x[2]];
+ return{id:x[0],name:x[1],r:x[2],cls:x[3],hue:(i*47)%360,hp:Math.round(b[0]*m),atk:Math.round(b[1]*m),deck:b[2],
+  skill:{n:({atkUp:'Боевой дух',heal:'Поддержка',npUp:'Концентрация'})[x[4]],t:x[4]},
+  np:{n:x[5],t:x[6],m:x[2]===5?4.5:x[2]===4?4:3.5,aoe:x[7]}}});
+
+const ADV={Saber:'Lancer',Lancer:'Archer',Archer:'Saber',Caster:'Rider',Rider:'Caster'};
+const CLS_IC={Saber:'⚔',Archer:'🏹',Lancer:'🔱',Caster:'📖',Rider:'🐴',Berserker:'💢'};
+const CARD={B:{n:'Buster',m:1.5,np:0},A:{n:'Arts',m:1,np:12},Q:{n:'Quick',m:0.8,np:4}};
+const SKD={atkUp:'Атака +50% на 3 хода',heal:'Лечит весь отряд на 30%',npUp:'+50% к шкале NP'};
+const STAGES=[
+ {n:'1. Окраина',en:[['Слизень','🟢','Rider',900,60],['Слизень','🟢','Rider',900,60]],g:30},
+ {n:'2. Тёмный лес',en:[['Волк','🐺','Lancer',1500,90],['Гоблин','👺','Saber',1400,95],['Волк','🐺','Lancer',1500,90]],g:40},
+ {n:'3. Руины',en:[['Голем','🗿','Archer',3500,120],['Скелет','💀','Saber',2000,110]],g:50},
+ {n:'4. Башня мага',en:[['Колдун','🧙','Caster',4500,150],['Горгулья','🦇','Rider',3000,130],['Горгулья','🦇','Rider',3000,130]],g:60},
+ {n:'5. БОСС: Падший Король',en:[['Падший Король','👑','Berserker',16000,220]],g:120,boss:1},
+ {n:'6. Вулкан',en:[['Огненный волк','🔥','Lancer',6000,190],['Саламандра','🦎','Caster',5500,200],['Огненный волк','🔥','Lancer',6000,190]],g:80},
+ {n:'7. Небесный замок',en:[['Страж','🛡️','Saber',9000,230],['Валькирия','🪽','Lancer',8000,250],['Страж','🛡️','Archer',9000,230]],g:100},
+ {n:'8. БОСС: Повелитель Тьмы',en:[['Повелитель Тьмы','😈','Berserker',48000,330]],g:250,boss:1},
+];
+const DAILY=[[150,500],[150,500],[200,800],[200,800],[300,1200],[300,1200],[900,3000]];
+const QDEF=[
+ {id:'summon',t:'Совершить 3 призыва',n:3,g:100,c:0},
+ {id:'win',t:'Победить в 2 боях',n:2,g:0,c:600},
+ {id:'lvl',t:'Прокачать героя 2 раза',n:2,g:50,c:0},
+ {id:'battle',t:'Провести 4 боя',n:4,g:100,c:300},
+];
+const AVS=['Saber','Archer','Lancer','Caster','Rider','Berserker'];
+
+// ====== УТИЛИТЫ ======
+const $=id=>document.getElementById(id);
+const H=id=>HEROES.find(h=>h.id===id);
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function yesterday(){const d=new Date(Date.now()-864e5);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function hash(s){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^h1>>>16,2246822507)^Math.imul(h2^h2>>>13,3266489909);h2=Math.imul(h2^h2>>>16,2246822507)^Math.imul(h1^h1>>>13,3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
+function modal(h){$('modal').innerHTML=`<div class="modal" onclick="if(event.target===this)closeM()"><div class="inner">${h}</div></div>`}
+function closeM(){$('modal').innerHTML=''}
+function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} src="img/${h.id}.jpg" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
+function portrait(h){return `<div class="pt">${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}<span class="nm">${esc(h.name)}</span></div>`}
+function stars(r){return '★'.repeat(r)}
+
+// ====== АККАУНТЫ ======
+const K_USERS='as_users',K_CUR='as_cur';
+function users(){try{return JSON.parse(localStorage.getItem(K_USERS)||'{}')}catch(e){return{}}}
+function putUsers(u){localStorage.setItem(K_USERS,JSON.stringify(u))}
+let ME=null,S=null; // ME = ключ пользователя
+function newData(name,av){return{name,av,gems:3000,gold:1000,owned:{},team:[],cleared:0,pity:0,xp:0,created:Date.now(),
+ daily:{last:'',streak:0},q:{date:'',prog:{},claimed:{}},st:{summons:0,fives:0,wins:0,battles:0}}}
+function save(){if(!ME)return;const u=users();if(u[ME]){u[ME].data=S;putUsers(u)}hud()}
+function login(key){ME=key;S=users()[key].data;localStorage.setItem(K_CUR,key);checkQuestDay();start()}
+let authMode='reg',authAv='Saber';
+function vAuth(){
+ $('game').style.display='none';$('auth').style.display='flex';
+ $('auth').innerHTML=`<div class="box"><h1>✦ Astral Summon</h1><p class="small" style="text-align:center;margin-bottom:6px">Аниме гача-RPG для своих</p>
+ <div class="tabs2"><button class="btn ${authMode==='reg'?'gold':''}" onclick="authMode='reg';vAuth()">Регистрация</button><button class="btn ${authMode==='in'?'gold':''}" onclick="authMode='in';vAuth()">Вход</button></div>
+ <input class="in" id="au_n" placeholder="Никнейм" maxlength="16" autocomplete="username">
+ <input class="in" id="au_p" type="password" placeholder="Пароль (от 4 символов)" autocomplete="${authMode==='reg'?'new-password':'current-password'}">
+ ${authMode==='reg'?`<input class="in" id="au_p2" type="password" placeholder="Повторите пароль" autocomplete="new-password">
+ <div class="small" style="margin-top:6px">Выберите аватар:</div><div class="avs">${AVS.map(a=>`<img src="img/${a}.jpg" class="${a===authAv?'sel':''}" onclick="authAv='${a}';vAuthKeep()">`).join('')}</div>`:''}
+ <div class="err" id="au_e"></div>
+ <button class="btn gold" style="width:100%" onclick="doAuth()">${authMode==='reg'?'Создать аккаунт и играть':'Войти'}</button>
+ <p class="small" style="margin-top:12px;text-align:center">Аккаунт и прогресс хранятся на этом устройстве. Перенос на другое — Профиль → Сохранение.</p></div>`}
+function vAuthKeep(){const n=$('au_n').value,p=$('au_p').value,p2=$('au_p2')?$('au_p2').value:'';vAuth();$('au_n').value=n;$('au_p').value=p;if($('au_p2'))$('au_p2').value=p2}
+function doAuth(){
+ const name=$('au_n').value.trim(),p=$('au_p').value,err=m=>$('au_e').textContent=m,key=name.toLowerCase(),u=users();
+ if(name.length<2)return err('Ник — минимум 2 символа');
+ if(p.length<4)return err('Пароль — минимум 4 символа');
+ if(authMode==='reg'){
+  if(p!==$('au_p2').value)return err('Пароли не совпадают');
+  if(u[key])return err('Такой ник уже занят на этом устройстве');
+  u[key]={name,h:hash(p),data:newData(name,authAv)};putUsers(u);login(key);
+  setTimeout(()=>modal(`<h2 style="text-align:center">Добро пожаловать, ${esc(name)}!</h2><p style="margin:10px 0;text-align:center">Стартовый подарок: 💎3000 и 🪙1000.<br>Загляните в «Призыв» и соберите свой отряд.</p><div class="row c"><button class="btn gold" onclick="closeM()">Поехали!</button></div>`),200);
+ }else{
+  if(!u[key]||u[key].h!==hash(p))return err('Неверный ник или пароль');
+  login(key);
+ }}
+function logout(){localStorage.removeItem(K_CUR);ME=S=null;closeM();authMode='in';vAuth()}
+
+// ====== ЗАДАНИЯ / НАГРАДЫ ======
+function checkQuestDay(){if(S.q.date!==today()){S.q={date:today(),prog:{},claimed:{}};save()}}
+function prog(id,n=1){checkQuestDay();S.q.prog[id]=(S.q.prog[id]||0)+n}
+function accLv(){return 1+Math.floor(S.xp/250)}
+function addXp(n){const b=accLv();S.xp+=n;if(accLv()>b){S.gems+=100;setTimeout(()=>toast('🎉 Уровень аккаунта '+accLv()+'! +💎100'),300)}}
+
+// ====== ГЛАВНЫЙ ЭКРАН ======
+function start(){$('auth').style.display='none';$('game').style.display='block';tab=S.gems!==undefined&&Object.keys(S.owned).length?'summon':'summon';render()}
+function hud(){if(!S)return;$('hdr').innerHTML=`<div class="me" onclick="tab='profile';render()"><img class="av" src="img/${S.av}.jpg"><div><b>${esc(S.name)}</b><small>Ур. ${accLv()}</small></div></div><div class="cur">💎 ${S.gems} &nbsp;🪙 ${S.gold}</div>`}
+let tab='summon';
+const TABS=[['summon','✨','Призыв'],['battle','⚔️','Бой'],['heroes','📜','Герои'],['quests','🎯','Задания'],['shop','🛒','Магазин'],['profile','👤','Профиль']];
+function render(){
+ $('nav').innerHTML=TABS.map(([k,i,n])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${n}</button>`).join('');
+ $('app').innerHTML=({summon:vSummon,battle:vBattle,heroes:vHeroes,quests:vQuests,shop:vShop,profile:vProfile})[tab]();hud();
+}
+function go(k){if(B&&k!=='battle'&&!confirm('Выйти из боя? Прогресс боя будет потерян.'))return;if(k!=='battle')B=null;tab=k;render();window.scrollTo(0,0)}
+
+// ====== ПРИЗЫВ ======
+function roll(){S.pity++;let r;const x=Math.random()*100;
+ if(S.pity>=90||x<3){r=5;S.pity=0}else if(x<18)r=4;else r=3;
+ const pool=HEROES.filter(h=>h.r===r);return pool[Math.floor(Math.random()*pool.length)]}
+function giveHero(h){if(S.owned[h.id]){S.owned[h.id].dup=Math.min(5,(S.owned[h.id].dup||0)+1);S.gold+=h.r*20;return false}S.owned[h.id]={lv:1,dup:0};if(S.team.length<3)S.team.push(h.id);return true}
+function summon(n){const cost=n===1?300:2700;if(S.gems<cost)return toast('Не хватает 💎 — проходите бои и задания');
+ S.gems-=cost;const got=[];
+ for(let i=0;i<n;i++){let h=roll();if(n===10&&i===9&&!got.some(g=>g.h.r>=4)){const p=HEROES.filter(x=>x.r===4);h=p[Math.floor(Math.random()*p.length)]}
+  got.push({h,isNew:giveHero(h)});S.st.summons++;if(h.r===5)S.st.fives++}
+ prog('summon',n);save();
+ modal(`<h2 style="text-align:center;margin-bottom:10px">Результат призыва</h2><div class="grid">${got.map((g,i)=>`<div class="card r${g.h.r} pop" style="animation-delay:${i*.1}s">${portrait(g.h)}<div class="stars">${stars(g.h.r)}</div>${g.isNew?'<div class="small" style="color:#7cf">NEW!</div>':`<div class="small">повтор +🪙${g.h.r*20}</div>`}</div>`).join('')}</div><div class="row c" style="margin-top:12px"><button class="btn" onclick="closeM();render()">OK</button></div>`)}
+function vSummon(){return `<div class="banner"><h2>🌟 Баннер «Звёздные Герои» 🌟</h2><p class="small" style="margin:8px 0 16px">5★ — 3% · 4★ — 15% · 3★ — 82%<br>Гарант 5★ на 90-й крутке (сейчас ${S.pity}/90). Десятикратный призыв гарантирует 4★+</p>
+<div class="row c"><button class="btn" onclick="summon(1)">Призыв ×1 · 💎300</button><button class="btn gold" onclick="summon(10)">Призыв ×10 · 💎2700</button></div></div>
+<div class="panel small">Повтор героя усиливает его на 5% (до 5 раз) и даёт 🪙. Кристаллы 💎 дают бои, задания и ежедневный вход.</div>`}
+
+// ====== ГЕРОИ ======
+function stats(id){const o=S.owned[id],h=H(id),b=1+(o.lv-1)*0.06+(o.dup||0)*0.05;return{hp:Math.round(h.hp*b),atk:Math.round(h.atk*b)}}
+function vHeroes(){
+ const slots=[0,1,2].map(i=>{const id=S.team[i];if(!id)return `<div class="card" style="opacity:.5"><div class="pt" style="display:flex;align-items:center;justify-content:center;font-size:30px">＋</div><div class="small">пусто</div></div>`;const h=H(id);return `<div class="card r${h.r}" onclick="hero('${id}')">${portrait(h)}<div class="small">ур.${S.owned[id].lv}</div></div>`}).join('');
+ const list=[...HEROES].sort((a,b)=>(!!S.owned[b.id]-!!S.owned[a.id])||b.r-a.r);
+ const own=Object.keys(S.owned).length;
+ return `<div class="panel"><h3>👥 Отряд (${S.team.length}/3)</h3><div class="grid" style="grid-template-columns:repeat(3,1fr)">${slots}</div><div class="small" style="margin-top:6px">Нажмите на героя, чтобы прокачать или изменить состав отряда.</div></div>
+ <div class="panel"><h3>📚 Коллекция ${own}/${HEROES.length}</h3><div class="bar xp"><i style="width:${own/HEROES.length*100}%"></i></div></div>
+ <div class="grid">${list.map(h=>S.owned[h.id]?`<div class="card r${h.r} ${S.team.includes(h.id)?'sel':''}" onclick="hero('${h.id}')">${portrait(h)}<div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ур.${S.owned[h.id].lv}${S.owned[h.id].dup?' +'+S.owned[h.id].dup:''}</div></div>`:`<div class="card lock">${portrait(h)}<div class="stars">${stars(h.r)}</div><div class="small">не получен</div></div>`).join('')}</div>`}
+function hero(id){const h=H(id),o=S.owned[id];if(!o)return;const s=stats(id),c=o.lv*50,inT=S.team.includes(id);
+ modal(`<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div style="width:42%;flex:none" class="card r${h.r}">${portrait(h)}</div><div style="flex:1;min-width:0"><h2 style="font-size:18px">${esc(h.name)}</h2><div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ${h.cls} · ур.${o.lv}/60 · копий +${o.dup||0}</div>
+ <div class="kv"><span>❤ HP</span><b>${s.hp}</b></div><div class="kv"><span>⚔ Атака</span><b>${s.atk}</b></div>
+ <div class="small" style="margin-top:8px"><b>Навык «${h.skill.n}»:</b> ${SKD[h.skill.t]}</div><div class="small" style="margin-top:4px"><b>NP «${h.np.n}»:</b> ${h.np.aoe?'урон по всем врагам':'урон по цели'}, тип ${CARD[h.np.t].n}</div></div></div>
+ <div class="row c" style="margin-top:12px"><button class="btn" ${S.gold<c||o.lv>=60?'disabled':''} onclick="lvUp('${id}')">Уровень ↑ · 🪙${c}</button><button class="btn ${inT?'':'gold'}" onclick="togT('${id}')">${inT?'Убрать из отряда':'В отряд'}</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function lvUp(id){const o=S.owned[id],c=o.lv*50;if(S.gold<c)return;S.gold-=c;o.lv++;prog('lvl');save();hero(id);render()}
+function togT(id){const i=S.team.indexOf(id);if(i>=0){if(S.team.length<=1)return toast('В отряде должен остаться хотя бы один герой');S.team.splice(i,1)}else{if(S.team.length>=3)return toast('Отряд полон (3 героя). Сначала уберите кого-то.');S.team.push(id)}save();closeM();render()}
+
+// ====== ЗАДАНИЯ ======
+function vQuests(){checkQuestDay();const d=S.daily,t=today(),can=d.last!==t,streak=d.last===yesterday()||d.last===t?d.streak:0,next=can?(streak%7):((streak-1)%7);
+ const days=DAILY.map((r,i)=>`<div class="card ${i===next&&can?'r5':''} ${(can?i<next:i<=next)?'lock':''}" style="cursor:default"><div class="small">День ${i+1}</div><div style="font-size:12px;font-weight:700">💎${r[0]}<br>🪙${r[1]}</div></div>`).join('');
+ return `<div class="panel"><h3>📅 Ежедневный вход</h3><div class="grid" style="grid-template-columns:repeat(7,1fr);gap:4px">${days}</div>
+ <div class="row c" style="margin-top:10px"><button class="btn gold" ${can?'':'disabled'} onclick="claimDaily()">${can?'Забрать награду':'Уже получено — приходите завтра'}</button></div></div>
+ <div class="panel"><h3>🎯 Ежедневные задания</h3>${QDEF.map(q=>{const p=Math.min(q.n,S.q.prog[q.id]||0),done=p>=q.n,cl=S.q.claimed[q.id];return `<div class="q"><div style="min-width:0;flex:1"><div>${q.t}</div><div class="small">${p}/${q.n} · награда ${q.g?'💎'+q.g:''} ${q.c?'🪙'+q.c:''}</div><div class="bar xp"><i style="width:${p/q.n*100}%"></i></div></div><button class="btn sm gold" style="width:auto;margin:0;padding:6px 12px" ${!done||cl?'disabled':''} onclick="claimQ('${q.id}')">${cl?'✔':'Забрать'}</button></div>`}).join('')}</div>
+ <div class="panel"><h3>🏅 Достижения</h3>${ACH.map(a=>{const ok=a.f(),cl=(S.ach||{})[a.id];return `<div class="q"><div style="flex:1"><div>${a.t}</div><div class="small">награда 💎${a.g}</div></div><button class="btn sm gold" style="width:auto;margin:0;padding:6px 12px" ${!ok||cl?'disabled':''} onclick="claimA('${a.id}')">${cl?'✔':ok?'Забрать':'…'}</button></div>`}).join('')}</div>`}
+const ACH=[
+ {id:'a1',t:'Получить 5 героев',g:300,f:()=>Object.keys(S.owned).length>=5},
+ {id:'a2',t:'Получить 12 героев',g:800,f:()=>Object.keys(S.owned).length>=12},
+ {id:'a3',t:'Получить 5★ героя',g:500,f:()=>S.st.fives>=1},
+ {id:'a4',t:'Одержать 10 побед',g:500,f:()=>S.st.wins>=10},
+ {id:'a5',t:'Победить Падшего Короля',g:600,f:()=>S.cleared>=5},
+ {id:'a6',t:'Победить Повелителя Тьмы',g:1500,f:()=>S.cleared>=8},
+ {id:'a7',t:'Совершить 50 призывов',g:700,f:()=>S.st.summons>=50},
+];
+function claimDaily(){const t=today(),d=S.daily;if(d.last===t)return;d.streak=d.last===yesterday()?d.streak+1:1;d.last=t;const r=DAILY[(d.streak-1)%7];S.gems+=r[0];S.gold+=r[1];save();toast(`Награда: 💎${r[0]} 🪙${r[1]}`);render()}
+function claimQ(id){const q=QDEF.find(x=>x.id===id);if(S.q.claimed[id]||(S.q.prog[id]||0)<q.n)return;S.q.claimed[id]=1;S.gems+=q.g;S.gold+=q.c;addXp(30);save();toast(`Получено: ${q.g?'💎'+q.g+' ':''}${q.c?'🪙'+q.c:''}`);render()}
+function claimA(id){const a=ACH.find(x=>x.id===id);S.ach=S.ach||{};if(S.ach[id]||!a.f())return;S.ach[id]=1;S.gems+=a.g;addXp(60);save();toast('Достижение! +💎'+a.g);render()}
+
+// ====== МАГАЗИН ======
+const HPRICE={3:1500,4:5000,5:20000};
+function vShop(){return `<div class="panel"><h3>💱 Обмен</h3>
+ <div class="q"><div>💎100 → 🪙600</div><button class="btn sm" style="width:auto;margin:0" onclick="ex(100,0,0,600)">Обменять</button></div>
+ <div class="q"><div>💎500 → 🪙3500</div><button class="btn sm" style="width:auto;margin:0" onclick="ex(500,0,0,3500)">Обменять</button></div>
+ <div class="q"><div>🪙2000 → 💎100</div><button class="btn sm" style="width:auto;margin:0" onclick="ex(0,2000,100,0)">Обменять</button></div></div>
+ <div class="panel"><h3>🧑‍🎤 Магазин героев</h3><div class="small" style="margin-bottom:8px">Купить героя напрямую за золото (повтор = копия для усиления).</div>
+ <div class="grid">${[...HEROES].sort((a,b)=>b.r-a.r).map(h=>`<div class="card r${h.r}">${portrait(h)}<div class="stars">${stars(h.r)}</div><button class="btn sm gold" onclick="buyH('${h.id}')">🪙${HPRICE[h.r]}</button></div>`).join('')}</div></div>`}
+function ex(gc,goc,gg,gog){if(S.gems<gc||S.gold<goc)return toast('Не хватает ресурсов');S.gems+=gg-gc;S.gold+=gog-goc;save();toast('Обмен выполнен');render()}
+function buyH(id){const h=H(id),p=HPRICE[h.r];if(S.gold<p)return toast('Не хватает 🪙');S.gold-=p;const n=giveHero(h);save();toast(n?'Новый герой: '+h.name:'Копия героя: '+h.name);render()}
+
+// ====== ПРОФИЛЬ ======
+function vProfile(){const own=Object.keys(S.owned).length,exp=S.xp%250;
+ return `<div class="panel"><div class="row" style="flex-wrap:nowrap"><img class="av" style="width:70px;height:70px" src="img/${S.av}.jpg"><div style="flex:1;min-width:0"><h2 style="font-size:20px">${esc(S.name)}</h2><div class="small">Уровень аккаунта ${accLv()}</div><div class="bar xp"><i style="width:${exp/250*100}%"></i></div><div class="small">${exp}/250 опыта</div></div></div>
+ <div class="small" style="margin-top:12px">Сменить аватар:</div><div class="avs">${AVS.map(a=>`<img src="img/${a}.jpg" class="${a===S.av?'sel':''}" onclick="S.av='${a}';save();render()">`).join('')}</div></div>
+ <div class="panel"><h3>📊 Статистика</h3>
+ <div class="kv"><span>Героев в коллекции</span><b>${own}/${HEROES.length}</b></div><div class="kv"><span>Призывов</span><b>${S.st.summons}</b></div><div class="kv"><span>5★ получено</span><b>${S.st.fives}</b></div><div class="kv"><span>Боёв / побед</span><b>${S.st.battles} / ${S.st.wins}</b></div><div class="kv"><span>Пройдено этапов</span><b>${S.cleared}/${STAGES.length}</b></div><div class="kv"><span>Гарант 5★ через</span><b>${90-S.pity} круток</b></div><div class="kv"><span>Дата регистрации</span><b>${new Date(S.created).toLocaleDateString('ru-RU')}</b></div></div>
+ <div class="panel"><h3>💾 Сохранение</h3><div class="small" style="margin-bottom:8px">Прогресс хранится в браузере этого устройства. Чтобы перенести на другой телефон — скопируйте код и вставьте на втором.</div>
+ <div class="row"><button class="btn" onclick="expSave()">Экспорт кода</button><button class="btn" onclick="impSave()">Импорт кода</button></div></div>
+ <div class="row c"><button class="btn" onclick="logout()">Выйти</button><button class="btn" style="background:#5b1a2a" onclick="delAcc()">Удалить аккаунт</button></div>`}
+function expSave(){const code=btoa(unescape(encodeURIComponent(JSON.stringify({n:S.name,h:users()[ME].h,d:S}))));modal(`<h3>Код сохранения</h3><p class="small" style="margin:6px 0">Скопируйте и сохраните в надёжном месте:</p><textarea id="ex" readonly style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn gold" onclick="navigator.clipboard&&navigator.clipboard.writeText($('ex').value).then(()=>toast('Скопировано'));$('ex').select()">Копировать</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function impSave(){modal(`<h3>Импорт кода</h3><p class="small" style="margin:6px 0">Вставьте код сохранения. Аккаунт будет создан или заменён на этом устройстве.</p><textarea id="im" style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text"></textarea><div class="err" id="im_e"></div><div class="row c"><button class="btn gold" onclick="doImp()">Загрузить</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+function doImp(){try{const o=JSON.parse(decodeURIComponent(escape(atob($('im').value.trim()))));if(!o.n||!o.d||!o.d.owned)throw 0;const u=users(),k=o.n.toLowerCase();u[k]={name:o.n,h:o.h,data:o.d};putUsers(u);closeM();login(k);toast('Сохранение загружено')}catch(e){$('im_e').textContent='Неверный код'}}
+function delAcc(){if(!confirm('Удалить аккаунт и весь прогресс НАВСЕГДА?'))return;const u=users();delete u[ME];putUsers(u);logout()}
+
+// ====== БОЙ ======
+let B=null;
+function vBattle(){
+ if(!B){const tm=S.team.map(id=>H(id));return `<div class="panel"><h3>👥 Ваш отряд</h3><div class="grid" style="grid-template-columns:repeat(3,1fr)">${tm.map(h=>`<div class="card r${h.r}">${portrait(h)}</div>`).join('')||'<div class="small">Отряд пуст — получите героев в призыве.</div>'}</div><button class="btn sm" onclick="tab='heroes';render()">Изменить отряд</button></div>`+
+  STAGES.map((s,i)=>`<div class="panel row sb" style="opacity:${i>S.cleared?.45:1}"><div style="min-width:0"><b>${s.n}</b><div class="small">${s.en.map(e=>e[1]+' '+e[0]).join(' · ')}<br>Награда: 💎${i>=S.cleared?s.g*10:Math.round(s.g*3)} 🪙${s.g*5}${i>=S.cleared?' (первый раз)':''}</div></div><button class="btn ${s.boss?'gold':''}" ${i>S.cleared||!S.team.length?'disabled':''} onclick="startB(${i})">${i<S.cleared?'Повтор':i>S.cleared?'🔒':'В бой'}</button></div>`).join('')}
+ const f=B.team.map((u,i)=>`<div class="f ${u.hp<=0?'dead':''}">${portrait(u.h)}<div class="bar hp"><i style="width:${Math.max(0,u.hp)/u.max*100}%"></i></div><div class="small">❤ ${Math.max(0,u.hp)}</div><div class="bar np"><i style="width:${u.np}%"></i></div><div class="small">NP ${u.np}%${u.buff?' ⚔':''}</div>
+ <button class="btn sm" ${u.cd||u.hp<=0?'disabled':''} onclick="useSkill(${i})">${u.h.skill.n}${u.cd?' ('+u.cd+')':''}</button>
+ <button class="btn sm gold" ${u.np<100||u.hp<=0||B.pick.length>=3||B.pick.some(p=>p.np&&p.u===i)?'disabled':''} onclick="pickNP(${i})">NP</button></div>`).join('');
+ const e=B.en.map((x,i)=>`<div class="f ${x.hp<=0?'dead':''}" style="cursor:pointer;${B.tgt===i&&x.hp>0?'border-color:#f43f5e;box-shadow:0 0 10px #f43f5e':''}" onclick="B.tgt=${i};render()"><div class="pt" style="display:flex;align-items:center;justify-content:center;font-size:38px;background:#2a0f1f">${x.e}</div><b>${x.n}</b> <span class="small">${CLS_IC[x.cls]}</span><div class="bar ehp"><i style="width:${Math.max(0,x.hp)/x.max*100}%"></i></div><div class="small">❤ ${Math.max(0,x.hp)}</div></div>`).join('');
+ const cards=B.hand.map((c,i)=>{const u=B.team[c.u],pk=B.pick.findIndex(p=>p.i===i);return `<div class="cc ${c.t} ${pk>=0?'picked':''}" onclick="pickC(${i})">${imgTag(u.h)}${CARD[c.t].n}${pk>=0?'<span>#'+(pk+1)+'</span>':''}</div>`}).join('');
+ return `<div class="panel small"><b>${B.st.n}</b> · ход ${B.turn}. Тап по врагу — цель. Выберите 3 карты или NP, затем «Атака». 3 карты одного героя — доп. удар.</div>
+ <div class="fighters">${e}</div><div class="cmd">${cards}</div>
+ <div class="row c" style="margin-bottom:10px"><button class="btn gold" ${B.pick.length<3?'disabled':''} onclick="attack()">Атака ▶ ${B.pick.length}/3</button><button class="btn" onclick="B.pick=[];render()">Сброс</button><button class="btn" onclick="if(confirm('Отступить?')){B=null;render()}">Выход</button></div>
+ <div class="fighters">${f}</div><div class="log">${B.log.slice(0,30).join('<br>')}</div>`}
+function startB(i){const st=STAGES[i];
+ B={si:i,st,turn:1,tgt:0,pick:[],log:['Бой начался!'],
+ team:S.team.map(id=>{const s=stats(id);return{h:H(id),hp:s.hp,max:s.hp,atk:s.atk,np:0,cd:0,buff:0}}),
+ en:st.en.map(e=>({n:e[0],e:e[1],cls:e[2],hp:e[3],max:e[3],atk:e[4]}))};deal();render();window.scrollTo(0,0)}
+function deal(){const deck=[];B.team.forEach((u,i)=>{if(u.hp>0)[...u.h.deck].forEach(t=>deck.push({t,u:i}))});deck.sort(()=>Math.random()-.5);B.hand=deck.slice(0,5);B.pick=[]}
+function pickC(i){const k=B.pick.findIndex(p=>p.i===i);if(k>=0)B.pick.splice(k,1);else if(B.pick.length<3)B.pick.push({i,u:B.hand[i].u,t:B.hand[i].t});render()}
+function pickNP(u){if(B.pick.length<3)B.pick.push({np:1,u,t:B.team[u].h.np.t});render()}
+function useSkill(i){const u=B.team[i],t=u.h.skill.t;
+ if(t==='atkUp'){u.buff=3;L(`${u.h.name}: атака +50% (3 хода)`)}
+ if(t==='heal'){B.team.forEach(x=>{if(x.hp>0)x.hp=Math.min(x.max,x.hp+Math.round(x.max*.3))});L(`${u.h.name}: отряд вылечен на 30%`)}
+ if(t==='npUp'){u.np=Math.min(100,u.np+50);L(`${u.h.name}: NP +50%`)}
+ u.cd=4;render()}
+function mult(a,d){if(a==='Berserker'||d==='Berserker')return 2;if(ADV[a]===d)return 2;if(ADV[d]===a)return .5;return 1}
+function L(t){B.log.unshift(t)}
+function alive(a){return a.filter(x=>x.hp>0)}
+function hit(u,m,label){if(!alive(B.en).length)return;let tg=B.en[B.tgt];if(!tg||tg.hp<=0){tg=alive(B.en)[0];B.tgt=B.en.indexOf(tg)}
+ const cm=mult(u.h.cls,tg.cls),d=Math.round(u.atk*m*cm*(u.buff?1.5:1)*(.9+Math.random()*.2)*2);tg.hp-=d;
+ L(`${u.h.name} · ${label} → ${tg.e}: <b>${d}</b>${cm>1?' 🔺':cm<1?' 🔻':''}${tg.hp<=0?' 💥':''}`)}
+function attack(){
+ const same=B.pick.every(p=>p.u===B.pick[0].u)&&B.pick.length===3;
+ B.pick.forEach((p,k)=>{const u=B.team[p.u];if(u.hp<=0)return;
+  if(p.np){const np=u.h.np,m=np.m*(np.t==='B'?1.2:1);u.np=0;L(`🌟 ${u.h.name} — «${np.n}»!`);
+   if(np.aoe){B.en.forEach((e,j)=>{if(e.hp>0){B.tgt=j;hit(u,m*0.7,'NP')}})}else hit(u,m,'NP')}
+  else{const c=CARD[p.t];hit(u,c.m*(1+k*.2),c.n);u.np=Math.min(100,u.np+c.np+(p.t==='A'&&B.pick[0].t==='A'?5:0))}});
+ if(same){const u=B.team[B.pick[0].u];if(u.hp>0)hit(u,1.5,'Extra')}
+ if(!alive(B.en).length)return win();
+ alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);const d=Math.round(e.atk*cm*(.85+Math.random()*.3));v.hp-=d;v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
+ B.team.forEach(u=>{if(u.cd)u.cd--;if(u.buff)u.buff--});
+ if(!alive(B.team).length){S.st.battles++;prog('battle');save();B=null;modal(`<h2>💀 Поражение</h2><p style="margin:10px 0">Прокачайте героев или соберите отряд с преимуществом по классу (Saber → Lancer → Archer → Saber, Caster ↔ Rider).</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);return}
+ B.turn++;deal();render()}
+function win(){const st=B.st,first=B.si>=S.cleared,gm=first?st.g*10:Math.round(st.g*3),gd=st.g*5;
+ S.gems+=gm;S.gold+=gd;S.st.battles++;S.st.wins++;prog('battle');prog('win');addXp(20+B.si*10);if(first)S.cleared=B.si+1;
+ const last=B.si===STAGES.length-1&&first;B=null;save();
+ modal(`<h2>🏆 Победа!</h2><p style="margin:10px 0">Награда: 💎${gm} 🪙${gd}${first?' (первое прохождение)':''}</p>${last?'<p>Вы победили Повелителя Тьмы и прошли игру! Теперь собирайте всех героев и ищите 5★.</p>':''}<div class="row c"><button class="btn gold" onclick="closeM();render()">Дальше</button></div>`)}
+
+// ====== СТАРТ ======
+(function(){const cur=localStorage.getItem(K_CUR),u=users();if(cur&&u[cur])login(cur);else{authMode=Object.keys(u).length?'in':'reg';vAuth()}})();
+</script>
+</body>
+</html>
