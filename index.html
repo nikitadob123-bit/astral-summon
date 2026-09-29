@@ -151,7 +151,7 @@ const QDEF=[
  {id:'lvl',t:'Прокачать героя 2 раза',n:2,g:50,c:0},
  {id:'battle',t:'Провести 4 боя',n:4,g:100,c:300},
 ];
-const AVS=['Saber','Archer','Lancer','Caster','Rider','Berserker'];
+const AVS=['av_m1','av_m2','av_m3','av_m4','av_m5','av_m6','av_f1','av_f2','av_f3','av_f4','av_f5','av_f6'];
 
 // ====== УТИЛИТЫ ======
 const $=id=>document.getElementById(id);
@@ -176,7 +176,7 @@ function newData(name,av){return{name,av,gems:3000,gold:1000,owned:{},team:[],cl
  daily:{last:'',streak:0},q:{date:'',prog:{},claimed:{}},st:{summons:0,fives:0,wins:0,battles:0}}}
 function save(){if(!ME)return;const u=users();if(u[ME]){u[ME].data=S;putUsers(u)}hud()}
 function login(key){ME=key;S=users()[key].data;localStorage.setItem(K_CUR,key);checkQuestDay();start()}
-let authMode='reg',authAv='Saber';
+let authMode='reg',authAv='av_m1';
 function vAuth(){
  $('game').style.display='none';$('auth').style.display='flex';
  $('auth').innerHTML=`<div class="box"><h1>✦ Astral Summon</h1><p class="small" style="text-align:center;margin-bottom:6px">Аниме гача-RPG для своих</p>
