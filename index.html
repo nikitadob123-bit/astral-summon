@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="theme-color" content="#0b0a2b">
@@ -2650,7 +2651,7 @@ function admHtml(){
 // ====== ЗВУК И МУЗЫКА (WebAudio, всё синтезируется в игре) ======
 const AUD=(()=>{
  let ctx=null,master,comp,mus,sfx,noiseBuf,timer=null,mode=null,step=0,nextT=0,mg={},shaper;
- const on={m:localStorage.getItem('as_mus')!=='0',s:localStorage.getItem('as_sfx')!=='0'};
+ let ls=(k)=>{try{return localStorage.getItem(k)}catch(e){return null}};const on={m:ls('as_mus')!=='0',s:ls('as_sfx')!=='0'};
  const mf=n=>440*Math.pow(2,(n-69)/12);
  function setup(c,dest){ // строит граф; вынесено для оффлайн-проверки
   ctx=c;comp=c.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=6;master=c.createGain();master.gain.value=.85;master.connect(comp);comp.connect(dest||c.destination);
@@ -2659,7 +2660,7 @@ const AUD=(()=>{
   const len=c.sampleRate;noiseBuf=c.createBuffer(1,len,c.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
   const cv=new Float32Array(256);for(let i=0;i<256;i++){const x=i/128-1;cv[i]=Math.tanh(x*3)}shaper=c.createWaveShaper();shaper.curve=cv;shaper.connect(mg.boss);
  }
- function init(){if(ctx){if(ctx.state==='suspended')ctx.resume();return true}const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;try{setup(new C())}catch(e){ctx=null;return false}if(ctx.state==='suspended')ctx.resume();return true}
+ let dead=false;function init(){if(dead)return false;try{if(ctx){if(ctx.state!=='running'){const p=ctx.resume();if(p&&p.catch)p.catch(()=>{})}return true}const C=window.AudioContext||window.webkitAudioContext;if(!C){dead=true;return false}setup(new C());const p=ctx.resume();if(p&&p.catch)p.catch(()=>{});return true}catch(e){ctx=null;dead=true;return false}}
  function tone(f,t,dur,type,vol,dest,o){o=o||{};const os=ctx.createOscillator(),g=ctx.createGain();os.type=type||'sine';os.frequency.setValueAtTime(f,t);if(o.to)os.frequency.exponentialRampToValueAtTime(Math.max(20,o.to),t+dur);
   const a=o.a||.005;g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
   let n=os;if(o.lp){const fl=ctx.createBiquadFilter();fl.type='lowpass';fl.frequency.setValueAtTime(o.lp,t);if(o.lpTo)fl.frequency.exponentialRampToValueAtTime(o.lpTo,t+dur);fl.Q.value=o.q||1;os.connect(fl);n=fl}
@@ -2697,7 +2698,7 @@ const AUD=(()=>{
   s6(t){noise(t,.6,.35,null,{f:100,type:'lowpass'});kick(t,sfx,1);[48,55,60,64,67,72].forEach(n=>tone(mf(n),t+.15,2,'sawtooth',.11,null,{lp:2500,a:.1}));[84,88,91,96,100,103].forEach((n,i)=>{tone(mf(n),t+.5+i*.11,1.2,'sine',.13);tone(mf(n+12),t+.55+i*.11,.8,'sine',.06)});noise(t+.5,1.6,.12,null,{f:7000})},
   level(t){[67,72,76,79,84].forEach((n,i)=>tone(mf(n),t+i*.08,.35,'square',.09))}
  };
- function play(n,delay){if(!on.s||!init()||!S_[n])return;try{S_[n](ctx.currentTime+.005+(delay||0)/1000)}catch(e){}}
+ function play(n,delay){try{if(!on.s||!init()||!S_[n])return;S_[n](ctx.currentTime+.005+(delay||0)/1000)}catch(e){}}
  function seq(list){list.forEach(([n,d])=>setTimeout(()=>play(n),d))}
  // ---------- МУЗЫКА ----------
  const P={
@@ -2730,42 +2731,44 @@ const AUD=(()=>{
   const r=RIFF[m][s];if(r>=0){const sc=boss?[0,2,3,5,7,8,11,12]:[0,3,5,7,10,12,15,17];tone(mf(root+24+sc[r%sc.length]),t,spb*(boss?1.5:1.7),boss?'sawtooth':'square',boss?.075:.06,d,{lp:3200,lpTo:900})}
   if(boss&&s===0&&bar%2===0)tone(mf(root+12),t,spb*16,'sawtooth',.05,d,{lp:500,a:.5});
  }
- function tick(){if(!ctx||!mode)return;const p=P[mode],spb=60/p.bpm/4;while(nextT<ctx.currentTime+.35){sched(mode,step,Math.max(nextT,ctx.currentTime),spb);nextT+=spb;step++}}
- function setMode(m){if(!init())return;if(m===mode)return;mode=m;step=0;nextT=ctx.currentTime+.08;['menu','battle','boss'].forEach(k=>{mg[k].gain.cancelScheduledValues(ctx.currentTime);mg[k].gain.setTargetAtTime(k===m?(k==='menu'?.9:.85):0,ctx.currentTime,k===m?.25:.15)});if(!timer)timer=setInterval(tick,90);tick()}
- function setOn(k,v){on[k]=v;localStorage.setItem(k==='m'?'as_mus':'as_sfx',v?'1':'0');if(ctx){const g=k==='m'?mus:sfx;g.gain.setTargetAtTime(v?(k==='m'?1:2.2):0,ctx.currentTime,.05)}bar();if(v)init()}
- function bar(){let b=document.getElementById('audbar');if(!b){b=document.createElement('div');b.id='audbar';b.style.cssText='position:fixed;right:8px;bottom:78px;z-index:60;display:flex;gap:6px';document.body.appendChild(b)}
+ function tick(){try{tick0()}catch(e){}}
+ function tick0(){if(!ctx||!mode)return;const p=P[mode],spb=60/p.bpm/4;while(nextT<ctx.currentTime+.35){sched(mode,step,Math.max(nextT,ctx.currentTime),spb);nextT+=spb;step++}}
+ function setMode(m){try{setMode0(m)}catch(e){}}
+ function setMode0(m){if(!init())return;if(m===mode)return;mode=m;step=0;nextT=ctx.currentTime+.08;['menu','battle','boss'].forEach(k=>{mg[k].gain.cancelScheduledValues(ctx.currentTime);mg[k].gain.setTargetAtTime(k===m?(k==='menu'?.9:.85):0,ctx.currentTime,k===m?.25:.15)});if(!timer)timer=setInterval(tick,90);tick()}
+ function setOn(k,v){on[k]=v;try{localStorage.setItem(k==='m'?'as_mus':'as_sfx',v?'1':'0')}catch(e){}try{if(ctx){const g=k==='m'?mus:sfx;g.gain.setTargetAtTime(v?(k==='m'?1:2.2):0,ctx.currentTime,.05)}}catch(e){}bar(true);if(v)init()}
+ function bar(force){let b=document.getElementById('audbar');if(b&&!force)return;if(!b){b=document.createElement('div');b.id='audbar';b.style.cssText='position:fixed;right:8px;bottom:78px;z-index:60;display:flex;gap:6px';document.body.appendChild(b)}
   const st='width:38px;height:38px;border-radius:50%;border:1px solid #4b52b0;background:#141a4acc;color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(4px)';
   b.innerHTML=`<button style="${st};opacity:${on.m?1:.45}" onclick="AUD.toggle('m')" title="Музыка">🎵</button><button style="${st};opacity:${on.s?1:.45}" onclick="AUD.toggle('s')" title="Звуки">🔊</button>`}
  return{on,play,seq,setMode,init,bar,toggle:k=>setOn(k,!on[k]),_test:{setup,S_,sched,P,get mg(){return mg},get ctx(){return ctx},tone}};
 })();
-// --- подключение к игре ---
+// --- подключение к игре (любой сбой звука не должен ломать игру) ---
 function audMode(){return (typeof B!=='undefined'&&B&&tab==='battle')?((B.st&&B.st.boss)?'boss':'battle'):'menu'}
-function audWrap(n,f){const o=globalThis[n];if(typeof o!=='function')return;globalThis[n]=function(...a){return f(o,a,this)}}
-audWrap('render',(o,a)=>{const r=o(...a);try{if(AUD.on.m&&AUD.init())AUD.setMode(audMode())}catch(e){}return r});
-audWrap('go',(o,a)=>{AUD.play('tab');return o(...a)});
-audWrap('pickC',(o,a)=>{AUD.play('card');return o(...a)});
-audWrap('pickNP',(o,a)=>{AUD.play('np');return o(...a)});
-audWrap('useSkill',(o,a)=>{AUD.play('skill');return o(...a)});
-audWrap('startB',(o,a)=>{const r=o(...a);AUD.play(B&&B.st&&B.st.boss?'boss':'start');return r});
-audWrap('startS',(o,a)=>{const r=o(...a);AUD.play(B&&B.st&&B.st.boss?'boss':'start');return r});
-audWrap('readCh',(o,a)=>{AUD.play('page');return o(...a)});
-audWrap('modal',(o,a)=>{AUD.play('pop');return o(...a)});
-audWrap('toast',(o,a)=>{AUD.play(/Не хватает|Неверн|нельзя/i.test(String(a[0]))?'deny':'ping');return o(...a)});
-audWrap('attack',(o,a)=>{if(!B)return o(...a);const w0=S.st.wins,n=B.pick.length,hp0=B.team.reduce((s,u)=>s+Math.max(0,u.hp),0),en0=B.en.filter(e=>e.hp>0).length;
- B.pick.forEach((p,k)=>AUD.play(p.np?'np':'slash',k*230));B.pick.forEach((p,k)=>AUD.play('hit',k*230+110));
- const r=o(...a);const dead=(typeof B!=='undefined'&&B)?B.en.filter(e=>e.hp>0).length<en0:true;
- if(dead)AUD.play('kill',n*230+60);
- if(!B||S.st.wins>w0){if(S.st.wins>w0)setTimeout(()=>AUD.play('win'),n*230+500);else setTimeout(()=>AUD.play('lose'),n*230+900);if(S.st.wins>w0)AUD.setMode('menu')}
- else{const hp1=B.team.reduce((s,u)=>s+Math.max(0,u.hp),0);if(hp1<hp0)AUD.play('foe',n*230+420)}
- return r});
-audWrap('summon',(o,a)=>{const g0=S.gems,s6=S.st.sixes||0,f0=S.st.fives;const r=o(...a);
- if(S.gems>=g0)return r;const six=(S.st.sixes||0)>s6,five=S.st.fives>f0;AUD.play('summon');
- setTimeout(()=>AUD.play(six?'s6':five?'s5':a[0]===10?'s4':'s3'),1100);return r});
-document.addEventListener('pointerdown',e=>{const t=e.target.closest&&e.target.closest('button,.cc,.f,.card,.me,.avs img,a');AUD.init();AUD.bar();
- if(AUD.on.m&&AUD.init())AUD.setMode(audMode());
- if(!t||t.closest('#audbar'))return;if(t.matches('.cc'))return;if(t.disabled)AUD.play('deny');else if(t.closest('.f'))AUD.play('target');else AUD.play('click')},true);
+function audWrap(n,pre,post){try{const o=globalThis[n];if(typeof o!=='function')return;globalThis[n]=function(){const a=arguments;let c;try{c=pre&&pre(a)}catch(e){}const r=o.apply(this,a);try{post&&post(a,c,r)}catch(e){}return r}}catch(e){}}
+audWrap('render',null,()=>{if(AUD.on.m)AUD.setMode(audMode())});
+audWrap('go',()=>AUD.play('tab'));
+audWrap('pickC',()=>AUD.play('card'));
+audWrap('pickNP',()=>AUD.play('np'));
+audWrap('useSkill',()=>AUD.play('skill'));
+const audStart=()=>AUD.play(B&&B.st&&B.st.boss?'boss':'start');
+audWrap('startB',null,audStart);
+audWrap('startS',null,audStart);
+audWrap('readCh',()=>AUD.play('page'));
+audWrap('modal',()=>AUD.play('pop'));
+audWrap('toast',a=>AUD.play(/Не хватает|Неверн|нельзя/i.test(String(a[0]))?'deny':'ping'));
+audWrap('attack',()=>{if(!B)return null;const n=B.pick.length;B.pick.forEach((p,k)=>{AUD.play(p.np?'np':'slash',k*230);AUD.play('hit',k*230+110)});
+ return{n,w0:S.st.wins,hp0:B.team.reduce((s,u)=>s+Math.max(0,u.hp),0),en0:B.en.filter(e=>e.hp>0).length}},
+ (a,c)=>{if(!c)return;const n=c.n,alive=(typeof B!=='undefined'&&B)?B.en.filter(e=>e.hp>0).length:0;
+  if(alive<c.en0)AUD.play('kill',n*230+60);
+  if(!B||S.st.wins>c.w0){if(S.st.wins>c.w0){setTimeout(()=>AUD.play('win'),n*230+500)}else setTimeout(()=>AUD.play('lose'),n*230+900);if(!B)AUD.setMode('menu')}
+  else{const hp1=B.team.reduce((s,u)=>s+Math.max(0,u.hp),0);if(hp1<c.hp0)AUD.play('foe',n*230+420)}});
+audWrap('summon',a=>({g0:S.gems,s6:S.st.sixes||0,f0:S.st.fives}),(a,c)=>{if(!c||S.gems>=c.g0)return;const six=(S.st.sixes||0)>c.s6,five=S.st.fives>c.f0;AUD.play('summon');setTimeout(()=>AUD.play(six?'s6':five?'s5':a[0]===10?'s4':'s3'),1100)});
+// звук разблокируем на первом настоящем касании (iOS/Telegram требуют click/touchend)
+const audUnlock=()=>{try{AUD.init();if(AUD.on.m)AUD.setMode(audMode())}catch(e){}};
+['touchend','click'].forEach(ev=>document.addEventListener(ev,audUnlock,{capture:true,passive:true}));
+document.addEventListener('pointerdown',e=>{try{const t=e.target&&e.target.closest&&e.target.closest('button,.cc,.f,.card,.me,.avs img');
+ if(!t||t.closest('#audbar')||t.matches('.cc'))return;if(t.disabled)AUD.play('deny');else if(t.closest('.f'))AUD.play('target');else AUD.play('click')}catch(x){}},true);
 document.addEventListener('visibilitychange',()=>{try{const c=AUD._test.ctx;if(!c)return;document.hidden?c.suspend():c.resume()}catch(e){}});
-AUD.bar();
+try{AUD.bar(true)}catch(e){}
 
 // ====== СТАРТ ======
 (function(){const cur=localStorage.getItem(K_CUR),u=users();if(cur&&u[cur])login(cur);else{authMode=Object.keys(u).length?'in':'reg';vAuth()}})();
