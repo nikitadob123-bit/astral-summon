@@ -108,7 +108,7 @@ input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;bac
 @keyframes g7t{0%{text-shadow:2px 0 #f0f,-2px 0 #0ff}20%{text-shadow:-2px 1px #f0f,2px -1px #0ff}40%{text-shadow:1px 0 #0ff,-1px 0 #f0f;transform:translateX(1px)}60%{text-shadow:3px 0 #f0f,-3px 0 #0ff;transform:none}80%{text-shadow:-1px -1px #f0f,1px 1px #0ff}}
 .nm.gl{font-weight:700}
 .r7 .stars{color:#0ff;text-shadow:1px 0 #f0f;animation:g7t 1.3s steps(1) infinite;letter-spacing:-1px}
-.r7.lock{animation:none}.r7.lock .pt.g7 img,.r7.lock .pt.g7::after{animation:none}
+.r7.lock{animation:none;filter:grayscale(.7) brightness(.75)}.r7.lock .pt.g7 img,.r7.lock .pt.g7::after{animation:none}
 .av.f7{border-color:#0ff;animation:g7b .9s steps(1) infinite}
 @media(prefers-reduced-motion:reduce){.r7,.pt.g7 img,.pt.g7::after,.g7t,.nm.gl,.r7 .stars{animation:none}}
 /* guild */
@@ -447,6 +447,7 @@ const NPM={3:3.5,4:4,5:4.5,6:10};
 const SKN={atkUp:'Боевой дух',heal:'Поддержка',npUp:'Концентрация',godUp:'Мифическая мощь'};
 const RMAP={"madara": 5, "jiren": 5, "beerus": 5, "whis": 5, "obito": 5, "pain": 5, "nagato": 5, "muzan": 5, "kokushibo": 5, "meruem": 5, "cell": 5, "frieza": 5, "gohan": 5, "whitebeard": 5, "mihawk": 5, "shanks": 5, "yamamoto": 5, "kenpachi": 5, "byakuya": 5, "jiraiya": 5, "tsunade": 5, "yuta": 5, "saber_alt": 5, "merlin": 5, "scathach": 5, "netero": 5, "guts": 5, "ainz": 5, "alucard": 5, "orochimaru": 4, "sasori": 4, "deidara": 4, "kisame": 4, "konan": 4, "ulquiorra": 4, "grimmjow": 4, "urahara": 4, "yoruichi": 4, "renji": 4, "hit": 4, "android18": 4, "krillin": 4, "geto": 4, "mahito": 4, "kenjaku": 4, "shigaraki": 4, "dabi": 4, "hange": 4, "zeke": 4, "sanemi": 4, "gyomei": 4, "crocodile": 4, "kid": 4, "sabo": 4, "jinbe": 4, "cu": 4, "emiya": 4, "kiritsugu": 4, "medusa": 4, "ling": 4, "greed": 4, "hohenheim": 4, "roswaal": 4, "echidna": 4, "beatrice": 4, "schneizel": 4, "roshi": 4, "guy": 4, "light": 4, "edward": 4, "bakugo": 4, "yor": 4, "ace": 4, "mikasa": 4, "annie": 3, "ram": 3, "aqua": 3, "darkness": 3, "hinata": 3, "misato": 3, "power": 3, "aki": 3, "nobara": 3, "shinji": 3};
 RAW.forEach(x=>{if(RMAP[x[0]])x[2]=RMAP[x[0]]});
+const DV_REN={ainz_wc:'featherine'};
 const HEROES=[...RAW,...MYTH_RAW].map((x,i)=>{const b=CLS_BASE[x[3]],m=RMUL[x[2]];
  return{id:x[0],name:x[1],r:x[2],cls:x[3],hue:(i*47)%360,hp:Math.round(b[0]*m),atk:Math.round(b[1]*m),deck:b[2],myth:MYTH[x[0]]||null,
   skill:{n:SKN[x[4]],t:x[4]},
@@ -499,7 +500,7 @@ const AVS=['av_m1','av_m2','av_m3','av_m4','av_m5','av_m6','av_f1','av_f2','av_f
 
 // ====== УТИЛИТЫ ======
 const $=id=>document.getElementById(id);
-const H=id=>HEROES.find(h=>h.id===id);
+const H=id=>{id=DV_REN[id]||id;return HEROES.find(h=>h.id===id)};
 function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function yesterday(){const d=new Date(Date.now()-864e5);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function hash(s){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^h1>>>16,2246822507)^Math.imul(h2^h2>>>13,3266489909);h2=Math.imul(h2^h2>>>16,2246822507)^Math.imul(h1^h1>>>13,3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36)}
@@ -520,7 +521,7 @@ let ME=null,S=null; // ME = ключ пользователя
 function newData(name,av){return{name,av,gems:3000,gold:1000,owned:{},team:[],cleared:0,pity:0,xp:0,created:Date.now(),
  daily:{last:'',streak:0},q:{date:'',prog:{},claimed:{}},st:{summons:0,fives:0,wins:0,battles:0}}}
 function save(){if(!ME)return;const u=users();if(u[ME]){u[ME].data=S;putUsers(u)}hud()}
-function login(key){ME=key;S=users()[key].data;localStorage.setItem(K_CUR,key);checkQuestDay();start()}
+function login(key){ME=key;S=users()[key].data;try{dvMig(S)}catch(e){console.error(e)}localStorage.setItem(K_CUR,key);checkQuestDay();start()}
 let authMode='reg',authAv='av_m1';
 function vAuth(){
  $('game').style.display='none';$('auth').style.display='flex';
@@ -569,8 +570,8 @@ function render(){
 function go(k){if(B&&k!=='battle'&&!confirm('Выйти из боя? Прогресс боя будет потерян.'))return;if(k!=='battle'){if(B&&B.guild)gBossEnd(B,1);B=null}tab=k;render();window.scrollTo(0,0)}
 
 // ====== ПРИЗЫВ ======
-function roll(){S.pity++;S.pity6=(S.pity6||0)+1;let r;const x=Math.random()*100;S.pity7=(S.pity7||0)+1;
- if(S.pity7>=600||Math.random()*100<.05){r=7;S.pity7=0}else if(S.pity6>=300||x<.6){r=6;S.pity6=0;S.pity=0}else if(S.pity>=90||x<3.6){r=5;S.pity=0}else if(x<18.6)r=4;else r=3;
+function roll(){S.pity++;S.pity6=(S.pity6||0)+1;let r;const x=Math.random()*100;const o7=dvOpen();if(o7)S.pity7=(S.pity7||0)+1;
+ if(o7&&(S.pity7>=600||Math.random()*100<.05)){r=7;S.pity7=0}else if(S.pity6>=300||x<.6){r=6;S.pity6=0;S.pity=0}else if(S.pity>=90||x<3.6){r=5;S.pity=0}else if(x<18.6)r=4;else r=3;
  const pool=HEROES.filter(h=>h.r===r);return pool[Math.floor(Math.random()*pool.length)]}
 function giveHero(h){if(S.owned[h.id]){S.owned[h.id].dup=Math.min(5,(S.owned[h.id].dup||0)+1);S.gold+=h.r*20*(h.r===7?50:h.r===6?5:1);return false}S.owned[h.id]={lv:1,dup:0,asc:0,sk:1,npl:1};if(S.team.length<3)S.team.push(h.id);return true}
 function summon(n){const cost=n===1?300:2700;if(S.gems<cost)return toast('Не хватает 💎 — проходите бои и задания');
@@ -579,7 +580,7 @@ function summon(n){const cost=n===1?300:2700;if(S.gems<cost)return toast('Не �
   got.push({h,isNew:giveHero(h)});S.st.summons++;tallyH(h)}
  prog('summon',n);prog('summon10',n);save();
  modal(`<h2 style="text-align:center;margin-bottom:10px">Результат призыва</h2><div class="grid">${got.map((g,i)=>`<div class="card r${g.h.r} pop" style="animation-delay:${i*.1}s">${portrait(g.h)}<div class="stars">${stars(g.h.r)}</div>${g.isNew?'<div class="small" style="color:#7cf">NEW!</div>':`<div class="small">повтор +🪙${g.h.r*20*(g.h.r===7?50:g.h.r===6?5:1)}</div>`}</div>`).join('')}</div><div class="row c" style="margin-top:12px"><button class="btn" onclick="closeM();render()">OK</button></div>`)}
-function vSummon(){return `<div class="banner"><h2>🌟 Баннер «Звёздные Герои» 🌟</h2><p class="small" style="margin:8px 0 6px"><span class="g7t">7★ БОЖЕСТВЕННЫЙ — 0.05%</span> · <span class="rbt">6★ МИФИК — 0.6%</span> · 5★ — 3% · 4★ — 15% · 3★ — 81.4%<br>Гарант 5★+ на 90-й крутке (сейчас ${S.pity}/90). Гарант 6★ на 300-й (сейчас ${S.pity6||0}/300). Гарант 7★ на 600-й (сейчас ${S.pity7||0}/600). Десятикратный призыв гарантирует 4★+</p>
+function vSummon(){return `<div class="banner"><h2>🌟 Баннер «Звёздные Герои» 🌟</h2><p class="small" style="margin:8px 0 6px">${dvOpen()?'<span class="g7t">7★ БОЖЕСТВЕННЫЙ — 0.05%</span>':'<span class="g7t">7★ БОЖЕСТВЕННЫЙ — 🔒 после сюжета</span>'} · <span class="rbt">6★ МИФИК — 0.6%</span> · 5★ — 3% · 4★ — 15% · 3★ — 81.4%<br>Гарант 5★+ на 90-й крутке (сейчас ${S.pity}/90). Гарант 6★ на 300-й (сейчас ${S.pity6||0}/300). ${dvOpen()?'Гарант 7★ на 600-й (сейчас '+(S.pity7||0)+'/600).':'7★ откроются после прохождения всего сюжета ('+dvStory().n+'/'+dvStory().t+' глав).'} Десятикратный призыв гарантирует 4★+</p>
 <div class="small" style="margin-bottom:12px">Мифики: ${HEROES.filter(h=>h.r===6).map(h=>esc(h.name.split(':')[0])).join(', ')}</div>
 <div class="row c"><button class="btn" onclick="summon(1)">Призыв ×1 · 💎300</button><button class="btn gold" onclick="summon(10)">Призыв ×10 · 💎2700</button></div></div>
 ${typeof dvSummonPanel==='function'?dvSummonPanel():''}<div class="panel small">Повтор героя усиливает его на 5% (до 5 раз) и даёт 🪙. Кристаллы 💎 дают бои, задания и ежедневный вход.</div>`}
@@ -718,6 +719,7 @@ function attack(){
  try{dvExtra()}catch(e){}
  if(!alive(B.en).length)return win();
  alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);const d=Math.round(e.atk*cm*(.85+Math.random()*.3)*((v.m&&v.m.dmgTaken)||1)*(B.inv>0?0:1)*(B.shield||1));v.hp-=d;v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
+ try{dvRevive()}catch(e){}
  B.team.forEach(u=>{if(u.cd)u.cd--;if(u.buff)u.buff--;if(u.hp>0&&u.m){if(u.m.regen)u.hp=Math.min(u.max,u.hp+Math.round(u.max*u.m.regen));if(u.m.teamNp)B.team.forEach(x=>{if(x.hp>0)x.np=Math.min(100,x.np+u.m.teamNp)})}});
  if(!alive(B.team).length){if(B.guild)return gBossEnd(B);S.st.battles++;prog('battle');save();B=null;modal(`<h2>💀 Поражение</h2><p style="margin:10px 0">Прокачайте героев или соберите отряд с преимуществом по классу (Saber → Lancer → Archer → Saber, Caster ↔ Rider).</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);return}
  if(B.guild&&B.turn>=B.guild.maxT)return gBossEnd(B);B.turn++;deal();render()}
@@ -2641,6 +2643,7 @@ function admCur(k,sgn){const n=admNum();if(!n)return toast('Введите чи�
 function admSetCur(k){const n=admNum();admMut(d=>{d[k]=n});toast('Установлено: '+n)}
 function admGiveHero(){const id=document.getElementById('ad_h').value;admMut(d=>{if(!d.owned[id]){d.owned[id]={lv:1,dup:0,asc:0,sk:1,npl:1};if(d.team.length<3)d.team.push(id)}});toast('Герой выдан')}
 function admTakeHero(){const id=document.getElementById('ad_h').value;admMut(d=>{delete d.owned[id];d.team=d.team.filter(x=>x!==id)});toast('Герой забран')}
+function admStoryAll(){admMut(d=>{d.sp=d.sp||{};d.seen=d.seen||{};WORLDS.forEach(w=>{d.sp[w.id]=w.ch.length;d.seen[w.id]=1})});toast('Весь сюжет пройден')}
 function admAllHeroes(r){admMut(d=>{HEROES.forEach(h=>{if((r===0||h.r===r)&&!d.owned[h.id])d.owned[h.id]={lv:1,dup:0,asc:0,sk:1,npl:1}});if(!d.team.length)d.team=Object.keys(d.owned).slice(0,3)});toast('Готово')}
 function admClearHeroes(){if(!confirm('Забрать всех героев у этого аккаунта?'))return;admMut(d=>{d.owned={};d.team=[]})}
 function admMaxHeroes(){admMut(d=>{Object.values(d.owned).forEach(o=>{o.asc=ASC_MAX;o.lv=lvCap(o);o.dup=5;o.sk=Math.max(o.sk||1,10);o.npl=Math.max(o.npl||1,10)})});toast('Все герои прокачаны')}
@@ -2902,7 +2905,7 @@ function gGold(x){const b=gBonMine();return Math.round(x*(1+b.gold/100))}
 function gXp(x){const b=gBonMine();return Math.round(x*(1+b.xp/100))}
 function gTriesLeft(){const d=gdS();return Math.max(0,G_TRIES+(d.xt||0)-d.tries)}
 function gDuelsLeft(){const d=gdS();return Math.max(0,G_DUELS+(d.xd||0)-d.duels)}
-function gMergeHero(hid,o){const h=H(hid);o=JSON.parse(JSON.stringify(o));
+function gMergeHero(hid,o){hid=DV_REN[hid]||hid;const h=H(hid);o=JSON.parse(JSON.stringify(o));
  if(!S.owned[hid]){S.owned[hid]=o;if(S.team.length<3)S.team.push(hid);return'new'}
  const a=S.owned[hid],tot=(a.dup||0)+(o.dup||0)+1;
  ['lv','asc','sk','npl'].forEach(k=>{a[k]=Math.max(a[k]||0,o[k]||0)});
@@ -3148,11 +3151,11 @@ function gGoldShow(){const g=gMine();if(!g)return;const real=Object.values(g.mem
  <div class="row c" style="margin-top:12px"><button class="btn gold" ${GS.heroes.length&&GS.heroes.length===GS.rec.length?'':'disabled'} onclick="gGoldConfirm()">Далее</button><button class="btn" onclick="closeM()">Отмена</button></div>`);
  const n=document.querySelector('#modal .inner');if(n)n.scrollTop=st}
 function gGoldTog(t,v){const a=t==='h'?GS.heroes:GS.rec,val=t==='h'?v:dk(v),i=a.indexOf(val);if(i>=0)a.splice(i,1);else a.push(val);gGoldShow()}
-function gGoldConfirm(){const g=gMine();if(!g||g.gm!==ME)return;const bad=GS.heroes.map((id,i)=>{const t=GStore.kv('acct:'+GS.rec[i]);return t&&t.own&&t.own.includes(id)?H(id).name+' → '+g.members[GS.rec[i]].name:''}).filter(Boolean);
+function gGoldConfirm(){const g=gMine();if(!g||g.gm!==ME)return;if(GS.heroes.some(id=>H(id)&&H(id).r===7)&&!dvOpen())return gFail('Пройдите весь сюжет — 7★ нельзя отправлять до этого');const bad=GS.heroes.map((id,i)=>{const t=GStore.kv('acct:'+GS.rec[i]);return t&&t.own&&t.own.includes(id)?H(id).name+' → '+g.members[GS.rec[i]].name:''}).filter(Boolean);
  if(bad.length){return modal(`<h3>⛔ Нельзя отправить</h3><p style="margin:8px 0">Получатель уже владеет героем: ${bad.map(esc).join('; ')}.<br>Выберите другого героя или получателя.</p><div class="row c"><button class="btn" onclick="gGoldShow()">Назад</button></div>`)}
  modal(`<h3>Отправить героя? Он покинет ваш пул</h3><div style="margin:8px 0">${GS.heroes.map((id,i)=>`<div class="q"><div>${esc(H(id).name)} · ур.${S.owned[id].lv}, вознесение ${S.owned[id].asc||0}, навык ${sk(S.owned[id])}, NP ${S.owned[id].npl||1}</div><b>→ ${esc(g.members[GS.rec[i]].name)}</b></div>`).join('')}</div><div class="small">Действие необратимо (кроме возврата через 7 дней, если пакет не заберут).</div>
  <div class="row c" style="margin-top:10px"><button class="btn gold" onclick="gGoldSend()">Отправить</button><button class="btn" onclick="gGoldShow()">Назад</button></div>`)}
-async function gGoldSend(){const g=gMine();if(!g||g.gm!==ME||GSENDING)return;try{await GStore.fetchKV(GS.rec.map(k=>'acct:'+k))}catch(e){}const now=Date.now(),pairs=GS.heroes.map((id,i)=>[id,GS.rec[i]]);
+async function gGoldSend(){const g=gMine();if(!g||g.gm!==ME||GSENDING)return;if(GS.heroes.some(id=>H(id)&&H(id).r===7)&&!dvOpen())return gFail('Пройдите весь сюжет — 7★ нельзя отправлять до этого');try{await GStore.fetchKV(GS.rec.map(k=>'acct:'+k))}catch(e){}const now=Date.now(),pairs=GS.heroes.map((id,i)=>[id,GS.rec[i]]);
  for(const [id,to] of pairs){if(!S.owned[id])return gFail('Герой уже отправлен');const t=GStore.kv('acct:'+to);if(!t||t.dead||!g.members[to]||g.members[to].npc)return gFail('Получатель недоступен');if(t.own&&t.own.includes(id))return gFail('У получателя уже есть '+H(id).name)}
  if(new Set(GS.heroes).size!==GS.heroes.length)return gFail('Повтор героя');
  const pk=pairs.map(([id,to])=>({id:'p_'+hash(ME+now+id+to+Math.random()).slice(0,10),kind:'hero',gid:g.id,from:ME,fromName:S.name,to,toName:g.members[to].name,hid:id,o:JSON.parse(JSON.stringify(S.owned[id])),ts:now,exp:now+7*G_DAY,state:'open'}));
@@ -3265,7 +3268,7 @@ function admGuildReset(){if(!isAdmin())return;if(!confirm('Сбросить ги
  GStore.tx(d=>{Object.values(d.guilds).forEach(g=>{if(g.members[k]){delete g.members[k];if(g.gm===k){const nx=gRealKeys(g)[0];if(nx){g.gm=nx;g.members[nx].rank=5}else delete d.guilds[g.id]}}});return 1});
  const t=(AU===ME?S:u[AU].data);t.guildId='';if(AU===ME)save();else putUsers(u);admShow();toast('Гильдия сброшена')}
 // ====== БОЖЕСТВЕННЫЕ 7★ · МИРОВЫЕ БОССЫ · РЕЙД ======
-const DIV_MARK='ASTRAL_DIVINE_V1';
+const DIV_MARK='ASTRAL_DIVINE_V2';
 // ---------- форматирование огромных чисел ----------
 const FMT_U=['','K','M','B','T','Qa','Qi','Sx','Sp'];
 function fmtHp(n){n=Number(n);if(n!==n)return'0';if(!isFinite(n))return n>0?'∞':'0';const a=Math.abs(n);
@@ -3276,8 +3279,8 @@ function fmtHp(n){n=Number(n);if(n!==n)return'0';if(!isFinite(n))return n>0?'∞
 const DIV={
  dio_oh:{sd:'«Over Heaven»: атака ×12 на 4 хода, отряд вылечен на 100%, NP отряда +100%, неуязвимость отряда на 3 хода, все дебаффы сняты',bm:11,np:100,inv:3,lead:11,kill:.3,pct:.45,
   ld:'Лидер: весь отряд бьёт с бонусом +1000% урона'},
- ainz_wc:{sd:'«Мир Ничто»: атака ×10 на 4 хода, отряд вылечен на 100%, NP отряда +100%, неуязвимость отряда на 4 хода, дебаффы сняты',bm:9,np:100,inv:4,lead:9,kill:.35,pct:.5,
-  ld:'Лидер: +800% урона отряду, шанс мгновенно убить любого врага'},
+ featherine:{sd:'«Переписанная Сцена»: рассказчик решает, что раны в этой сцене не случились — атака ×10 на 4 хода, отряд вылечен на 100%, NP отряда +100%, неуязвимость отряда на 4 хода, дебаффы стёрты',bm:9,np:100,inv:4,lead:10,kill:.32,pct:.5,
+  ld:'Лидер: +900% урона отряду, «рассказ» сам выбирает исход — шанс мгновенного убийства врага'},
  daishinkan:{sd:'«Стирание Мультивселенной»: атака ×13 на 4 хода, вылечивает отряд на 100%, NP отряда +100%, неуязвимость на 3 хода',bm:12,np:100,inv:3,lead:12,kill:.3,pct:.55,
   ld:'Лидер: +1100% урона отряду, урон боссам в % от макс. HP'}};
 (function(){const add=(id,name,cls,np,extra)=>{const b=CLS_BASE[cls];
@@ -3285,13 +3288,24 @@ const DIV={
    myth:Object.assign({npStart:100,dmgTaken:.01,regen:1,teamNp:100,npGain:3,leech:1},extra),
    skill:{n:'Rewrite Reality',t:'divUp'},np:{n:np[0],t:np[1],m:120,aoe:np[2]}})};
  add('dio_oh','Дио: Over Heaven','Lancer',['Over Heaven: Переписанная Судьба','B',1],{atkMul:6,d:'Баг реальности: старт со 100% NP, входящий урон −99%, лечение 100% HP за ход, NP отряда +100% каждый ход, игнор защиты, внеочередной удар каждый ход, шанс мгновенного убийства врага 30%, удар по боссу — до 45% его макс. HP',ins:1});
- add('ainz_wc','Аинз Оул Гоун: Разрушитель Миров','Caster',['Мир Ничто: Крах Реальности','A',1],{atkMul:5,d:'Все предметы мирового класса: старт со 100% NP, входящий урон −99%, лечение 100% HP за ход, NP отряда +100% каждый ход, внеочередной удар, шанс мгновенного убийства 35%, удар по боссу — до 50% его макс. HP'});
+ add('featherine','Фезарин Огастус Аврора','Caster',['Финальная Сцена: Переписанный Эпилог','A',1],{atkMul:5,undying:1,d:'Ведьма-наблюдатель: пишет ход событий — старт со 100% NP, входящий урон −99%, лечение 100% HP за ход, бессмертие (падшая героиня встаёт в начале хода), NP отряда +100% каждый ход, внеочередной удар, шанс мгновенного убийства 32%, удар по боссу — до 50% его макс. HP'});
  add('daishinkan','Великий Жрец: Даишинкан','Rider',['Стирание Мультивселенной','B',1],{atkMul:7,d:'Ангел над ангелами: старт со 100% NP, входящий урон −99%, лечение 100% HP за ход, NP отряда +100% каждый ход, внеочередной удар, шанс мгновенного убийства 30%, удар по боссу — до 55% его макс. HP'})})();
 // ---------- состояние игрока ----------
 function dvS(){const t=today();if(!S.dv||S.dv.date!==t)S.dv={date:t,tries:0,xt:0,rd:{}};return S.dv}
 function dvP(){if(!S.dvp)S.dvp={tix:0,cl:{},gift:0,kills:0,title:'',fr:0};return S.dvp}
+function dvStory(){let n=0,t=0;try{WORLDS.forEach(w=>{t+=w.ch.length;n+=Math.min((S.sp||{})[w.id]||0,w.ch.length)})}catch(e){}return{n,t}}
+function dvOpen(){try{if(!S)return false;const p=dvStory();return p.t>0&&p.n>=p.t}catch(e){return false}}
+const DV_LOCK='Пройдите весь сюжет';
+function dvMig(d){if(!d||!d.owned)return;const A='ainz_wc',F='featherine';let ch=0;
+ if(d.owned[A]){const o=d.owned[A],n=d.owned[F];delete d.owned[A];ch=1;
+  if(!n)d.owned[F]=o;else{['lv','asc','sk','npl'].forEach(k=>{n[k]=Math.max(n[k]||0,o[k]||0)});n.dup=Math.min(5,(n.dup||0)+(o.dup||0)+1)}}
+ if(d.team&&d.team.includes(A)){d.team=d.team.map(x=>x===A?F:x).filter((x,i,a)=>a.indexOf(x)===i);ch=1}
+ if(d.gout)d.gout.forEach(x=>{if(x.hid===A){x.hid=F;ch=1}});
+ if(d.av===A){d.av=F}
+ return ch}
 function dv7(){return HEROES.filter(h=>h.r===7)}
 function dvFr(){try{return dv7().some(h=>S.owned[h.id])||!!dvP().fr}catch(e){return false}}
+function dvCheckGift(){if(!S||!dvOpen())return false;const p=dvP();if(p.gift)return false;p.gift=1;const nw=dv7().filter(h=>!S.owned[h.id]),h=(nw.length?nw:dv7())[0],isNew=giveHero(h);tallyH(h);save();setTimeout(()=>dvShowGot(h,isNew,'🎁 ДАР БОГОВ — за прохождение всего сюжета'),400);return true}
 function dvTitle(){try{return dvP().title||''}catch(e){return''}}
 function tallyH(h){if(h.r>=5)S.st.fives++;if(h.r>=6)S.st.sixes=(S.st.sixes||0)+1;if(h.r>=7)S.st.sevens=(S.st.sevens||0)+1}
 // ---------- боевые эффекты ----------
@@ -3312,7 +3326,8 @@ function dvAdj(u,tg,dmg){
  return Math.max(0,Math.round(d))}
 function dvExtra(){if(!B)return;dvTeam7().forEach(u=>{if(alive(B.en).length)hit(u,2,'⚡ Внеочередной ход')});
  if(dvTeam7().length&&B.turn%3===1)L('🧹 Все дебаффы отряда сняты · ❤ отряд исцелён на 100%')}
-function dvTurn(){if(!B)return;const s7=dvTeam7();
+function dvRevive(){if(!B)return;B.team.forEach(u=>{if(u.hp<=0&&u.m&&u.m.undying){u.hp=u.max;L('♾ '+u.h.name+' встаёт: в этой сцене она не падала')}})}
+function dvTurn(){if(!B)return;dvRevive();const s7=dvTeam7();
  if(B.turn<=1||B.inv===undefined)B.inv=s7.length?Math.max.apply(null,s7.map(x=>(DIV[x.h.id]||{}).inv||3)):0;else if(B.inv>0)B.inv--;
  if(B.inv>0&&s7.length)L('🛡 Отряд неуязвим (ходов: '+B.inv+')');
  if(B.guild&&B.guild.wb)B.en.forEach(e=>{if(e.hp>0&&e.hp<e.max*.5&&!e.ph&&B.guild.mech==='phase'){e.ph=1;e.atk=Math.round(e.atk*1.8);L('🌀 '+e.n+' входит во вторую фазу!')}})}
@@ -3321,20 +3336,25 @@ function dvSkill(u,i){const p=DIV[u.h.id]||{bm:9,np:100,inv:3};u.buff=4;u.bm=1+p
  L(`✦ ${u.h.name}: REWRITE REALITY — атака ×${u.bm}, отряд исцелён, NP +${p.np}%, неуязвимость ${p.inv} хода`)}
 // ---------- призыв 7★ ----------
 const DV_TIX_COST=60000;
-function dvSummonPanel(){const p=dvP(),hs=dv7();
+function dvSummonPanel(){const p=dvP(),hs=dv7(),o=dvOpen(),st=dvStory();
+ const cards=`<div class="row" style="flex-wrap:nowrap;gap:6px;margin-bottom:8px">${hs.map(h=>`<div class="card r7 ${o||S.owned[h.id]?'':'lock'}" style="flex:1;min-width:0">${portrait(h)}<div class="small" style="overflow-wrap:anywhere">${S.owned[h.id]?'✅':o?'—':'🔒'}</div></div>`).join('')}</div>`;
+ if(!o)return `<div class="panel g7p"><h3><span class="g7t">Ǝ̷R̷R̷O̷R̷ · БОЖЕСТВЕННЫЙ ПРИЗЫВ 7★</span></h3>
+ <div style="margin:6px 0;font-weight:700;overflow-wrap:anywhere">🔒 Откроется после прохождения всего сюжета (${st.n}/${st.t} глав)</div>
+ <div class="bar xp" style="margin-bottom:6px"><i style="width:${st.t?st.n/st.t*100:0}%"></i></div>
+ <div class="small" style="margin-bottom:8px">Пока сюжет не пройден, 7★ не выпадают в призыве (шанс 0%, счётчик гарантии не идёт), билеты нельзя купить и использовать. Билеты из наград мир-босса копятся. После финала всех миров: шанс 0.05%, гарантия на 600-й крутке, билеты и подарок «Дар Богов».</div>${cards}
+ <div class="small">🎫 Накоплено билетов: <b>${p.tix}</b></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm gold" disabled>🔒 ${DV_LOCK}</button><button class="btn sm" disabled>🔒 Купить 🎫</button></div></div>`;
  return `<div class="panel g7p"><h3><span class="g7t">Ǝ̷R̷R̷O̷R̷ · БОЖЕСТВЕННЫЙ ПРИЗЫВ 7★</span></h3>
- <div class="small" style="margin:6px 0">Шансы: <b>0.05%</b> в каждом обычном призыве, гарантия на 600-й крутке за всё время (сейчас ${S.pity7||0}/600). Также: 🎁 «Дар Богов» за 150-ю главу Рагнарёка, 🎫 билеты и награды за убийство мировых боссов.</div>
- <div class="row" style="flex-wrap:nowrap;gap:6px;margin-bottom:8px">${hs.map(h=>`<div class="card r7" style="flex:1;min-width:0;${S.owned[h.id]?'':'opacity:.85'}">${portrait(h)}<div class="small" style="overflow-wrap:anywhere">${S.owned[h.id]?'✅':'—'}</div></div>`).join('')}</div>
+ <div class="small" style="margin:6px 0">✅ Сюжет пройден (${st.n}/${st.t}). Шансы: <b>0.05%</b> в каждом обычном призыве, гарантия на 600-й крутке за всё время (сейчас ${S.pity7||0}/600). Также: 🎁 «Дар Богов» за полное прохождение сюжета, 🎫 билеты и награды за убийство мировых боссов.</div>
+ ${cards}
  <div class="small">🎫 Божественных билетов: <b>${p.tix}</b> · билет = гарантированный 7★ (сначала новые герои)</div>
  <div class="row" style="margin-top:6px"><button class="btn sm gold" ${p.tix<1?'disabled':''} onclick="dvUseTix()">Использовать 🎫</button><button class="btn sm" onclick="dvBuyTix()">Купить 🎫 · 💎${fmtHp(DV_TIX_COST)}</button></div></div>`}
-function dvBuyTix(){if(S.gems<DV_TIX_COST)return toast('Не хватает 💎');S.gems-=DV_TIX_COST;dvP().tix++;save();toast('🎫 Билет куплен');render()}
-function dvUseTix(){const p=dvP();if(p.tix<1)return toast('Нет билетов');const hs=dv7(),nw=hs.filter(h=>!S.owned[h.id]),pool=nw.length?nw:hs,h=pool[Math.floor(Math.random()*pool.length)];
+function dvBuyTix(){if(!dvOpen())return toast('🔒 '+DV_LOCK);if(S.gems<DV_TIX_COST)return toast('Не хватает 💎');S.gems-=DV_TIX_COST;dvP().tix++;save();toast('🎫 Билет куплен');render()}
+function dvUseTix(){const p=dvP();if(!dvOpen())return toast('🔒 '+DV_LOCK);if(p.tix<1)return toast('Нет билетов');const hs=dv7(),nw=hs.filter(h=>!S.owned[h.id]),pool=nw.length?nw:hs,h=pool[Math.floor(Math.random()*pool.length)];
  p.tix--;const isNew=giveHero(h);S.st.summons++;tallyH(h);S.pity7=0;save();dvShowGot(h,isNew,'🎫 Божественный билет')}
 function dvShowGot(h,isNew,ttl){modal(`<h2 style="text-align:center" class="g7t">${ttl}</h2><div class="card r7 pop" style="max-width:200px;margin:10px auto">${portrait(h)}<div class="stars">${stars(7)}</div>${isNew?'<div class="small" style="color:#7cf">NEW!</div>':`<div class="small">повтор +🪙${h.r*20*50}</div>`}</div><div class="small g7t" style="text-align:center">${esc(h.myth.d)}</div><div class="row c" style="margin-top:12px"><button class="btn" onclick="closeM();render()">OK</button></div>`)}
 // ---------- Дар Богов ----------
-function dvAfterStory(wid,ci,first){if(wid!=='ragnarok'||ci!==149||!first)return;const p=dvP();if(p.gift)return;p.gift=1;
- const nw=dv7().filter(h=>!S.owned[h.id]),h=(nw.length?nw:dv7())[0];const isNew=giveHero(h);tallyH(h);
- setTimeout(()=>dvShowGot(h,isNew,'🎁 ДАР БОГОВ'),400)}
+function dvAfterStory(wid,ci,first){dvCheckGift()}
 function dvProfile(){const n=dv7().filter(h=>S.owned[h.id]).length,p=dvP();
  return `<div class="panel ${n?'g7p':''}"><h3><span class="g7t">Божественные 7★</span></h3><div class="kv"><span>Героев 7★</span><b>${n}/${dv7().length}</b></div><div class="kv"><span>Билеты 🎫</span><b>${p.tix}</b></div><div class="kv"><span>Титул</span><b>${esc(p.title||'—')}</b></div><div class="kv"><span>Убито мировых боссов (участие)</span><b>${p.kills||0}</b></div></div>`}
 
@@ -3512,7 +3532,7 @@ function raidRank(d){const rs=RLIST.map(k=>GStore.kv(k)).filter(r=>r&&!r.dead&&r
 // ---------- опрос ----------
 let DVSYNC=null;
 function dvSync(force){if(!S||!ME)return Promise.resolve();if(DVSYNC)return DVSYNC;
- DVSYNC=(async()=>{try{const before=GStore.ver;await wbEnsure();if(tab==='wboss'&&WV==='raid'&&(force||!RLIST.length)){try{await GStore.kvLike('raid:',40).then(k=>RLIST=k)}catch(e){}}
+ DVSYNC=(async()=>{try{try{dvCheckGift()}catch(e){}const before=GStore.ver;await wbEnsure();if(tab==='wboss'&&WV==='raid'&&(force||!RLIST.length)){try{await GStore.kvLike('raid:',40).then(k=>RLIST=k)}catch(e){}}
   const ra=raidMine();if(dvP().room&&!ra&&GStore.kv('raid:'+dvP().room)){const x=GStore.kv('raid:'+dvP().room);if(x&&(x.dead||!x.members[ME])){dvP().room='';save()}}
   if(ra&&ra.call&&tab==='wboss'&&WV==='raid'&&ra.call.ts>(dvP().rc||0)){dvP().rc=ra.call.ts;save()}
   $('nav').innerHTML=navHtml();navFit();
