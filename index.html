@@ -382,6 +382,11 @@ const MYTH_RAW=[
  ['kaguya','Кагуя Оцуцуки: Богиня Кроликов',6,'Caster','godUp','Бесконечное Цукуёми','A',1],
  ['saitama','Сайтама: Герой ради Веселья',6,'Berserker','godUp','Серьёзный Удар: Разрыв Реальности','B',1],
  ['giorno','Джорно: Золотой Реквием',6,'Rider','godUp','Золотой Опыт Реквием: Возврат к Нулю','B',1],
+ ['jinwoo','Сон Джинву: Монарх Теней',6,'Saber','godUp','Армия Теней: Пробуждение Монарха','A',1],
+ ['mob','Моб: Психик ???%',6,'Caster','godUp','Взрыв Сто Процентов','B',1],
+ ['vegeta_ue','Вегета: Ультра Эго',6,'Berserker','godUp','Финальный Взрыв: Эго Разрушения','B',1],
+ ['aizen_h','Айзен: Слияние с Хогёку',6,'Caster','godUp','Кёка Суйгэцу: Полное Помрачение','Q',1],
+ ['madoka_g','Мадока Канамэ: Богиня Закона Циклов',6,'Archer','godUp','Стрела Конца Отчаяния','A',1],
 ]
 // Пассивы мификов: npStart — NP в начале боя, npGain — множитель набора NP, atkMul — множитель атаки,
 // dmgTaken — множитель входящего урона, regen — лечение себя в долях макс. HP за ход, teamNp — NP всему отряду за ход, leech — вампиризм
@@ -397,6 +402,11 @@ const MYTH={
  yhwach:{npStart:80,regen:.1,atkMul:1.5,dmgTaken:.5,d:'Всезнание: старт с 80% NP, лечение 10% HP за ход, атака +50%, входящий урон −50%'},
  kaguya:{npStart:100,teamNp:30,atkMul:1.3,d:'Праматерь: старт со 100% NP, весь отряд получает +30% NP каждый ход, атака +30%'},
  saitama:{npStart:100,npGain:2,atkMul:2.2,d:'Один удар: старт со 100% NP, набор NP ×2, атака +120%'},
+ jinwoo:{npStart:100,teamNp:20,leech:.2,atkMul:1.7,d:'Армия Теней: старт со 100% NP, весь отряд +20% NP каждый ход, 20% урона лечит его, атака +70%'},
+ mob:{npStart:60,npGain:2.5,dmgTaken:.5,atkMul:1.6,d:'Психик ???%: набор NP ×2.5, входящий урон −50%, атака +60%, старт с 60% NP'},
+ vegeta_ue:{npStart:50,npGain:1.5,leech:.1,atkMul:2.4,d:'Ультра Эго: атака +140%, набор NP ×1.5, 10% урона лечит его, старт с 50% NP'},
+ aizen_h:{npStart:100,dmgTaken:.35,regen:.05,atkMul:1.5,d:'Хогёку: старт со 100% NP, входящий урон −65%, лечение 5% HP за ход, атака +50%'},
+ madoka_g:{npStart:100,teamNp:35,regen:.2,atkMul:1.2,d:'Закон Циклов: старт со 100% NP, весь отряд +35% NP каждый ход, лечение 20% HP за ход, атака +20%'},
  giorno:{npStart:60,regen:.2,dmgTaken:.5,atkMul:1.4,d:'Золотой Реквием: старт с 60% NP, лечение 20% HP за ход, входящий урон −50%, атака +40%'},
 };
 const CLS_BASE={Saber:[1300,160,'BBAQQ'],Archer:[1150,175,'BAAQQ'],Lancer:[1250,165,'BAAQQ'],Caster:[1050,140,'BAAAQ'],Rider:[1200,150,'BBAQQ'],Berserker:[1400,175,'BBBAQ']};
@@ -616,6 +626,7 @@ function vProfile(){const own=Object.keys(S.owned).length,exp=S.xp%250;
  <div class="kv"><span>Героев в коллекции</span><b>${own}/${HEROES.length}</b></div><div class="kv"><span>Призывов</span><b>${S.st.summons}</b></div><div class="kv"><span>5★ получено</span><b>${S.st.fives}</b></div><div class="kv"><span>6★ мификов</span><b>${S.st.sixes||0}</b></div><div class="kv"><span>Боёв / побед</span><b>${S.st.battles} / ${S.st.wins}</b></div><div class="kv"><span>Пройдено этапов</span><b>${S.cleared}/${STAGES.length}</b></div><div class="kv"><span>Гарант 5★ через</span><b>${90-S.pity} круток</b></div><div class="kv"><span>Гарант 6★ через</span><b>${300-(S.pity6||0)} круток</b></div><div class="kv"><span>Дата регистрации</span><b>${new Date(S.created).toLocaleDateString('ru-RU')}</b></div></div>
  <div class="panel"><h3>💾 Сохранение</h3><div class="small" style="margin-bottom:8px">Прогресс хранится в браузере этого устройства. Чтобы перенести на другой телефон — скопируйте код и вставьте на втором.</div>
  <div class="row"><button class="btn" onclick="expSave()">Экспорт кода</button><button class="btn" onclick="impSave()">Импорт кода</button></div></div>
+ ${admEntry()}
  <div class="row c"><button class="btn" onclick="logout()">Выйти</button><button class="btn" style="background:#5b1a2a" onclick="delAcc()">Удалить аккаунт</button></div>`}
 function expSave(){const code=btoa(unescape(encodeURIComponent(JSON.stringify({n:S.name,h:users()[ME].h,d:S}))));modal(`<h3>Код сохранения</h3><p class="small" style="margin:6px 0">Скопируйте и сохраните в надёжном месте:</p><textarea id="ex" readonly style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn gold" onclick="navigator.clipboard&&navigator.clipboard.writeText($('ex').value).then(()=>toast('Скопировано'));$('ex').select()">Копировать</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
 function impSave(){modal(`<h3>Импорт кода</h3><p class="small" style="margin:6px 0">Вставьте код сохранения. Аккаунт будет создан или заменён на этом устройстве.</p><textarea id="im" style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text"></textarea><div class="err" id="im_e"></div><div class="row c"><button class="btn gold" onclick="doImp()">Загрузить</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
@@ -2575,6 +2586,66 @@ function winStory(){SPS();const {w:wid,ci}=B.story,w=wById(wid),c=w.ch[ci],r=chR
  let bonus=0,fin=false;if(first){S.sp[wid]=ci+1;if(ci===w.ch.length-1){bonus=endBonus(w);S.gems+=bonus;fin=true}}
  SV=wid;B=null;save();
  modal(`<h2>🏆 Победа!</h2><p style="margin:10px 0;line-height:1.5">${esc(c.w)}</p><p class="small">Награда: 💎${gm} 🪙${gd}${first?' (первое прохождение)':' (повтор)'}</p>${fin?`<p style="margin:10px 0" class="rbt">🎉 Мир пройден! Бонус за финал: 💎${bonus}</p><p style="line-height:1.5">${esc(w.end)}</p>`:''}<div class="row c" style="margin-top:12px"><button class="btn gold" onclick="closeM();tab='story';render()">Дальше</button></div>`)}
+
+// ====== МЕНЮ АДМИНА ======
+const ADMINS=['арата люцифуг'];
+function isAdmin(){return !!S&&ADMINS.includes(String(S.name).trim().toLowerCase())}
+let AU=null,AL=[];
+function admEntry(){return isAdmin()?`<div class="panel" style="border-color:#c9a0ff;box-shadow:0 0 16px #a56bff66"><h3>🛡 Меню админа</h3><div class="small" style="margin:6px 0">Доступно только вам, Арата Люцифуг. Профили игроков, валюта, герои, прогресс и другое.</div><button class="btn gold" style="width:100%" onclick="admOpen()">Открыть меню админа</button></div>`:''}
+function admOpen(){if(!isAdmin())return;if(!AU||!users()[AU])AU=ME;admShow()}
+function admShow(){if(!isAdmin())return;const old=document.querySelector('#modal .inner'),st=old?old.scrollTop:0;modal(admHtml());const n=document.querySelector('#modal .inner');if(n)n.scrollTop=st}
+function admMut(fn){if(!isAdmin())return;const u=users(),t=u[AU];if(!t)return;if(AU===ME){fn(S);save()}else{fn(t.data);putUsers(u)}hud();admShow();if(AU===ME)render()}
+function admNum(){const v=parseInt(document.getElementById('ad_n').value,10);return isFinite(v)&&v>=0?v:0}
+function admSel(i){AU=AL[i];admShow()}
+function admCur(k,sgn){const n=admNum();if(!n)return toast('Введите число');admMut(d=>{d[k]=Math.max(0,(d[k]||0)+sgn*n)});toast((sgn>0?'Добавлено ':'Убрано ')+n)}
+function admSetCur(k){const n=admNum();admMut(d=>{d[k]=n});toast('Установлено: '+n)}
+function admGiveHero(){const id=document.getElementById('ad_h').value;admMut(d=>{if(!d.owned[id]){d.owned[id]={lv:1,dup:0,asc:0,sk:1,npl:1};if(d.team.length<3)d.team.push(id)}});toast('Герой выдан')}
+function admTakeHero(){const id=document.getElementById('ad_h').value;admMut(d=>{delete d.owned[id];d.team=d.team.filter(x=>x!==id)});toast('Герой забран')}
+function admAllHeroes(r){admMut(d=>{HEROES.forEach(h=>{if((r===0||h.r===r)&&!d.owned[h.id])d.owned[h.id]={lv:1,dup:0,asc:0,sk:1,npl:1}});if(!d.team.length)d.team=Object.keys(d.owned).slice(0,3)});toast('Готово')}
+function admClearHeroes(){if(!confirm('Забрать всех героев у этого аккаунта?'))return;admMut(d=>{d.owned={};d.team=[]})}
+function admMaxHeroes(){admMut(d=>{Object.values(d.owned).forEach(o=>{o.asc=ASC_MAX;o.lv=lvCap(o);o.dup=5;o.sk=Math.max(o.sk||1,10);o.npl=Math.max(o.npl||1,10)})});toast('Все герои прокачаны')}
+function admLevel(){const n=admNum();if(!n)return toast('Введите число');admMut(d=>{d.xp=(d.xp||0)+n*250});toast('Уровней аккаунта: +'+n)}
+function admCampaign(all){admMut(d=>{d.cleared=all?STAGES.length:0})}
+function admWorld(mode){const w=document.getElementById('ad_w').value,W=wById(w);admMut(d=>{d.sp=d.sp||{};d.seen=d.seen||{};if(mode==='all'){d.sp[w]=W.ch.length;d.seen[w]=1}else if(mode==='to'){const n=Math.min(W.ch.length,admNum());d.sp[w]=n;d.seen[w]=1}else{d.sp[w]=0}});toast('Прогресс мира обновлён')}
+function admPity(){admMut(d=>{d.pity=89;d.pity6=299});toast('Следующая крутка — гарантированный мифик')}
+function admGiftAll(){const n=admNum();if(!n)return toast('Введите число');const u=users();Object.keys(u).forEach(k=>{if(k!==ME)u[k].data.gems=(u[k].data.gems||0)+n});putUsers(u);S.gems+=n;save();admShow();toast('Всем аккаунтам на устройстве: 💎'+n)}
+function admPass(){const p=document.getElementById('ad_p').value;if(p.length<4)return toast('Пароль — от 4 символов');const u=users();u[AU].h=hash(p);putUsers(u);document.getElementById('ad_p').value='';toast('Пароль изменён')}
+function admRename(){const nm=document.getElementById('ad_nm').value.trim();if(nm.length<2)return toast('Ник — от 2 символов');const u=users(),k=nm.toLowerCase();if(k!==AU&&u[k])return toast('Ник занят');const t=u[AU];delete u[AU];t.name=nm;t.data.name=nm;u[k]=t;if(AU===ME){ME=k;S=t.data;localStorage.setItem(K_CUR,k)}putUsers(u);AU=k;hud();admShow();toast('Ник изменён')}
+function admReset(){if(!confirm('Сбросить весь прогресс этого аккаунта?'))return;const u=users(),t=u[AU],nd=newData(t.name,t.data.av);t.data=nd;putUsers(u);if(AU===ME){S=nd;save()}hud();admShow();if(AU===ME)render()}
+function admDel(){if(AU===ME)return toast('Свой аккаунт здесь не удалить');if(!confirm('Удалить этот аккаунт навсегда?'))return;const u=users();delete u[AU];putUsers(u);AU=ME;admShow()}
+function admExport(){const t=users()[AU],code=btoa(unescape(encodeURIComponent(JSON.stringify({n:t.name,h:t.h,d:t.data}))));modal(`<h3>Код аккаунта: ${esc(t.name)}</h3><textarea readonly style="width:100%;height:140px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn" onclick="admShow()">← Назад</button></div>`)}
+function admImportUi(){modal(`<h3>Открыть профиль по коду</h3><p class="small" style="margin:6px 0">Игрок присылает вам код из «Профиль → Сохранение → Экспорт кода». Профиль появится в списке, и его можно смотреть и менять.</p><textarea id="ad_c" style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text"></textarea><div class="err" id="ad_ce"></div><div class="row c" style="margin-top:8px"><button class="btn gold" onclick="admImport()">Добавить</button><button class="btn" onclick="admShow()">← Назад</button></div>`)}
+function admImport(){try{const o=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('ad_c').value.trim()))));if(!o.n||!o.d||!o.d.owned)throw 0;const u=users(),k=o.n.toLowerCase();if(k===ME)return document.getElementById('ad_ce').textContent='Это ваш аккаунт';if(u[k]&&!confirm('Профиль с таким ником уже есть. Заменить?'))return;u[k]={name:o.n,h:o.h,data:o.d};putUsers(u);AU=k;admShow();toast('Профиль добавлен')}catch(e){document.getElementById('ad_ce').textContent='Неверный код'}}
+function admHtml(){
+ const u=users();AL=Object.keys(u);if(!u[AU])AU=ME;const t=u[AU],d=(AU===ME?S:t.data);
+ const owned=Object.keys(d.owned||{}),myth=owned.filter(id=>H(id)&&H(id).r===6).length;
+ const sp=d.sp||{},lv=1+Math.floor((d.xp||0)/250),st=d.st||{};
+ const list=AL.map((k,i)=>`<button class="btn sm ${k===AU?'gold':''}" style="margin:3px" onclick="admSel(${i})">${esc(u[k].name)}${k===ME?' (вы)':''} · 💎${(k===ME?S:u[k].data).gems}</button>`).join('');
+ const hopts=[...HEROES].sort((a,b)=>b.r-a.r||a.name.localeCompare(b.name)).map(h=>`<option value="${h.id}">${h.r}★ ${esc(h.name)}${d.owned&&d.owned[h.id]?' ✓':''}</option>`).join('');
+ const wopts=WORLDS.map(w=>`<option value="${w.id}">${esc(w.n)} (${Math.min(sp[w.id]||0,w.ch.length)}/${w.ch.length})</option>`).join('');
+ const inp='background:#0a0c26;color:#fff;border:1px solid #ffffff33;border-radius:10px;padding:9px;width:100%;margin:4px 0';
+ return `<h2 style="text-align:center">🛡 Меню админа</h2><div class="small" style="text-align:center;margin-bottom:8px">Арата Люцифуг · аккаунты на этом устройстве</div>
+ <div class="panel"><b>👥 Игроки</b><div style="margin-top:6px">${list}</div><div class="row" style="margin-top:8px"><button class="btn sm" onclick="admImportUi()">📥 Профиль по коду</button><button class="btn sm" onclick="admExport()">📤 Код аккаунта</button></div></div>
+ <div class="panel"><b>👤 ${esc(t.name)}</b>
+ <div class="kv"><span>Уровень аккаунта</span><b>${lv}</b></div><div class="kv"><span>💎 / 🪙</span><b>${d.gems} / ${d.gold}</b></div><div class="kv"><span>Героев / мификов</span><b>${owned.length}/${HEROES.length} / ${myth}</b></div><div class="kv"><span>Этапов кампании</span><b>${d.cleared||0}/${STAGES.length}</b></div><div class="kv"><span>Призывов</span><b>${st.summons||0}</b></div><div class="kv"><span>Боёв / побед</span><b>${st.battles||0} / ${st.wins||0}</b></div>
+ <div class="small" style="margin-top:6px">Сюжет: ${WORLDS.map(w=>w.ic+' '+Math.min(sp[w.id]||0,w.ch.length)+'/'+w.ch.length).join(' · ')}</div>
+ <div class="small">Отряд: ${(d.team||[]).map(id=>H(id)?esc(H(id).name):'').join(', ')||'пусто'}</div></div>
+ <div class="panel"><b>💰 Валюта</b><input id="ad_n" type="number" min="0" placeholder="Число" style="${inp}">
+ <div class="row"><button class="btn sm" onclick="admCur('gems',1)">💎 +</button><button class="btn sm" onclick="admCur('gems',-1)">💎 −</button><button class="btn sm" onclick="admSetCur('gems')">💎 =</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admCur('gold',1)">🪙 +</button><button class="btn sm" onclick="admCur('gold',-1)">🪙 −</button><button class="btn sm" onclick="admSetCur('gold')">🪙 =</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admLevel()">⭐ + уровни аккаунта</button><button class="btn sm" onclick="admGiftAll()">🎁 💎 всем на устройстве</button></div></div>
+ <div class="panel"><b>🦸 Герои</b><select id="ad_h" style="${inp}">${hopts}</select>
+ <div class="row"><button class="btn sm" onclick="admGiveHero()">Выдать</button><button class="btn sm" onclick="admTakeHero()">Забрать</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admAllHeroes(6)">Все мифики</button><button class="btn sm" onclick="admAllHeroes(5)">Все 5★</button><button class="btn sm" onclick="admAllHeroes(0)">Всех героев</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admMaxHeroes()">⚡ Максимум всем героям</button><button class="btn sm" style="background:#5b1a2a" onclick="admClearHeroes()">Забрать всех</button></div></div>
+ <div class="panel"><b>📖 Прогресс</b><div class="row" style="margin:6px 0"><button class="btn sm" onclick="admCampaign(1)">Кампания: пройти всё</button><button class="btn sm" onclick="admCampaign(0)">Кампания: сбросить</button></div>
+ <select id="ad_w" style="${inp}">${wopts}</select><div class="small">Для «До главы N» введите N в поле валюты выше.</div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admWorld('all')">Пройти мир</button><button class="btn sm" onclick="admWorld('to')">До главы N</button><button class="btn sm" onclick="admWorld('reset')">Сбросить мир</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPity()">🎯 Гарант мифика на след. крутку</button></div></div>
+ <div class="panel"><b>⚙ Аккаунт</b><input id="ad_nm" placeholder="Новый ник" maxlength="16" style="${inp}"><button class="btn sm" onclick="admRename()">Сменить ник</button>
+ <input id="ad_p" type="password" placeholder="Новый пароль (от 4 символов)" style="${inp}"><button class="btn sm" onclick="admPass()">Сменить пароль</button>
+ <div class="row" style="margin-top:8px"><button class="btn sm" style="background:#5b1a2a" onclick="admReset()">Сбросить прогресс</button><button class="btn sm" style="background:#5b1a2a" onclick="admDel()">Удалить аккаунт</button></div></div>
+ <div class="row c" style="margin-top:8px"><button class="btn gold" onclick="closeM()">Закрыть</button></div>`}
 
 // ====== СТАРТ ======
 (function(){const cur=localStorage.getItem(K_CUR),u=users();if(cur&&u[cur])login(cur);else{authMode=Object.keys(u).length?'in':'reg';vAuth()}})();
