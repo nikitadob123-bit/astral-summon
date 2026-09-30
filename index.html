@@ -110,81 +110,58 @@ input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;bac
 .r7 .stars{color:#0ff;text-shadow:1px 0 #f0f;animation:g7t 1.3s steps(1) infinite;letter-spacing:-1px}
 .r7.lock{animation:none;filter:grayscale(.7) brightness(.75)}.r7.lock .pt.g7 img,.r7.lock .pt.g7::after{animation:none}
 .av.f7{border-color:#0ff;animation:g7b .9s steps(1) infinite}
-/* ===== 1★ чёрная звезда v3: «неизвестность» — заметный баг (ASTRAL_ARATA_V3). Анимации: steps(), opacity/transform/clip-path; без filter ===== */
-.r1,.f.r1{position:relative;border:3px solid #000!important;background:repeating-linear-gradient(90deg,#0000 0 7px,#a0f1 7px 8px),linear-gradient(#050009,#14000e)!important;box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000;clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px));animation:gxfr 3.3s steps(1) infinite}
-@keyframes gxfr{0%{clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px))}20%{clip-path:polygon(-4px 5px,6px -4px,calc(100% - 13px) -4px,calc(100% + 4px) 12px,calc(100% + 4px) calc(100% - 6px),calc(100% - 4px) calc(100% + 4px),12px calc(100% + 4px),-4px calc(100% - 13px))}34%{clip-path:polygon(-4px 8px,8px -4px,30% -4px,34% 3px,41% -4px,calc(100% - 9px) -4px,calc(100% + 4px) 8px,calc(100% + 4px) 55%,calc(100% - 3px) 58%,calc(100% + 4px) 62%,calc(100% + 4px) calc(100% - 9px),calc(100% - 8px) calc(100% + 4px),8px calc(100% + 4px),-4px calc(100% - 8px))}52%{clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px))}68%{clip-path:polygon(-4px 8px,8px -4px,30% -4px,34% 3px,41% -4px,calc(100% - 9px) -4px,calc(100% + 4px) 8px,calc(100% + 4px) 55%,calc(100% - 3px) 58%,calc(100% + 4px) 62%,calc(100% + 4px) calc(100% - 9px),calc(100% - 8px) calc(100% + 4px),8px calc(100% + 4px),-4px calc(100% - 8px))}84%{clip-path:polygon(-4px 5px,6px -4px,calc(100% - 13px) -4px,calc(100% + 4px) 12px,calc(100% + 4px) calc(100% - 6px),calc(100% - 4px) calc(100% + 4px),12px calc(100% + 4px),-4px calc(100% - 13px))}}
-.r1::before,.r1::after{content:'';position:absolute;inset:-3px;z-index:3;pointer-events:none;background:repeating-linear-gradient(90deg,#f03 0 15px,#0000 15px 19px,#a0f 19px 35px,#fff 35px 39px,#0000 39px 47px,#0ff 47px 60px,#0000 60px 63px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,#0ff 0 11px,#a0f 11px 29px,#0000 29px 34px,#f03 34px 50px,#fff 50px 53px,#0000 53px 60px) 0 100%/100% 4px no-repeat,repeating-linear-gradient(180deg,#a0f 0 13px,#0000 13px 17px,#f03 17px 31px,#0ff 31px 44px,#0000 44px 50px) 0 0/4px 100% no-repeat,repeating-linear-gradient(180deg,#fff 0 6px,#f03 6px 20px,#0000 20px 26px,#a0f 26px 45px,#0ff 45px 49px,#0000 49px 57px) 100% 0/4px 100% no-repeat}
-.r1::after{background:repeating-linear-gradient(90deg,#0000 0 9px,#0ff 9px 22px,#f03 22px 26px,#0000 26px 33px,#fff 33px 37px,#a0f 37px 58px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,#f03 0 18px,#0000 18px 24px,#0ff 24px 30px,#a0f 30px 47px,#0000 47px 52px,#fff 52px 56px) 0 100%/100% 4px no-repeat,repeating-linear-gradient(180deg,#f03 0 9px,#0ff 9px 26px,#0000 26px 32px,#a0f 32px 40px,#fff 40px 43px,#0000 43px 52px) 0 0/4px 100% no-repeat,repeating-linear-gradient(180deg,#0000 0 11px,#a0f 11px 24px,#f03 24px 30px,#0ff 30px 47px,#0000 47px 53px) 100% 0/4px 100% no-repeat;opacity:0;animation:gxfb 3.3s steps(1) infinite}
+/* ===== 1★ чёрная звезда v4: «Ничто» — чёрная пустотная рамка, чистый портрет, 3 маленьких символа (ASTRAL_ARATA_V4). Анимации: steps(), opacity/transform/clip-path; без filter ===== */
+.r1,.f.r1{position:relative;border:4px solid #05000a!important;background:repeating-linear-gradient(90deg,#0000 0 7px,#a0f1 7px 8px),linear-gradient(#050009,#0d000a)!important;box-shadow:0 0 3px 1px #14002a,inset 0 0 0 1px #0a0010,inset 0 0 12px #000;clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px));animation:gxfr 3.3s steps(1) infinite}
+@keyframes gxfr{0%{clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px))}20%{clip-path:polygon(-4px 5px,6px -4px,calc(100% - 13px) -4px,calc(100% + 4px) 12px,calc(100% + 4px) calc(100% - 6px),calc(100% - 4px) calc(100% + 4px),12px calc(100% + 4px),-4px calc(100% - 13px))}34%{clip-path:polygon(-4px 8px,8px -4px,30% -4px,34% 6px,41% -4px,calc(100% - 9px) -4px,calc(100% + 4px) 8px,calc(100% + 4px) 55%,calc(100% - 6px) 58%,calc(100% + 4px) 62%,calc(100% + 4px) calc(100% - 9px),calc(100% - 8px) calc(100% + 4px),8px calc(100% + 4px),-4px calc(100% - 8px))}52%{clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px))}68%{clip-path:polygon(-4px 8px,8px -4px,calc(100% - 9px) -4px,calc(100% + 4px) 8px,calc(100% + 4px) calc(100% - 9px),calc(100% - 8px) calc(100% + 4px),52% calc(100% + 4px),49% calc(100% - 6px),44% calc(100% + 4px),8px calc(100% + 4px),-4px calc(100% - 8px),-4px 48%,3px 45%,-4px 41%)}84%{clip-path:polygon(-4px 5px,6px -4px,calc(100% - 13px) -4px,calc(100% + 4px) 12px,calc(100% + 4px) calc(100% - 6px),calc(100% - 4px) calc(100% + 4px),12px calc(100% + 4px),-4px calc(100% - 13px))}}
+/* рамка: ::before — сегменты глубокого чёрного и #0a0010 + «куски пустоты» (чёрные треугольники), уходящие внутрь; ::after — редкие короткие вспышки тёмного пурпура и 1 белый пиксель */
+.r1::before,.r1::after{content:'';position:absolute;inset:-4px;z-index:3;pointer-events:none;background:repeating-linear-gradient(90deg,#000 0 13px,#0a0010 13px 22px,#030006 22px 29px,#12001f 29px 33px,#000 33px 47px,#0a0010 47px 58px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,#0a0010 0 17px,#000 17px 26px,#12001f 26px 30px,#000 30px 49px,#050008 49px 57px) 0 100%/100% 4px no-repeat,repeating-linear-gradient(180deg,#000 0 14px,#0a0010 14px 21px,#000 21px 38px,#12001f 38px 42px,#050008 42px 55px) 0 0/4px 100% no-repeat,repeating-linear-gradient(180deg,#0a0010 0 11px,#000 11px 29px,#030006 29px 36px,#12001f 36px 40px,#000 40px 52px) 100% 0/4px 100% no-repeat,linear-gradient(to bottom right,#000 50%,#0000 0) 26% 0/14px 10px no-repeat,linear-gradient(to bottom left,#000 50%,#0000 0) 71% 0/10px 7px no-repeat,linear-gradient(to top right,#000 50%,#0000 0) 44% 100%/16px 10px no-repeat,linear-gradient(to bottom right,#0a0010 50%,#0000 0) 0 38%/9px 18px no-repeat,linear-gradient(to bottom left,#000 50%,#0000 0) 100% 64%/10px 16px no-repeat}
+.r1::after{background:linear-gradient(90deg,#0000 0 22%,#3b0764 22% 27%,#0000 27% 61%,#2a0050 61% 66%,#0000 66%) 0 0/100% 2px no-repeat,linear-gradient(90deg,#0000 0 38%,#2a0050 38% 45%,#0000 45% 79%,#3b0764 79% 83%,#0000 83%) 0 100%/100% 2px no-repeat,linear-gradient(#4a0a7a,#4a0a7a) 0 27%/2px 12px no-repeat,linear-gradient(#2a0050,#2a0050) 100% 71%/2px 9px no-repeat,linear-gradient(#fff,#fff) 37% 100%/2px 2px no-repeat;opacity:0;animation:gxfb 3.3s steps(1) infinite}
 .r1::before{animation:gxfa 3.3s steps(1) infinite}
-@keyframes gxfa{0%,100%{opacity:1;transform:none}58%{opacity:0}72%{opacity:1;transform:translate(1px,-1px)}86%{transform:translate(-1px,1px)}}
-@keyframes gxfb{0%,38%{opacity:0;transform:none}40%{opacity:1;transform:translate(-1px,0)}56%{opacity:1;transform:translate(1px,1px)}74%,100%{opacity:0}}
+@keyframes gxfa{0%,100%{opacity:1;transform:none}58%{opacity:.6}72%{opacity:1;transform:translate(1px,-1px)}86%{transform:translate(-1px,1px)}}
+@keyframes gxfb{0%,44%{opacity:0;transform:none}45%{opacity:1;transform:translate(-1px,0)}48%{opacity:0}79%{opacity:1;transform:translate(1px,0)}82%,100%{opacity:0}}
 .pt.gx{background:#000;contain:paint}
 .pt.gx>i,.pt.gx>b{position:absolute;pointer-events:none;display:block}
 .pt.gx>b u,.bs u{text-decoration:none}
-.pt.gx .gxh{inset:0;z-index:2;background:radial-gradient(circle at 0 0,#000 0 9%,transparent 10%),radial-gradient(circle at 100% 22%,#000 0 6%,transparent 7%),radial-gradient(circle at 4% 100%,#000 0 8%,transparent 9%),radial-gradient(circle at 100% 100%,#000 0 10%,transparent 11%);animation:gxh 3.4s steps(1) infinite}
-@keyframes gxh{0%,100%{transform:none;opacity:1}30%{transform:scale(1.05);opacity:.85}31%{transform:none;opacity:1}62%{transform:translate(2px,-1px) scale(1.08);opacity:.7}64%{transform:scaleX(-1);opacity:1}66%{transform:none}}
-/* горизонтальные полосы смещения: 6 фиксированных полос-копий портрета (clip-path), в каждый момент видны ровно 3; сдвиг 4–10px шагами, RGB-кромка */
-.pt.gx .gxs{inset:0;z-index:1;opacity:1;animation:gxbd 3.6s steps(1) infinite}
-.pt.gx .gxs1{background:linear-gradient(180deg,#0000 0 6%,#ff2a55 6% calc(6% + 3px),#0000 calc(6% + 3px) calc(14% - 3px),#22e6ff calc(14% - 3px) 14%,#0000 14%),var(--im) center top/cover;clip-path:inset(6% 0 86% 0);--s:8px;animation-delay:0.0s}
-.pt.gx .gxs2{background:linear-gradient(180deg,#0000 0 20%,#ff2a55 20% calc(20% + 3px),#0000 calc(20% + 3px) calc(28% - 3px),#22e6ff calc(28% - 3px) 28%,#0000 28%),var(--im) center top/cover;clip-path:inset(20% 0 72% 0);--s:9px;animation-delay:-0.6s}
-.pt.gx .gxs3{background:linear-gradient(180deg,#0000 0 36%,#ff2a55 36% calc(36% + 3px),#0000 calc(36% + 3px) calc(44% - 3px),#22e6ff calc(44% - 3px) 44%,#0000 44%),var(--im) center top/cover;clip-path:inset(36% 0 56% 0);--s:7px;animation-delay:-1.2s}
-.pt.gx .gxs4{background:linear-gradient(180deg,#0000 0 52%,#ff2a55 52% calc(52% + 3px),#0000 calc(52% + 3px) calc(60% - 3px),#22e6ff calc(60% - 3px) 60%,#0000 60%),var(--im) center top/cover;clip-path:inset(52% 0 40% 0);--s:10px;animation-delay:-1.8s}
-.pt.gx .gxs5{background:linear-gradient(180deg,#0000 0 66%,#ff2a55 66% calc(66% + 3px),#0000 calc(66% + 3px) calc(74% - 3px),#22e6ff calc(74% - 3px) 74%,#0000 74%),var(--im) center top/cover;clip-path:inset(66% 0 26% 0);--s:8px;animation-delay:-2.4s}
-.pt.gx .gxs6{background:linear-gradient(180deg,#0000 0 82%,#ff2a55 82% calc(82% + 3px),#0000 calc(82% + 3px) calc(90% - 3px),#22e6ff calc(90% - 3px) 90%,#0000 90%),var(--im) center top/cover;clip-path:inset(82% 0 10% 0);--s:9px;animation-delay:-3.0s}
-@keyframes gxbd{0%{opacity:1;transform:translateX(var(--s))}16.66%{opacity:1;transform:translateX(calc(var(--s)*-.7))}33.33%{opacity:1;transform:translateX(calc(var(--s)*.8))}50%{opacity:0;transform:none}66.66%{opacity:0;transform:none}83.33%{opacity:0;transform:none}}
-.pt.gx .gxr,.pt.gx .gxc{inset:0;z-index:1;mix-blend-mode:screen;opacity:.3;background:var(--im) center top/cover,#f02;background-blend-mode:multiply,normal;transform:translateX(-4px);animation:gxr 2.4s steps(1) infinite}
-.pt.gx .gxc{background:var(--im) center top/cover,#0ef;background-blend-mode:multiply,normal;transform:translateX(4px);animation-name:gxc2;animation-duration:3.1s}
-@keyframes gxr{0%,100%{transform:translateX(-4px)}25%{transform:translate(-6px,1px)}50%{transform:translateX(-3px)}80%{transform:translate(-8px,-1px);opacity:.42}82%{opacity:.3;transform:translateX(-4px)}}
-@keyframes gxc2{0%,100%{transform:translateX(4px)}30%{transform:translate(6px,-1px)}55%{transform:translateX(3px)}85%{transform:translate(8px,1px);opacity:.42}87%{opacity:.3;transform:translateX(4px)}}
-.pt.gx img{animation:gxi .9s steps(1) infinite}
-@keyframes gxi{0%{transform:scale(1.03)}12%{transform:translate(2px,-1px) scale(1.03)}25%{transform:translate(-2px,1px) scale(1.03)}37%{transform:translate(1px,1px) scale(1.03)}50%{transform:translate(-1px,-2px) scale(1.03)}62%{transform:translate(2px,0) scale(1.03)}75%{transform:translate(-2px,-1px) scale(1.03)}87%{transform:translate(0,2px) scale(1.03)}}
-.pt.gx .gxn{left:0;right:0;top:-12px;bottom:0;z-index:2;background:repeating-linear-gradient(0deg,#0000 0 5px,#c6f22 5px 6px,#0000 6px 11px,#0ff1 11px 12px);opacity:.5;animation:gxn .8s steps(4) infinite}
-@keyframes gxn{to{transform:translateY(12px)}}
-/* яркие блоки «битых пикселей» 6–14px: всегда видны, прыгают по кадрам */
-.pt.gx .gxp{inset:0;z-index:2;opacity:1;background:linear-gradient(#fff,#fff) 14% 22%/12px 7px,linear-gradient(#f0f,#f0f) 71% 9%/8px 8px,linear-gradient(#0ff,#0ff) 33% 58%/14px 6px,linear-gradient(#ff3d81,#ff3d81) 56% 34%/10px 10px,linear-gradient(#b400ff,#b400ff) 84% 47%/6px 12px,linear-gradient(#f03,#f03) 8% 76%/14px 8px,linear-gradient(#fff,#fff) 47% 83%/9px 6px,linear-gradient(#0ff,#0ff) 91% 68%/7px 7px;background-repeat:no-repeat;animation:gxp 3.3s steps(1) infinite}
-.pt.gx .gxp2{background-position:60% 12%,20% 40%,80% 70%,10% 90%,45% 62%,92% 20%,30% 8%,66% 52%;animation:gxp2 4.3s steps(1) infinite}
-@keyframes gxp{0%,100%{transform:none}14%{transform:translate(6%,9%)}30%{transform:translate(-8%,4%)}46%{transform:translate(9%,-6%)}60%{transform:translate(-4%,-11%)}78%{transform:translate(3%,12%)}}
-@keyframes gxp2{0%,100%{transform:scaleX(-1)}18%{transform:translate(-7%,8%)}36%{transform:translate(10%,-9%)}54%{transform:translate(-3%,5%)}72%{transform:scale(-1,-1)}88%{transform:translate(6%,-4%)}}
-/* неизвестные символы: <b class=gxg> = слот из 3 вариантов (<u>), один виден всегда; смена шагами через opacity; шрифты с запасом */
-.pt.gx .gxg{z-index:3;font-family:'Noto Sans Symbols','Noto Sans Symbols 2','Segoe UI Symbol','DejaVu Sans Mono',ui-monospace,Menlo,Consolas,monospace,system-ui,sans-serif;font-size:max(14px,calc(var(--fs,20px)*.85));line-height:1;font-weight:700;white-space:nowrap;width:0;height:1em;animation:gxgm 3.7s steps(1) infinite}
-.pt.gx .gxg u{position:absolute;left:0;top:0;opacity:0;text-decoration:none;font-style:normal;text-shadow:0 1px 1px #000,0 0 3px #000,0 0 7px #000,1px 0 #f03,-1px 0 #0ff;animation:gxgv var(--t,3.3s) steps(1) infinite}
+/* одна тонкая полоса сдвига (копия участка портрета без цвета), видна лишь часть цикла; ниже лица */
+.pt.gx .gxs{inset:0;z-index:1;opacity:0;animation:gxbd 4.4s steps(1) infinite}
+.pt.gx .gxs1{background:var(--im) center top/cover;clip-path:inset(72% 0 24% 0);--s:5px}
+@keyframes gxbd{0%{opacity:0;transform:none}70%{opacity:1;transform:translateX(var(--s))}74%{opacity:1;transform:translateX(calc(var(--s)*-.6))}78%,100%{opacity:0;transform:none}}
+.pt.gx img{animation:gxi 1.1s steps(1) infinite}
+@keyframes gxi{0%{transform:scale(1.02)}30%{transform:translate(1px,0) scale(1.02)}34%{transform:scale(1.02)}70%{transform:translate(-1px,1px) scale(1.02)}74%{transform:scale(1.02)}}
+/* редкие мелкие «битые пиксели» 2–4px у краёв (тёмный пурпур), вспыхивают коротко */
+.pt.gx .gxp{inset:0;z-index:2;opacity:0;background:linear-gradient(#6d28d9,#6d28d9) 6% 15%/4px 2px,linear-gradient(#3b0764,#3b0764) 93% 41%/3px 3px,linear-gradient(#4c1d95,#4c1d95) 4% 66%/2px 4px;background-repeat:no-repeat;animation:gxp 4.1s steps(1) infinite}
+@keyframes gxp{0%,100%{opacity:0;transform:none}22%{opacity:.8;transform:translate(1px,2px)}26%{opacity:0}63%{opacity:.7;transform:translate(-1px,-2px)}66%{opacity:0}}
+/* 3 маленьких символа (12–16px) в углах/у краёв, полупрозрачные; <b class=gxg> = слот из 3 вариантов (<u>), один виден всегда; смена шагами */
+.pt.gx .gxg{z-index:3;font-family:'Noto Sans Symbols','Noto Sans Symbols 2','Segoe UI Symbol','DejaVu Sans Mono',ui-monospace,Menlo,Consolas,monospace,system-ui,sans-serif;font-size:var(--fs,14px);line-height:1;font-weight:700;white-space:nowrap;width:0;height:1em;opacity:.55;animation:gxgm 3.7s steps(1) infinite}
+.pt.gx .gxg u{position:absolute;left:0;top:0;opacity:0;text-decoration:none;font-style:normal;text-shadow:0 0 2px #000,0 0 5px #000,0 0 6px #3b0764;animation:gxgv var(--t,3.3s) steps(1) infinite}
 .pt.gx .gxg u:nth-child(1){opacity:1}
 .pt.gx .gxg u:nth-child(2){animation-delay:calc(var(--t,3.3s)/-1.5)}
 .pt.gx .gxg u:nth-child(3){animation-delay:calc(var(--t,3.3s)/-3)}
-.pt.gx .gxg .c0{color:#fff}.pt.gx .gxg .c1{color:#e879f9}.pt.gx .gxg .c2{color:#ff4d6d}
-.pt.gx .gxg.w{left:0!important;right:0;width:auto}.pt.gx .gxg.w u{left:0;right:0;text-align:center}
+.pt.gx .gxg .c0{color:#d9ccf0}.pt.gx .gxg .c1{color:#b07ae0}.pt.gx .gxg .c2{color:#8f6bb3}
 @keyframes gxgv{0%{opacity:1}33.4%{opacity:0}100%{opacity:0}}
-@keyframes gxgm{0%,100%{transform:none;opacity:.9}20%{opacity:1}30%{transform:translate(2px,-1px)}31%{transform:translate(-3px,1px) scaleX(-1);opacity:.7}45%{opacity:1}64%{transform:translate(1px,3px) skewX(-8deg)}65%{transform:none}80%{opacity:.75}}
-.pt.gx::before{content:'▓ 0x00';position:absolute;left:3px;top:2px;z-index:3;font:700 10px/1 monospace;color:#e9d5ff;text-shadow:0 0 3px #000,1px 0 #f03,-1px 0 #0ff;pointer-events:none;animation:gxc 2.2s steps(1) infinite}
-@keyframes gxc{0%{content:'▓ 0x00'}14%{content:'Ǝ?#░ ..'}28%{content:'ERR_UNKNOWN'}42%{content:'nu11 ▒'}57%{content:'Ø̷̢ ░▓ ???'}71%{content:'██▒▒░░'}85%{content:'0xFF ▚'}}
-.pt.gx::after{content:'';position:absolute;left:0;right:0;height:9%;top:-10%;z-index:3;background:linear-gradient(#0000,#a0f4,#0000);pointer-events:none;animation:gxbar 5.2s steps(24) infinite}
-@keyframes gxbar{to{top:108%}}
-.nm.gx,.gxt{color:#fff;font-weight:800;text-shadow:1px 0 #f03,-1px 0 #a0f;animation:gxt 3.1s steps(1) infinite}
-@keyframes gxt{0%,100%{text-shadow:1px 0 #f03,-1px 0 #a0f;transform:none}40%{text-shadow:-2px 0 #0ff,2px 0 #f03;transform:translateX(1px)}42%{text-shadow:1px 0 #f03,-1px 0 #a0f;transform:none}}
+@keyframes gxgm{0%,100%{transform:none;opacity:.55}30%{opacity:.4}31%{transform:translate(1px,0);opacity:.6}64%{opacity:.35}65%{transform:none;opacity:.55}}
+.nm.gx,.gxt{color:#fff;font-weight:800;text-shadow:1px 0 #3b0764,-1px 0 #12001f;animation:gxt 3.1s steps(1) infinite}
+@keyframes gxt{0%,100%{text-shadow:1px 0 #3b0764,-1px 0 #12001f;transform:none}40%{text-shadow:-1px 0 #4c1d95,1px 0 #12001f;transform:translateX(1px)}42%{text-shadow:1px 0 #3b0764,-1px 0 #12001f;transform:none}}
 .nm.gx{z-index:4}
 /* искажение имени: на отдельных кадрах поверх подставляется zalgo/подмена символов (настоящее имя остаётся в DOM) */
-.nm.gx::after{content:'';position:absolute;inset:0;padding:inherit;background:linear-gradient(#0000,#000 55%);color:#f0abfc;text-shadow:1px 0 #f03,-1px 0 #0ff;opacity:0;pointer-events:none;overflow:hidden;animation:gxnm 3.7s steps(1) infinite}
-@keyframes gxnm{0%,18%,30%,52%,66%,84%,100%{opacity:0;content:''}19%{opacity:1;content:'К̷̢а̸̛с̶у̵г̷а̸ А̴р̶а̸т̷а̵'}22%{opacity:1;content:'Ka5uga Ar4ta ▒▒'}31%{opacity:1;content:'ERR_UNKNOWN'}34%{opacity:1;content:'Ⱪ⟁ᛊ⏃ ᚫᚱ⏃ᛏ⏃'}53%{opacity:1;content:'Касуга ██▒▒░░'}56%{opacity:1;content:'Ǝ̷R̴Ø̷̢R̸ ?̵?̶?̷'}67%{opacity:1;content:'П̵о̷в̸е̷л̴и̶т̸е̷л̵ь̶ Д̷е̸м̷о̴н̵о̷в̸'}70%{opacity:1;content:'nu11 nu11 nu11'}85%{opacity:1;content:'К̸а̷с̴у̶г̵а̸ ▓▒░ Ā̷r̴a̶t̷a̵'}}
-/* чёрная звезда редкости: залитая чёрная звезда на светящемся бело-пурпурном «портале»; сдвинутые копии и «?» мерцают */
-.bs{position:relative;isolation:isolate;display:inline-block;vertical-align:middle;color:#000;font-size:22px;line-height:1;padding:5px 6px;margin:0 2px;font-weight:900;-webkit-text-stroke:1.5px #fff;background:radial-gradient(closest-side,#fdf4ff 0,#e879f9 28%,#a21caf 52%,#4c1d95 74%,#0000 100%);text-shadow:0 0 2px #fff,0 0 6px #d946ef,0 0 11px #7e22ce,2px 1px 0 #f03,-2px -1px 0 #22e6ff}
+.nm.gx::after{content:'';position:absolute;inset:0;padding:inherit;background:linear-gradient(#0000,#000 55%);color:#c4b5fd;opacity:0;pointer-events:none;overflow:hidden;animation:gxnm 3.7s steps(1) infinite}
+@keyframes gxnm{0%,18%,30%,52%,66%,84%,100%{opacity:0;content:''}19%{opacity:1;content:'К̷̢а̸̛с̶у̵г̷а̸ А̴р̶а̸т̷а̵'}22%{opacity:1;content:'Ka5uga Ar4ta ▒▒'}31%{opacity:1;content:'ERR_UNKNOWN'}34%{opacity:1;content:'Ⱪ⟁ᛊ⏃ ᚫᚱ⏃ᛏ⏃'}53%{opacity:1;content:'Касуга ██▒▒░░'}}
+/* чёрная звезда редкости: чистая чёрная «дыра», тонкое неровное тёмно-пурпурное свечение (без белой обводки) */
+.bs{position:relative;isolation:isolate;display:inline-block;vertical-align:middle;color:#000;font-size:22px;line-height:1;padding:5px 6px;margin:0 2px;font-weight:900;-webkit-text-stroke:.6px #2e1065;background:radial-gradient(closest-side,#0000 0,#0000 46%,#3b076466 66%,#2e106533 82%,#0000 100%);text-shadow:0 0 2px #4c1d95,0 0 6px #3b0764,1px 0 3px #2e1065}
 .bs::before,.bs::after{content:'★';position:absolute;left:6px;top:5px;z-index:-1;pointer-events:none;color:#000;font-weight:900}
-.bs::before{-webkit-text-stroke:2px #ff2a55;transform:translate(-4px,2px);animation:gxsa 1.9s steps(1) infinite}
-.bs::after{-webkit-text-stroke:2px #22e6ff;transform:translate(4px,-2px);animation:gxsb 2.3s steps(1) infinite}
-.bs u{position:absolute;right:-7px;top:-7px;z-index:2;font:900 12px/1 monospace;color:#fff;-webkit-text-stroke:0;text-shadow:0 0 3px #000,1px 0 #f03,-1px 0 #22e6ff;pointer-events:none;animation:gxq 1.7s steps(1) infinite}
-@keyframes gxsa{0%,100%{opacity:1;transform:translate(-4px,2px)}30%{opacity:.35;transform:translate(-6px,-1px)}31%{opacity:1;transform:translate(-2px,3px)}62%{opacity:.6;transform:translate(-5px,0)}}
-@keyframes gxsb{0%,100%{opacity:1;transform:translate(4px,-2px)}25%{opacity:.4;transform:translate(6px,1px)}26%{opacity:1;transform:translate(2px,-3px)}70%{opacity:.6;transform:translate(5px,0)}}
-@keyframes gxq{0%,100%{opacity:1;transform:none}30%{opacity:0}45%{opacity:1;transform:translate(1px,2px) scaleX(-1)}70%{opacity:.5;transform:translate(-1px,-1px)}}
+.bs::before{-webkit-text-stroke:1.5px #4c1d95;transform:translate(-1px,1px);opacity:.55;animation:gxsa 1.9s steps(1) infinite}
+.bs::after{-webkit-text-stroke:1.5px #3b0764;transform:translate(1px,-1px);opacity:.5;animation:gxsb 2.3s steps(1) infinite}
+.bs u{position:absolute;right:-7px;top:-7px;z-index:2;font:900 11px/1 monospace;color:#a78bfa;-webkit-text-stroke:0;text-shadow:0 0 3px #000;opacity:.6;pointer-events:none;animation:gxq 1.7s steps(1) infinite}
+@keyframes gxsa{0%,100%{opacity:.55;transform:translate(-1px,1px)}30%{opacity:.2;transform:translate(-2px,0)}31%{opacity:.6;transform:translate(-1px,2px)}62%{opacity:.35;transform:translate(-2px,1px)}}
+@keyframes gxsb{0%,100%{opacity:.5;transform:translate(1px,-1px)}25%{opacity:.2;transform:translate(2px,0)}26%{opacity:.55;transform:translate(1px,-2px)}70%{opacity:.3;transform:translate(2px,-1px)}}
+@keyframes gxq{0%,100%{opacity:.6;transform:none}30%{opacity:0}45%{opacity:.6;transform:translate(1px,1px)}70%{opacity:.3}}
 .bs{animation:gxst 2.7s steps(1) infinite}
-@keyframes gxst{0%,100%{transform:none;opacity:1}40%{transform:translate(1px,0);opacity:.8}42%{transform:translate(-2px,1px) scaleX(-1);opacity:1}43%{transform:none}75%{opacity:.6}77%{opacity:1;transform:translateY(1px)}}
+@keyframes gxst{0%,100%{transform:none;opacity:1}40%{transform:translate(1px,0);opacity:.85}43%{transform:none}75%{opacity:.8}77%{opacity:1}}
 .r1 .stars{font-size:22px;line-height:1.5;min-height:34px}
 .f.r1{padding:4px}
-.f .pt.gx::before{font-size:7px}
-.f .pt.gx .gxg{font-size:13px!important}
-.f .pt.gx .gxg:nth-of-type(n+5){display:none}
-.f .pt.gx .gxp2{display:none}
-@media(max-width:360px){.pt.gx .gxg{font-size:max(14px,calc(var(--fs,20px)*.72))}.pt.gx .gxg.w{font-size:11px}.f .pt.gx .gxg{font-size:13px!important}}
-@media(max-width:260px){.pt.gx .gxg:nth-of-type(n+6){display:none}.r1 .stars{font-size:19px}}
-@media(prefers-reduced-motion:reduce){.r1,.r1::before,.r1::after,.pt.gx img,.pt.gx .gxh,.pt.gx .gxs,.pt.gx .gxr,.pt.gx .gxc,.pt.gx .gxn,.pt.gx .gxp,.pt.gx .gxp2,.pt.gx .gxg,.pt.gx .gxg u,.pt.gx::before,.pt.gx::after,.nm.gx,.nm.gx::after,.gxt,.bs,.bs::before,.bs::after,.bs u{animation:none!important}.pt.gx .gxn,.pt.gx::after{display:none!important}.pt.gx .gxg u:nth-child(n+2){display:none}.pt.gx .gxg u:nth-child(1){opacity:1}.r1::after{opacity:0}.pt.gx .gxs{transform:translateX(var(--s))}.pt.gx .gxs2,.pt.gx .gxs4,.pt.gx .gxs6{display:none}.pt.gx .gxr{transform:translateX(-4px)}.pt.gx .gxc{transform:translateX(4px)}.pt.gx .gxg{transform:none}}
+.f .pt.gx .gxg{font-size:12px}
+@media(max-width:260px){.r1 .stars{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.r1,.r1::before,.r1::after,.pt.gx img,.pt.gx .gxs,.pt.gx .gxp,.pt.gx .gxg,.pt.gx .gxg u,.nm.gx,.nm.gx::after,.gxt,.bs,.bs::before,.bs::after,.bs u{animation:none!important}.pt.gx .gxs,.pt.gx .gxp{display:none!important}.pt.gx .gxg u:nth-child(n+2){display:none}.pt.gx .gxg u:nth-child(1){opacity:1}.r1::after{opacity:0}}
 @media(prefers-reduced-motion:reduce){.r7,.pt.g7 img,.pt.g7::after,.g7t,.nm.gl,.r7 .stars{animation:none}}
 /* guild */
 .gem{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:12px;font-size:24px;border:2px solid #ffd76a;box-shadow:0 0 10px #ffd76a55}
@@ -583,19 +560,14 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
 function modal(h){$('modal').innerHTML=`<div class="modal" onclick="if(event.target===this)closeM()"><div class="inner">${h}</div></div>`}
 function closeM(){$('modal').innerHTML=''}
-const IMG_V={arata:2};function imgSrc(id){return 'img/'+id+'.jpg'+(IMG_V[id]?'?v='+IMG_V[id]:'')}
+const IMG_V={arata:2,featherine:2};function imgSrc(id){return 'img/'+id+'.jpg'+(IMG_V[id]?'?v='+IMG_V[id]:'')}
 function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} loading="lazy" src="${imgSrc(h.id)}" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
-// неизвестные символы: 8 слотов по 3 варианта (виден ровно один, смена шагами); [left%, top%, размер px, длительность, класс, [[текст,цвет],...]]
+// неизвестные символы (v4): 3 маленьких слота (12–16px) в углах/у краёв, вне лица; по 3 варианта (виден ровно один, смена шагами); [left%, top%, размер px, длительность, класс, [[текст,цвет],...]]
 const GX_SL=[
- [5,7,24,'3.3s','',[['ᚠ̷̢',0],['⟁',1],['ꙮ',2]]],
- [74,5,22,'2.9s','',[['⌬',1],['҉',0],['☍̸',2]]],
- [9,33,22,'3.7s','',[['Ø̷̢',2],['Ʌ̴͎',0],['⍾',1]]],
- [76,29,22,'3.1s','',[['ᛉ',0],['⏃̴',1],['⌇',2]]],
- [0,19,14,'2.6s','w',[['ERR_UNKNOWN',2],['0xDEAD',0],['nu11',1]]],
- [7,56,20,'3.5s','',[['██▒▒░░',1],['▓▒░',0],['⎔',2]]],
- [68,52,24,'4.1s','',[['Ʌ̴͎̈',0],['ꙮ',2],['Ø̷̢',1]]],
- [0,69,14,'3.0s','w',[['0xDEAD',1],['██▒▒░░',2],['ERR_UNKNOWN',0]]]];
-const GX_LAYERS='<i class="gxh"></i><i class="gxs gxs1"></i><i class="gxs gxs2"></i><i class="gxs gxs3"></i><i class="gxs gxs4"></i><i class="gxs gxs5"></i><i class="gxs gxs6"></i><i class="gxr"></i><i class="gxc"></i><i class="gxn"></i><i class="gxp"></i><i class="gxp gxp2"></i>'+GX_SL.map(g=>'<b class="gxg'+(g[4]?' '+g[4]:'')+'" aria-hidden="true" style="left:'+g[0]+'%;top:'+g[1]+'%;--fs:'+g[2]+'px;--t:'+g[3]+'">'+g[5].map(v=>'<u class="c'+v[1]+'">'+v[0]+'</u>').join('')+'</b>').join('');
+ [4,4,14,'3.3s','',[['ᚠ',0],['⟁',1],['Ø',2]]],
+ [88,6,14,'3.7s','',[['⌬',1],['ᛉ',0],['⍾',2]]],
+ [4,66,16,'3.1s','',[['Ʌ',2],['⎔',0],['ꙮ',1]]]];
+const GX_LAYERS='<i class="gxs gxs1"></i><i class="gxp"></i>'+GX_SL.map(g=>'<b class="gxg'+(g[4]?' '+g[4]:'')+'" aria-hidden="true" style="left:'+g[0]+'%;top:'+g[1]+'%;--fs:'+g[2]+'px;--t:'+g[3]+'">'+g[5].map(v=>'<u class="c'+v[1]+'">'+v[0]+'</u>').join('')+'</b>').join('');
 function portrait(h){const g7=h.r===7,gx=!!h.secret;return `<div class="pt${g7?' g7':gx?' gx':''}"${gx?` style="--im:url(${imgSrc(h.id)})"`:''}>${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}${gx?GX_LAYERS:''}<span class="nm${g7?' gl':gx?' gx':''}">${esc(h.name)}</span></div>`}
 function nmG(h){return h.r===7?`<span class="g7t">${esc(h.name)}</span>`:h.secret?`<span class="gxt">${esc(h.name)}</span>`:esc(h.name)}
 function stars(r){return r===1?'<span class="bs">★<u>?</u></span>':'★'.repeat(r)}
@@ -3662,9 +3634,9 @@ function dvSync(force){if(!S||!ME)return Promise.resolve();if(DVSYNC)return DVSY
 setInterval(()=>{try{if(document.hidden||!S||!ME)return;if(tab==='wboss'||Date.now()-WLAST>6e4){WLAST=Date.now();dvSync()}}catch(e){}},15000);
 setTimeout(()=>{try{if(S&&ME)dvSync()}catch(e){}},4000);
 
-// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V3) ======
+// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V4) ======
 // Trinity Seven (Тринити: Семеро магов). Тема Imperium/Impero (Господство): копирует и стирает магию. Чёрный Императорский меч Юдекка — Меч Повелителя Демонов.
-const AR_MARK='ASTRAL_ARATA_V3',AR_ID='arata',AR_PRICE=99999;
+const AR_MARK='ASTRAL_ARATA_V4',AR_ID='arata',AR_PRICE=99999;
 function arBz(s){let o='';for(const ch of String(s)){o+=ch;if(/[А-Яа-яЁёA-Za-z0-9]/.test(ch)&&(o.length*7)%5===0)o+='\u0336'}return o}
 const AR_SD='Юдекка — Меч Повелителя Демонов: мгновенный <s>огромный</s> невероятный урон по всем врагам, отряд исцелён и воскрешён на 100%, NP +100%, неуязвимость 2 хода, 2 хода вне очереди, на врагов ложится «Imperium» (безумный дебафф). Мир-босс: ≈2.5% его макс. HP за применение.';
 const AR_D=[
