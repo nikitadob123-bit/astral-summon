@@ -71,7 +71,7 @@ input{user-select:text;-webkit-user-select:text}
 .f.dead{opacity:.3}
 .f .small{font-size:10px}
 .cmd{display:flex;gap:6px;justify-content:center;margin:10px 0}
-.cc{flex:1;max-width:80px;aspect-ratio:3/4;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-weight:700;font-size:11px;border:2px solid #fff3;gap:3px}
+.cc{flex:1;min-width:0;max-width:80px;aspect-ratio:3/4;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-weight:700;font-size:11px;border:2px solid #fff3;gap:3px}
 .cc img{width:70%;aspect-ratio:1;object-fit:cover;object-position:top;border-radius:8px}
 .cc.B{background:linear-gradient(#b91c1c,#450a0a)}.cc.A{background:linear-gradient(#1d4ed8,#0c1a4a)}.cc.Q{background:linear-gradient(#15803d,#052e16)}
 .cc.picked{outline:3px solid #fff;transform:translateY(-8px)}
@@ -162,6 +162,18 @@ input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;bac
 .f .pt.gx .gxg{font-size:12px}
 @media(max-width:260px){.r1 .stars{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.r1,.r1::before,.r1::after,.pt.gx img,.pt.gx .gxs,.pt.gx .gxp,.pt.gx .gxg,.pt.gx .gxg u,.nm.gx,.nm.gx::after,.gxt,.bs,.bs::before,.bs::after,.bs u{animation:none!important}.pt.gx .gxs,.pt.gx .gxp{display:none!important}.pt.gx .gxg u:nth-child(n+2){display:none}.pt.gx .gxg u:nth-child(1){opacity:1}.r1::after{opacity:0}}
+/* ===== ASTRAL_DUNGEON_V1: пустотные описания Араты (.vd) + следы пустоты на портрете (.gxv) ===== */
+.vd{opacity:1!important;color:#d8c8f4;background:linear-gradient(90deg,#0b0016f2,#16062ce6 60%,#0b0016f2);border:1px solid #3b0f6a;border-left:3px solid #7c3aed;border-radius:8px;padding:7px 9px;line-height:1.45;overflow-wrap:anywhere;text-shadow:0 0 5px #6d28d9aa,0 1px 1px #000;box-shadow:0 0 10px #4c1d9555,inset 0 0 14px #000}
+.vd b{color:#f1e8ff;text-shadow:0 0 6px #a855f7,0 0 2px #000,1px 0 #3b0764}
+.vd b.vdh{display:inline-block;animation:vdh 4.3s steps(1) infinite}
+.vd s{color:#b9a3e6;text-decoration-color:#8b5cf6}
+.vd u.vdl{text-decoration:none;display:inline-block;color:#e9d5ff;animation:vdl 3.1s steps(1) infinite}
+.vd u.vdl.b{animation-duration:3.7s;animation-delay:-1.2s}.vd u.vdl.c{animation-duration:4.9s;animation-delay:-2.6s}
+@keyframes vdh{0%,100%{transform:none;text-shadow:0 0 6px #a855f7,0 0 2px #000,1px 0 #3b0764}52%{transform:translateX(1px);text-shadow:0 0 6px #a855f7,-1px 0 #6d28d9,1px 0 #12001f}54%{transform:none}}
+@keyframes vdl{0%,100%{transform:none;opacity:1}40%{transform:translate(1px,-1px);opacity:.55}43%{transform:translate(-1px,1px);opacity:.85}46%{transform:none;opacity:1}}
+.pt.gx .gxv{inset:0;z-index:2;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400' preserveAspectRatio='none'%3E%3Cpath d='M0 42L14 54L10 72L26 86L22 98M14 54L30 47L41 31M0 0L18 20L34 14L52 34M300 32L284 48L288 66L270 80L274 94M284 48L268 42L262 26M300 0L280 16L266 12L250 30M0 296L16 308L12 328L30 344L26 360L40 372M16 308L34 302L44 286M0 400L20 382L14 368M300 288L282 302L288 324L268 338L272 358M282 302L264 296L256 280M300 400L280 382L262 388L248 366M0 196L10 205L6 220L16 232M300 168L290 178L294 194L284 206' fill='none' stroke='%235b21b6' stroke-width='1' stroke-linejoin='bevel' opacity='0.55' transform='translate(1.5 0)' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M0 42L14 54L10 72L26 86L22 98M14 54L30 47L41 31M0 0L18 20L34 14L52 34M300 32L284 48L288 66L270 80L274 94M284 48L268 42L262 26M300 0L280 16L266 12L250 30M0 296L16 308L12 328L30 344L26 360L40 372M16 308L34 302L44 286M0 400L20 382L14 368M300 288L282 302L288 324L268 338L272 358M282 302L264 296L256 280M300 400L280 382L262 388L248 366M0 196L10 205L6 220L16 232M300 168L290 178L294 194L284 206' fill='none' stroke='%23000' stroke-width='2.2' stroke-linejoin='bevel' opacity='0.8' transform='translate(0 0)' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat,radial-gradient(ellipse 24% 15% at 0 0,#000b,#0000),radial-gradient(ellipse 24% 15% at 100% 0,#000a,#0000),radial-gradient(ellipse 24% 16% at 0 100%,#000b,#0000),radial-gradient(ellipse 24% 16% at 100% 100%,#000b,#0000),radial-gradient(ellipse 9% 12% at 0 52%,#0008,#0000),radial-gradient(ellipse 9% 12% at 100% 44%,#0008,#0000);opacity:.72;animation:gxvm 3.9s steps(1) infinite}
+@keyframes gxvm{0%,100%{opacity:.72;transform:none}46%{opacity:.5}48%{opacity:.72}81%{opacity:.6;transform:translate(1px,0)}83%{opacity:.72;transform:none}}
+@media(prefers-reduced-motion:reduce){.vd b.vdh,.vd u.vdl,.pt.gx .gxv{animation:none!important}}
 @media(prefers-reduced-motion:reduce){.r7,.pt.g7 img,.pt.g7::after,.g7t,.nm.gl,.r7 .stars{animation:none}}
 /* guild */
 .gem{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:12px;font-size:24px;border:2px solid #ffd76a;box-shadow:0 0 10px #ffd76a55}
@@ -567,7 +579,7 @@ const GX_SL=[
  [4,4,14,'3.3s','',[['ᚠ',0],['⟁',1],['Ø',2]]],
  [88,6,14,'3.7s','',[['⌬',1],['ᛉ',0],['⍾',2]]],
  [4,66,16,'3.1s','',[['Ʌ',2],['⎔',0],['ꙮ',1]]]];
-const GX_LAYERS='<i class="gxs gxs1"></i><i class="gxp"></i>'+GX_SL.map(g=>'<b class="gxg'+(g[4]?' '+g[4]:'')+'" aria-hidden="true" style="left:'+g[0]+'%;top:'+g[1]+'%;--fs:'+g[2]+'px;--t:'+g[3]+'">'+g[5].map(v=>'<u class="c'+v[1]+'">'+v[0]+'</u>').join('')+'</b>').join('');
+const GX_LAYERS='<i class="gxs gxs1"></i><i class="gxp"></i><i class="gxv" aria-hidden="true"></i>'+GX_SL.map(g=>'<b class="gxg'+(g[4]?' '+g[4]:'')+'" aria-hidden="true" style="left:'+g[0]+'%;top:'+g[1]+'%;--fs:'+g[2]+'px;--t:'+g[3]+'">'+g[5].map(v=>'<u class="c'+v[1]+'">'+v[0]+'</u>').join('')+'</b>').join('');
 function portrait(h){const g7=h.r===7,gx=!!h.secret;return `<div class="pt${g7?' g7':gx?' gx':''}"${gx?` style="--im:url(${imgSrc(h.id)})"`:''}>${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}${gx?GX_LAYERS:''}<span class="nm${g7?' gl':gx?' gx':''}">${esc(h.name)}</span></div>`}
 function nmG(h){return h.r===7?`<span class="g7t">${esc(h.name)}</span>`:h.secret?`<span class="gxt">${esc(h.name)}</span>`:esc(h.name)}
 function stars(r){return r===1?'<span class="bs">★<u>?</u></span>':'★'.repeat(r)}
@@ -655,11 +667,12 @@ function vHeroes(){
  <div class="panel"><h3>📚 Коллекция ${own}/${tot}</h3><div class="bar xp"><i style="width:${Math.min(100,own/tot*100)}%"></i></div><div class="row" style="margin-top:8px;gap:5px">${[0,S.owned.arata?1:-1,3,4,5,6,7].filter(r=>r>=0).map(r=>`<button class="btn sm ${HF===r?'gold':''}" style="width:auto;margin:0;padding:6px 10px" onclick="HF=${r};render()">${r?r+'★':'Все'}</button>`).join('')}</div></div>
  <div class="grid">${list.map(h=>S.owned[h.id]?`<div class="card r${h.r} ${S.team.includes(h.id)?'sel':''}" onclick="hero('${h.id}')">${portrait(h)}<div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ур.${S.owned[h.id].lv}${S.owned[h.id].dup?' +'+S.owned[h.id].dup:''}</div></div>`:`<div class="card lock">${portrait(h)}<div class="stars">${stars(h.r)}</div><div class="small">не получен</div></div>`).join('')}</div>`}
 function hero(id){const h=H(id),o=S.owned[id];if(!o)return;const s=stats(id),c=lvCost(o.lv),inT=S.team.includes(id),cap=lvCap(o),asc=o.asc||0,skl=sk(o),npl=o.npl||1;
- const mp=h.myth?`<div class="small ${h.secret?'gxt':h.r===7?'g7t':'rbt'}" style="margin-top:6px">✦ ${h.myth.d}</div>`:'';
+ const vd=x=>h.secret&&typeof vdHtml==='function'?vdHtml(x):x;
+ const mp=h.myth?(h.secret?`<div class="small vd" style="margin-top:6px">${vd('✦ '+h.myth.d)}</div>`:`<div class="small ${h.r===7?'g7t':'rbt'}" style="margin-top:6px">✦ ${h.myth.d}</div>`):'';
  const atMax=o.lv>=cap,canAsc=atMax&&asc<ASC_MAX;
  modal(`<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div style="width:42%;flex:none" class="card r${h.r}">${portrait(h)}</div><div style="flex:1;min-width:0"><h2 style="font-size:17px">${nmG(h)}</h2><div class="stars">${stars(h.r)}</div><div class="small">${CLS_IC[h.cls]} ${h.cls} · ур.${o.lv}/${cap} · вознесение ${asc}/${ASC_MAX} · копий +${o.dup||0}</div>
  <div class="kv"><span>❤ HP</span><b>${fmtHp(s.hp)}</b></div><div class="kv"><span>⚔ Атака</span><b>${fmtHp(s.atk)}</b></div>
- <div class="small" style="margin-top:8px"><b>Навык «${h.skill.n}» ур.${skl}:</b> ${skDesc(h,o)}</div><div class="small" style="margin-top:4px"><b>NP «${h.np.n}» ур.${npl}:</b> ${h.np.aoe?'урон по всем врагам':'урон по цели'}, тип ${CARD[h.np.t].n}, мощность ×${(h.np.m*npMul(o)).toFixed(1)}</div>${mp}</div></div>
+ <div class="small${h.secret?' vd':''}" style="margin-top:8px">${vd(`<b>Навык «${h.skill.n}» ур.${skl}:</b> ${skDesc(h,o)}`)}</div><div class="small${h.secret?' vd':''}" style="margin-top:4px">${vd(`<b>NP «${h.np.n}» ур.${npl}:</b> ${h.np.aoe?'урон по всем врагам':'урон по цели'}, тип ${CARD[h.np.t].n}, мощность ×${(h.np.m*npMul(o)).toFixed(1)}`)}</div>${mp}</div></div>
  <div class="row c" style="margin-top:12px"><button class="btn" ${S.gold<c||atMax?'disabled':''} onclick="lvUp('${id}',1)">Ур. ↑ · 🪙${c}</button><button class="btn" ${atMax?'disabled':''} onclick="lvUp('${id}',10)">Ур. ↑×10</button>${canAsc?`<button class="btn gold" onclick="ascend('${id}')">Вознесение · 🪙${ascCost(asc)}</button>`:''}</div>
  <div class="row c" style="margin-top:6px"><button class="btn" ${skl>=10||S.gold<skCost(skl)?'disabled':''} onclick="skUp('${id}')">Навык ↑ ${skl>=10?'МАКС':'🪙'+skCost(skl)}</button><button class="btn" ${npl>=5||S.gold<npCost(npl)?'disabled':''} onclick="npUpg('${id}')">NP ↑ ${npl>=5?'МАКС':'🪙'+npCost(npl)}</button></div>
  <div class="row c" style="margin-top:6px"><button class="btn ${inT?'':'gold'}" onclick="togT('${id}')">${inT?'Убрать из отряда':'В отряд'}</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
@@ -744,7 +757,7 @@ function vBattle(){
  <div class="fighters">${e}</div><div class="cmd">${cards}</div>
  <div class="row c" style="margin-bottom:10px"><button class="btn gold" ${B.pick.length<3?'disabled':''} onclick="attack()">Атака ▶ ${B.pick.length}/3</button><button class="btn" onclick="B.pick=[];render()">Сброс</button><button class="btn" onclick="quitB()">Выход</button></div>
  <div class="fighters">${f}</div><div class="log">${B.log.slice(0,30).join('<br>')}</div>`}
-function quitB(){if(!confirm('Отступить?'))return;if(B&&B.guild)return gBossEnd(B);B=null;render()}
+function quitB(){if(!confirm('Отступить?'))return;if(B&&B.dg)return dgEnd(0,1);if(B&&B.guild)return gBossEnd(B);B=null;render()}
 function startB(i){const st=STAGES[i];
  B={si:i,st,turn:1,tgt:0,pick:[],log:['Бой начался!'],
  team:S.team.map(id=>{const s=stats(id),h=H(id),o=S.owned[id],m=h.myth||{};const gb=gBf();return{h,o,hp:Math.round(s.hp*gb.hp),max:Math.round(s.hp*gb.hp),atk:Math.round(s.atk*gb.atk*(m.atkMul||1)),np:m.npStart||0,cd:0,buff:0,m}}),
@@ -781,9 +794,9 @@ function attack(){
  alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;if(typeof arSkipEn==='function'&&arSkipEn(e))return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);const d=Math.round(e.atk*cm*(.85+Math.random()*.3)*((v.m&&v.m.dmgTaken)||1)*(B.inv>0?0:1)*(B.shield||1)*(typeof arIn==='function'?arIn(v):1));v.hp-=d;v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
  try{dvRevive()}catch(e){}
  B.team.forEach(u=>{if(u.cd)u.cd--;if(u.buff)u.buff--;if(u.hp>0&&u.m){if(u.m.regen)u.hp=Math.min(u.max,u.hp+Math.round(u.max*u.m.regen));if(u.m.teamNp)B.team.forEach(x=>{if(x.hp>0)x.np=Math.min(100,x.np+u.m.teamNp)})}});
- if(!alive(B.team).length){if(B.guild)return gBossEnd(B);S.st.battles++;prog('battle');save();B=null;modal(`<h2>💀 Поражение</h2><p style="margin:10px 0">Прокачайте героев или соберите отряд с преимуществом по классу (Saber → Lancer → Archer → Saber, Caster ↔ Rider).</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);return}
+ if(!alive(B.team).length){if(B.guild)return gBossEnd(B);if(B.dg)return dgEnd(0);S.st.battles++;prog('battle');save();B=null;modal(`<h2>💀 Поражение</h2><p style="margin:10px 0">Прокачайте героев или соберите отряд с преимуществом по классу (Saber → Lancer → Archer → Saber, Caster ↔ Rider).</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);return}
  if(B.guild&&B.turn>=B.guild.maxT)return gBossEnd(B);B.turn++;deal();render()}
-function win(){if(B.guild)return gBossEnd(B);if(B.story)return winStory();const st=B.st,first=B.si>=S.cleared,gm=first?st.g*10:Math.round(st.g*3),gd=gGold(st.g*5);
+function win(){if(B.dg)return dgEnd(1);if(B.guild)return gBossEnd(B);if(B.story)return winStory();const st=B.st,first=B.si>=S.cleared,gm=first?st.g*10:Math.round(st.g*3),gd=gGold(st.g*5);
  S.gems+=gm;S.gold+=gd;S.st.battles++;S.st.wins++;prog('battle');prog('win');addXp(gXp(20+B.si*10));if(first)S.cleared=B.si+1;
  const last=B.si===STAGES.length-1&&first;B=null;save();
  modal(`<h2>🏆 Победа!</h2><p style="margin:10px 0">Награда: 💎${gm} 🪙${gd}${first?' (первое прохождение)':''}</p>${last?'<p>Вы победили Астрального Императора и прошли всю кампанию! Теперь собирайте героев, проходите сюжеты миров и охотьтесь на мифических 6★.</p>':''}<div class="row c"><button class="btn gold" onclick="closeM();render()">Дальше</button></div>`)}
@@ -2747,7 +2760,7 @@ function admHtml(){
  <select id="ad_w" style="${inp}">${wopts}</select><div class="small">Для «До главы N» введите N в поле валюты выше.</div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admWorld('all')">Пройти мир</button><button class="btn sm" onclick="admWorld('to')">До главы N</button><button class="btn sm" onclick="admWorld('reset')">Сбросить мир</button></div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPity()">🎯 Гарант мифика на след. крутку</button></div></div>
- ${typeof admEvPanel==='function'?admEvPanel():''}
+ ${typeof admEvPanel==='function'?admEvPanel():''}${typeof dgAdmPanel==='function'?dgAdmPanel():''}
  <div class="panel"><b>⚙ Аккаунт</b><input id="ad_nm" placeholder="Новый ник" maxlength="16" style="${inp}"><button class="btn sm" onclick="admRename()">Сменить ник</button>
  <input id="ad_p" type="password" placeholder="Новый пароль (от 4 символов)" style="${inp}"><button class="btn sm" onclick="admPass()">Сменить пароль</button>
  <div class="row" style="margin-top:8px"><button class="btn sm" onclick="admGuildReset()">🏰 Сбросить гильдию</button><button class="btn sm" style="background:#5b1a2a" onclick="admReset()">Сбросить прогресс</button><button class="btn sm" style="background:#5b1a2a" onclick="admDel()">Удалить аккаунт</button></div></div>
@@ -3596,7 +3609,7 @@ function wbBossV(d){const info=wbInfo(d.n),def=info.def,pc=(d.max-d.hp)/d.max*10
  <div class="small" style="margin-top:6px">Ваш урон: <b>${fmtHp(me)}</b> · Попыток: <b>${wbTriesLeft()}</b> (${WB_TRIES}/день)</div>
  ${rb?`<div class="small" style="margin-top:4px">🤝 Рейд «${esc(ra.code)}»: ${rb.n} игр. · ${rb.on?'<b style="color:#4ade80">бонус ×'+rb.mul.toFixed(1)+' активен</b>':'бонус ждёт ≥2 бьющих за час'}</div>`:''}
  <div class="row c" style="margin-top:10px"><button class="btn gold" ${ended||!S.team.length||!wbTriesLeft()?'disabled':''} onclick="wbStart()">⚔ В бой (${wbTriesLeft()})</button><button class="btn" onclick="wbBuyTry()">+1 попытка 💎300</button></div>
- <div class="small" style="margin-top:8px">${seven?'✦ Герой 7★ в отряде: до 1% макс. HP за попытку (потолок).':'Обычная отряд наносит ≈ 0.00001% макс. HP за попытку — нужны все игроки, рейд и 7★.'}</div></div>`}
+ <div class="small" style="margin-top:8px">${seven?'✦ Герой 7★ в отряде: до 1% макс. HP за попытку (потолок).'+(S.owned.arata&&S.team.includes('arata')?' 🕳 Касуга Арата: до 20% макс. HP за бой (потолок, остальных двух героев блокирует).':''):'Обычная отряд наносит ≈ 0.00001% макс. HP за попытку — нужны все игроки, рейд и 7★.'}</div></div>`}
 function wbTopV(d){const s=wbSorted(d),rk=s.findIndex(x=>x.k===ME);
  return `<div class="panel"><h3>🏆 Топ урона · ${WB_BOSSES[d.idx].n}</h3><div class="small" style="margin-bottom:6px">Ваше место: ${rk>=0?'#'+(rk+1):'—'} · участников ${s.length}</div>${s.slice(0,50).map((x,i)=>`<div class="q ${x.k===ME?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${esc(x.n||x.k)}${x.k===ME?' (вы)':''}${x.gn?'<div class="small">🏰 '+esc(x.gn)+'</div>':''}</div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Пока никто не ударил босса</div>'}${rk>=50?`<div class="q gmeRow"><div>${rk+1}. ${esc(S.name)} (вы)</div><b>${fmtHp(s[rk].d)}</b></div>`:''}</div>`}
 function wbGuildV(d){const g=wbGuilds(d),my=gMine();
@@ -3638,15 +3651,17 @@ setTimeout(()=>{try{if(S&&ME)dvSync()}catch(e){}},4000);
 // Trinity Seven (Тринити: Семеро магов). Тема Imperium/Impero (Господство): копирует и стирает магию. Чёрный Императорский меч Юдекка — Меч Повелителя Демонов.
 const AR_MARK='ASTRAL_ARATA_V4',AR_ID='arata',AR_PRICE=99999;
 function arBz(s){let o='';for(const ch of String(s)){o+=ch;if(/[А-Яа-яЁёA-Za-z0-9]/.test(ch)&&(o.length*7)%5===0)o+='\u0336'}return o}
-const AR_SD='Юдекка — Меч Повелителя Демонов: мгновенный <s>огромный</s> невероятный урон по всем врагам, отряд исцелён и воскрешён на 100%, NP +100%, неуязвимость 2 хода, 2 хода вне очереди, на врагов ложится «Imperium» (безумный дебафф). Мир-босс: ≈2.5% его макс. HP за применение.';
+const AR_SD='Юдекка — Меч Повелителя Демонов: мгновенный <s>огромный</s> невероятный урон по всем врагам, отряд исцелён и воскрешён на 100%, NP +100%, неуязвимость 2 хода, 2 хода вне очереди, на врагов ложится «Imperium» (безумный дебафф). Мир-босс: ≈5.5% его макс. HP за применение (до ≈8% с баффами), но суммарно за бой — не более 20% макс. HP босса.';
 const AR_D=[
  '🕳 <b>'+arBz('Императорский баг')+'</b> (пассивка): <s>множитель урона</s> = ??? (каждый удар ×0.5…×9), <s>входящий урон</s> иногда ×0, ход дважды — «иногда» (а порой и трижды), враг может быть <s>удалён</s> из боя, HP<30% → HP ⇄ инверсия, дебаффы врагов обращаются в баффы Араты.',
  '🩸 <b>Imperium</b> (дебафф): враги −60…85% атаки, урон по ним растёт с каждым ходом (×1.5 за слой), пропускают ходы, беспощадное «стирание» слабых, теряют до 8% HP за ход (у боссов — 3%), баффы снимаются. Против мир-босса — в пределах разумного, иммунитеты игнорируются.',
- '🔒 Мир-босс: двое других героев заблокированы, но все их баффы достаются Арате на весь бой. Играет другая песня.'];
+ '🔒 Мир-босс: двое других героев заблокированы, но все их баффы достаются Арате на весь бой. Предел урона по боссу — 20% его макс. HP за бой. Играет другая песня.'];
 (function(){HEROES.push({id:AR_ID,name:'Касуга Арата — Повелитель Демонов',r:1,secret:1,cls:'Saber',hue:0,hp:8e8,atk:5e9,deck:'BBAAQ',
  myth:{ar:1,npStart:100,npGain:3,teamNp:100,regen:.25,leech:.05,dmgTaken:.01,atkMul:1,d:AR_D.join('<br>')},
  skill:{n:'Юдекка',t:'araUp'},np:{n:'Astral Trinity: Повелитель Демонов',t:'B',m:40,aoe:1}})})();
 function heroTot(){try{return HEROES.filter(h=>!h.secret||(S&&S.owned&&S.owned[h.id])).length}catch(e){return HEROES.length}}
+// «пустотное» оформление описаний в окне деталей: заголовки <b> мерцают/сдвигаются шагами, первая буква заголовка — отдельный «битый» символ
+function vdHtml(x){let n=0;return String(x).replace(/<b>([^<]*)<\/b>/g,(m,t)=>{const c=Array.from(t);if(!c.length)return m;let k=1;while(k<c.length&&/[\u0300-\u036f]/.test(c[k]))k++;const v=['','b','c'][n++%3];return '<b class="vdh"><u class="vdl'+(v?' '+v:'')+'">'+c.slice(0,k).join('')+'</u>'+c.slice(k).join('')+'</b>'})}
 // ---------- скрытая покупка ----------
 let SHV='';
 function arVisible(){try{return !!S&&S.gems===AR_PRICE&&!S.owned[AR_ID]&&Number.isInteger(S.gems)}catch(e){return false}}
@@ -3681,17 +3696,19 @@ function arInit(){if(!B)return null;if(B.ar!==undefined)return B.ar||null;
    b.blocked=1;b.hp=0;b.np=0;b.cd=0;b.buff=0;L('🔒 '+h.name+' — заблокирован. Его баффы переданы Арате на весь бой')});
   u.atk=Math.round((u.atk+atkAdd)*atkX);u.max=Math.round(u.max+hpAdd);u.hp=u.max;u.m.regen=regen;u.m.leech=Math.min(1,leech);u.m.teamNp=teamNp;u.m.dmgTaken=dmgT;u.np=Math.min(100,np);
   ar.wbX=Math.min(1.5,1+.1*others.length+.05*leads);ar.atkX=atkX;
-  L('🕳 Арата получает баффы заблокированных героев: атака ×'+atkX.toFixed(2)+', лимит урона по боссу ×'+ar.wbX.toFixed(2))}
+  L('🕳 Арата получает баффы заблокированных героев: атака ×'+atkX.toFixed(2)+', урон по боссу ×'+ar.wbX.toFixed(2)+' (потолок 20% макс. HP за бой)')}
  return ar}
 function arWbApply(){const ar=arInit();if(!ar)return;
  // босс бьёт по Арате: пересчёт атаки от его живого отряда
  try{const t=B.team.filter(x=>!x.blocked),avg=t.reduce((a,x)=>a+x.max,0)/Math.max(1,t.length);B.en.forEach(e=>{const cap=Math.round(avg*.25);if(e.atk>cap)e.atk=cap})}catch(e){}
  L('🎵 «Повелитель Демонов» — играет другая песня')}
 const AR_M=[.5,1,2,3,5,9,.25],AR_MW=[.5,1,1,1.5,2];
-function arWbDmg(tg,base){const ar=B.ar;const cap=tg.max*.09*ar.wbX,room=Math.max(0,cap-ar.used),d=Math.min(base,room);ar.used+=d;return d}
+// лимит урона по мир-боссу: 20% макс. HP за бой (было 9%); удары масштабированы ×(20/9), чтобы лимит достижим, но бой не убивает босса
+const AR_WB_CAP=.20,AR_WB_K=20/9;
+function arWbDmg(tg,base){const ar=B.ar;const cap=tg.max*AR_WB_CAP,room=Math.max(0,cap-ar.used),d=Math.min(base,room);ar.used+=d;return d}
 function arG(tg,d){return d}
 function arAdj(u,tg,dmg){if(!B||!(dmg>0))return 0;const ar=arInit();if(!ar)return Math.max(0,Math.round(dmg));
- if(arIsWb()){const m=AR_MW[Math.floor(arRnd()*AR_MW.length)];return Math.max(0,Math.round(arWbDmg(tg,tg.max*.0025*ar.wbX*m)))}
+ if(arIsWb()){const m=AR_MW[Math.floor(arRnd()*AR_MW.length)];return Math.max(0,Math.round(arWbDmg(tg,tg.max*.0025*AR_WB_K*ar.wbX*m)))}
  const m=AR_M[Math.floor(arRnd()*AR_M.length)],d=dmg*m*(1+.05*ar.stk)*(tg.dfm||1);return Math.max(0,Math.round(Math.min(arG(tg,d),1e300)))}
 function arIn(v){try{if(!B||!v||!v.m||!v.m.ar)return 1;if(!arInit())return 1;if(arRnd()<.25){L('🕳 урон по Арате: ×0 (баг)');return 0}}catch(e){}return 1}
 function arSkipEn(e){try{if(!B||!B.ar||!e.sl)return false;const k=arIsWb()?3:2;if(B.turn%k===0){L('⏳ '+e.n+' пропускает ход (скорость −)');return true}}catch(x){}return false}
@@ -3700,7 +3717,7 @@ function arDebuff(e){const wb=arIsWb(),boss=!!(B.st&&B.st.boss);
  if(e.ph&&!e.phS){e.atk=Math.max(1,Math.round(e.atk/1.8));e.phS=1}
  B.ar.stk=Math.min(200,B.ar.stk+1)}
 function arDot(){const ar=B.ar,wb=arIsWb();B.en.forEach(e=>{if(e.hp<=0||!(e.dotT>0))return;e.dotT--;
-  let d=e.max*(wb?.0005*ar.wbX:B.st&&B.st.boss?.03:.08);if(wb)d=arWbDmg(e,d);d=Math.max(0,Math.round(d));e.hp-=d;if(B.guild)B.guild.dmg+=d;L('🩸 '+e.e+' '+e.n+' теряет '+fmtHp(d)+' HP (Imperium)')})}
+  let d=e.max*(wb?.0005*AR_WB_K*ar.wbX:B.st&&B.st.boss?.03:.08);if(wb)d=arWbDmg(e,d);d=Math.max(0,Math.round(d));e.hp-=d;if(B.guild)B.guild.dmg+=d;L('🩸 '+e.e+' '+e.n+' теряет '+fmtHp(d)+' HP (Imperium)')})}
 function arTurn(){if(!B)return;const ar=arInit();if(!ar)return;const u=arUnit();if(!u)return;
  // инверсия HP
  if(u.hp<u.max*.3&&B.turn>1){u.hp=Math.max(1,u.max-u.hp);L('🕳 HP ⇄ ИНВЕРСИЯ: '+fmtHp(u.hp))}
@@ -3715,7 +3732,7 @@ function arExtra(){if(!B||!B.ar)return;const u=arUnit();if(!u||!alive(B.en).leng
 }
 function arSkill(u,i){const ar=arInit();if(!ar)return;const wb=arIsWb();
  B.team.forEach(x=>{if(x.blocked)return;x.hp=x.max;x.np=100});B.inv=Math.max(B.inv||0,2);
- if(wb){const tg=B.en[0];if(tg&&tg.hp>0){const d=Math.round(arWbDmg(tg,tg.max*.025*ar.wbX));tg.hp-=d;B.guild.dmg+=d;L(`✦ ${u.h.name}: ЮДЕККА — <b>${fmtHp(d)}</b> урона боссу`)}}
+ if(wb){const tg=B.en[0];if(tg&&tg.hp>0){const d=Math.round(arWbDmg(tg,tg.max*.025*AR_WB_K*ar.wbX));tg.hp-=d;B.guild.dmg+=d;L(`✦ ${u.h.name}: ЮДЕККА — <b>${fmtHp(d)}</b> урона боссу`)}}
  else{B.en.forEach(e=>{if(e.hp<=0)return;const d=Math.round(Math.min(arG(e,u.atk*120*(e.dfm||1)),1e300));e.hp-=d;if(B.guild)B.guild.dmg+=d});L(`✦ ${u.h.name}: ЮДЕККА — мгновенный урон по всем врагам`)}
  B.en.forEach(e=>{if(e.hp>0)arDebuff(e)});
  L(`✦ Отряд исцелён и воскрешён, NP +100%, неуязвимость 2 хода, 2 хода вне очереди`);
@@ -3809,13 +3826,61 @@ function admEvDone(id){admMut(d=>{const e=evInit(d);if(!e.a[id])e.a[id]={t:Date.
 function admEvReset(){admMut(d=>{d.ev={a:{},cl:{}}});toast('Ивенты сброшены')}
 function admEvPanel(){return `<div class="panel"><b>🎉 Ивенты</b><div class="small">Уровень: кнопки «Уровень +N» выше. Прогресс:</div><div class="row" style="margin-top:6px"><button class="btn sm" onclick="admEvDone('novice')">Новичок: отметить</button><button class="btn sm" onclick="admEvDone('legend')">Легенды: отметить</button><button class="btn sm" style="background:#5b1a2a" onclick="admEvReset()">Сбросить ивенты</button></div></div>`}
 
+// ====== ДАНЖИ ЗОЛОТА (ASTRAL_DUNGEON_V1) ======
+// Раздел «Данжи» внутри вкладки «Битва». Комплект: 💎1500 → 5 попыток. Победа: 🪙10 000…30 000 (равномерно, целые).
+// Попытка списывается в момент входа в бой. Поражение/отступление/выход — награды нет, попытка сгорает.
+// Новый комплект можно купить только при 0 попытках. Бои считаются обычными в заданиях/ивентах (победа — без «победы над боссом»).
+const DG_MARK='ASTRAL_DUNGEON_V1',DG_PRICE=1500,DG_TRIES=5,DG_MIN=10000,DG_MAX=30000;
+const DG_FOES=[
+ [['Золотой слизень','🟡','Rider',1200,55],['Гоблин-кладоискатель','👺','Saber',1400,70],['Золотой слизень','🟡','Rider',1200,55]],
+ [['Мимик','📦','Lancer',1500,65],['Пещерная крыса','🐀','Archer',1100,60],['Пещерная крыса','🐀','Archer',1100,60]],
+ [['Скелет-казначей','💀','Saber',1400,65],['Гоблин-кладоискатель','👺','Saber',1300,70]]];
+let BV='camp';
+function dgS(){if(!S)return {t:0,e:0,w:0,l:0,p:0};let d=S.dg;if(!d||typeof d!=='object')d=S.dg={t:0,e:0,w:0,l:0,p:0};
+ ['t','e','w','l','p'].forEach(k=>{const v=Number(d[k]);d[k]=isFinite(v)&&v>0?Math.floor(v):0});return d}
+function dgRoll(){const r=(typeof window!=='undefined'&&typeof window.DG_RNG==='function'?window.DG_RNG:Math.random)();return DG_MIN+Math.min(DG_MAX-DG_MIN,Math.floor(r*(DG_MAX-DG_MIN+1)))}
+function dgBuy(){if(!S)return false;const d=dgS();
+ if(B){toast('Сначала завершите бой');return false}
+ if(d.t>0){toast('Сначала потратьте оставшиеся попытки ('+d.t+')');return false}
+ if(!Number.isInteger(S.gems)||S.gems<DG_PRICE){toast('Не хватает 💎 — нужно '+DG_PRICE);return false}
+ S.gems-=DG_PRICE;d.t=DG_TRIES;d.p++;save();toast('Куплено: '+DG_TRIES+' попыток данжа (−💎'+DG_PRICE+')');render();return true}
+function dgStart(){if(!S||B)return false;const d=dgS();
+ if(d.t<=0){toast('Нет попыток — купите комплект');return false}
+ if(!S.team.length){toast('Соберите отряд во вкладке «Герои»');return false}
+ d.t--;save();const gb=gBf(),foes=DG_FOES[Math.floor(Math.random()*DG_FOES.length)],st={n:'💰 Данж золота',en:foes};
+ B={si:-1,dg:{n:d.p},st,turn:1,tgt:0,pick:[],log:['💰 Данж золота! Победите врагов и заберите 🪙'+DG_MIN.toLocaleString('ru-RU')+'–'+DG_MAX.toLocaleString('ru-RU')],
+  team:S.team.map(id=>{const s=stats(id),h=H(id),o=S.owned[id],m=h.myth||{};return{h,o,hp:Math.round(s.hp*gb.hp),max:Math.round(s.hp*gb.hp),atk:Math.round(s.atk*gb.atk*(m.atkMul||1)),np:m.npStart||0,cd:0,buff:0,m}}),
+  en:foes.map(e=>({n:e[0],e:e[1],cls:e[2],hp:e[3],max:e[3],atk:e[4]}))};
+ tab='battle';deal();render();window.scrollTo(0,0);return true}
+// итог боя: win=1 победа; win=0 поражение; quit=1 отступление (не считается боем в заданиях)
+function dgEnd(win,quit){if(!B||!B.dg||B.dg.done)return;B.dg.done=1;const d=dgS();let g=0;
+ if(win){g=dgRoll();S.gold+=g;d.e+=g;d.w++;S.st.battles++;S.st.wins++;prog('battle');prog('win')}
+ else{d.l++;if(!quit){S.st.battles++;prog('battle')}}
+ B=null;save();
+ modal(win?`<h2 style="text-align:center">🏆 Победа в данже!</h2><p style="margin:10px 0;text-align:center;overflow-wrap:anywhere">Награда: 🪙<b>${g.toLocaleString('ru-RU')}</b><br>Попыток осталось: ${d.t}</p><div class="row c"><button class="btn gold" onclick="closeM();render()">${d.t>0?'Дальше':'OK'}</button></div>`
+  :`<h2 style="text-align:center">${quit?'🏳 Отступление':'💀 Поражение'}</h2><p style="margin:10px 0;text-align:center;overflow-wrap:anywhere">Попытка потрачена, награды нет.<br>Попыток осталось: ${d.t}</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);
+ render()}
+function dgNav(){return `<div class="gnav" id="dgNav"><button id="dgTabC" class="${BV==='camp'?'on':''}" onclick="BV='camp';render()"><i>⚔</i>Кампания</button><button id="dgTabD" class="${BV==='dg'?'on':''}" onclick="BV='dg';render()"><i>💰</i>Данжи${dgS().t>0?'<span class="dot"></span>':''}</button></div>`}
+function dgView(){const d=dgS(),can0=!d.t&&Number.isInteger(S.gems)&&S.gems>=DG_PRICE,fmt=x=>x.toLocaleString('ru-RU');
+ return `<div class="panel" id="dgPanel" style="border-color:#ffd76a"><h3 style="overflow-wrap:anywhere">💰 Данжи золота</h3>
+ <div class="kv"><span>🎟 Попыток осталось</span><b id="dgTries">${d.t}</b></div><div class="kv"><span>🪙 Всего заработано</span><b id="dgEarn">${fmt(d.e)}</b></div><div class="kv"><span>Побед / поражений</span><b>${d.w} / ${d.l}</b></div>
+ <div class="row c" style="margin-top:10px"><button class="btn gold" id="dgBuy" ${d.t>0||S.gems<DG_PRICE?'disabled':''} onclick="dgBuy()">Комплект ${DG_TRIES} попыток · 💎${fmt(DG_PRICE)}</button><button class="btn" id="dgGo" ${d.t<=0||!S.team.length?'disabled':''} onclick="dgStart()">⚔ В бой (${d.t})</button></div>
+ ${!d.t&&!can0?`<div class="small" style="margin-top:6px;color:#f9a8a8">Не хватает 💎 (нужно ${fmt(DG_PRICE)}).</div>`:''}${!S.team.length?'<div class="small" style="margin-top:6px">Соберите отряд во вкладке «Герои».</div>':''}</div>
+ <div class="panel small" id="dgHint" style="line-height:1.5;overflow-wrap:anywhere">ℹ️ Заплатите 💎${fmt(DG_PRICE)} — получите ${DG_TRIES} попыток. Каждая — несложный бой со слабыми врагами. <b>Победа: 🪙${fmt(DG_MIN)}–${fmt(DG_MAX)}</b> (случайно, поровну). Поражение или отступление — попытка тратится без награды. Попытки хранятся, пока не потрачены; новый комплект можно купить, когда попыток 0. Бои засчитываются в заданиях и ивентах как обычные.<br>Средний доход: ≈🪙${fmt((DG_MIN+DG_MAX)/2)} за победу.</div>`}
+const _vBattle0=vBattle;
+vBattle=function(){if(B)return _vBattle0();return dgNav()+(BV==='dg'?dgView():_vBattle0())};
+// ---------- админ ----------
+function dgAdmAdd(){admMut(d=>{d.dg=d.dg&&typeof d.dg==='object'?d.dg:{t:0,e:0,w:0,l:0,p:0};d.dg.t=(Number(d.dg.t)>0?Math.floor(d.dg.t):0)+5});toast('+5 попыток данжа')}
+function dgAdmReset(){admMut(d=>{d.dg={t:0,e:0,w:0,l:0,p:0}});toast('Данжи сброшены')}
+function dgAdmPanel(){return `<div class="panel"><b>💰 Данжи</b><div class="small">Попыток у выбранного аккаунта: ${(()=>{try{const t=users()[AU];return t&&t.data&&t.data.dg?Math.max(0,t.data.dg.t|0):0}catch(e){return 0}})()}</div><div class="row" style="margin-top:6px"><button class="btn sm" id="admDg5" onclick="dgAdmAdd()">+5 попыток данжа</button><button class="btn sm" onclick="dgAdmReset()">Сбросить данжи</button></div></div>`}
+
 // ====== ЗВУК И МУЗЫКА (WebAudio, всё синтезируется в игре) ======
 const AUD=(()=>{
  let ctx=null,master,comp,mus,sfx,noiseBuf,timer=null,mode=null,step=0,nextT=0,mg={},shaper;
  let ls=(k)=>{try{return localStorage.getItem(k)}catch(e){return null}};const on={m:ls('as_mus')!=='0',s:ls('as_sfx')!=='0'};
  const mf=n=>440*Math.pow(2,(n-69)/12);
  function setup(c,dest){ // строит граф; вынесено для оффлайн-проверки
-  ctx=c;comp=c.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=6;master=c.createGain();master.gain.value=.85;master.connect(comp);comp.connect(dest||c.destination);
+  ctx=c;rbD=null;rbC=null;comp=c.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=6;master=c.createGain();master.gain.value=.85;master.connect(comp);comp.connect(dest||c.destination);
   mus=c.createGain();mus.gain.value=on.m?1:0;mus.connect(master);sfx=c.createGain();sfx.gain.value=on.s?2.2:0;sfx.connect(master);
   ['menu','battle','boss'].forEach(k=>{const g=c.createGain();g.gain.value=0;g.connect(mus);mg[k]=g});
   const len=c.sampleRate;noiseBuf=c.createBuffer(1,len,c.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
@@ -3857,8 +3922,23 @@ const AUD=(()=>{
   s4(t){[76,80,83,88].forEach((n,i)=>tone(mf(n),t+i*.07,.5,'triangle',.14))},
   s5(t){[72,76,79,84,88,91].forEach((n,i)=>{tone(mf(n),t+i*.08,.9,'triangle',.14);tone(mf(n-12),t+i*.08,.9,'sine',.1)});noise(t+.4,.9,.12,null,{f:6000})},
   s6(t){noise(t,.6,.35,null,{f:100,type:'lowpass'});kick(t,sfx,1);[48,55,60,64,67,72].forEach(n=>tone(mf(n),t+.15,2,'sawtooth',.11,null,{lp:2500,a:.1}));[84,88,91,96,100,103].forEach((n,i)=>{tone(mf(n),t+.5+i*.11,1.2,'sine',.13);tone(mf(n+12),t+.55+i*.11,.8,'sine',.06)});noise(t+.5,1.6,.12,null,{f:7000})},
-  level(t){[67,72,76,79,84].forEach((n,i)=>tone(mf(n),t+i*.08,.35,'square',.09))}
+  level(t){[67,72,76,79,84].forEach((n,i)=>tone(mf(n),t+i*.08,.35,'square',.09))},
+  // «бьющаяся реальность» (только атаки Араты): треск стекла + низкий искажённый удар + короткий bitcrush ~0.4 c
+  rbreak(t){const d=rbDist();
+   noise(t,.05,.2,null,{f:6500,type:'highpass'});noise(t+.035,.04,.16,null,{f:8000,type:'highpass'});noise(t+.08,.06,.13,null,{f:5200,to:9000,type:'bandpass',q:2});
+   for(let i=0;i<6;i++){const f=2400+Math.random()*4200;tone(f,t+.02+i*.045+Math.random()*.02,.09+Math.random()*.08,'triangle',.05+.02*(i%2),null,{to:f*(.6+Math.random()*.3),a:.001})}
+   tone(150,t,.3,'sawtooth',.2,d,{to:38,lp:900,lpTo:120});tone(70,t,.36,'sine',.32,null,{to:32});
+   const os=ctx.createOscillator(),g=ctx.createGain();os.type='square';for(let i=0;i<8;i++)os.frequency.setValueAtTime(220+((i*7919)%13)*90,t+.05+i*.03);
+   g.gain.setValueAtTime(0.0001,t+.05);g.gain.linearRampToValueAtTime(.055,t+.06);g.gain.exponentialRampToValueAtTime(0.0001,t+.3);os.connect(g);g.connect(sfx);os.start(t+.05);os.stop(t+.32);
+   const cb=rbCrush();if(cb){const b=ctx.createBufferSource(),bg=ctx.createGain();b.buffer=cb;bg.gain.setValueAtTime(.16,t+.02);bg.gain.exponentialRampToValueAtTime(0.0001,t+.22);b.connect(bg);bg.connect(sfx);b.start(t+.02);b.stop(t+.25)}}
  };
+ let rbD=null,rbC=null;
+ function rbDist(){if(!rbD){rbD=ctx.createWaveShaper();const cv=new Float32Array(257);for(let i=0;i<257;i++){const x=i/128-1;cv[i]=Math.max(-.8,Math.min(.8,x*5))*.9}rbD.curve=cv;rbD.connect(sfx)}return rbD}
+ function rbCrush(){if(!rbC){const n=Math.floor(ctx.sampleRate*.25);rbC=ctx.createBuffer(1,n,ctx.sampleRate);const a=rbC.getChannelData(0);let v=0;for(let i=0;i<n;i++){if(i%48===0)v=Math.round((Math.random()*2-1)*3)/3;a[i]=v}}return rbC}
+ // ограничение частоты: слоты не чаще 1 раза/80 мс, серия удаляется за ~0.6 с, чтобы не превращаться в кашу
+ const RB={n:0,last:-1e9,drop:0};
+ function reality(){try{if(!on.s)return false;const t=(typeof performance!=='undefined'?performance.now():Date.now()),slot=Math.max(t,RB.last+80);if(slot-t>560){RB.drop++;return false}
+  RB.last=slot;RB.n++;play('rbreak',slot-t);return true}catch(e){return false}}
  function play(n,delay){try{if(!on.s||!init()||!S_[n])return;S_[n](ctx.currentTime+.005+(delay||0)/1000)}catch(e){}}
  function seq(list){list.forEach(([n,d])=>setTimeout(()=>play(n),d))}
  // ---------- МУЗЫКА ----------
@@ -3900,7 +3980,7 @@ const AUD=(()=>{
  function bar(force){let b=document.getElementById('audbar');if(b&&!force)return;if(!b){b=document.createElement('div');b.id='audbar';b.style.cssText='position:fixed;right:8px;bottom:78px;z-index:60;display:flex;gap:6px';document.body.appendChild(b)}
   const st='width:38px;height:38px;border-radius:50%;border:1px solid #4b52b0;background:#141a4acc;color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(4px)';
   b.innerHTML=`<button style="${st};opacity:${on.m?1:.45}" onclick="AUD.toggle('m')" title="Музыка">🎵</button><button style="${st};opacity:${on.s?1:.45}" onclick="AUD.toggle('s')" title="Звуки">🔊</button>`}
- return{on,play,seq,setMode,init,bar,toggle:k=>setOn(k,!on[k]),_test:{setup,S_,sched,P,get mg(){return mg},get ctx(){return ctx},tone}};
+ return{on,play,seq,reality,RB,setMode,init,bar,toggle:k=>setOn(k,!on[k]),_test:{setup,S_,sched,P,get mg(){return mg},get ctx(){return ctx},tone}};
 })();
 // --- подключение к игре (любой сбой звука не должен ломать игру) ---
 function audMode(){return (typeof WBM!=='undefined'&&WBM.busy())?'none':(typeof B!=='undefined'&&B&&tab==='battle')?((B.st&&B.st.boss)?'boss':'battle'):'menu'}
@@ -3908,6 +3988,8 @@ function audWrap(n,pre,post){try{const o=globalThis[n];if(typeof o!=='function')
 audWrap('render',null,()=>{try{WBM.sync()}catch(e){}if(AUD.on.m)AUD.setMode(audMode())});
 audWrap('go',()=>AUD.play('tab'));
 audWrap('pickC',()=>AUD.play('card'));
+// каждая атака Араты (обычная, навык, NP, внеочередные) вызывает hit() → «бьющаяся реальность»; чужие герои — без изменений
+audWrap('hit',a=>{try{const u=a[0];if(u&&u.h&&u.h.id==='arata'&&B&&alive(B.en).length)AUD.reality()}catch(e){}});
 audWrap('pickNP',()=>AUD.play('np'));
 audWrap('useSkill',()=>AUD.play('skill'));
 const audStart=()=>AUD.play(B&&B.st&&B.st.boss?'boss':'start');
