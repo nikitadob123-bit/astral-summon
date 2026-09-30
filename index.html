@@ -10,6 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="theme-color" content="#0b0a2b">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<!-- ASTRAL_PLAYER_V1 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -764,12 +765,12 @@ function addXp(n){const b=accLv();S.xp+=n;if(accLv()>b){S.gems+=100;setTimeout((
 function start(){$('auth').style.display='none';$('game').style.display='block';tab=S.world?'summon':'story';SV=null;try{gOnLogin()}catch(e){console.error(e)}render()}
 function hud(){if(!S)return;$('hdr').innerHTML=`<div class="me" onclick="tab='profile';render()">${typeof pfMe==='function'?pfMe(38):`<img class="av" src="img/${S.av}.jpg">`}<div><b>${esc(S.name)}</b><small>Ур. ${accLv()}${typeof dvTitle==='function'&&dvTitle()?' · '+esc(dvTitle()):''}</small></div></div><div class="cur">💎 ${S.gems} &nbsp;🪙 ${S.gold}</div>`}
 let tab='summon';
-const TABS=[['summon','✨','Призыв'],['battle','⚔️','Бой'],['story','📖','Сюжет'],['romance','💞','Романтика'],['harem','🌸','Гарем'],['heroes','📜','Герои'],['guild','🏰','Гильдия'],['wboss','🌍','Мир-босс'],['events','🎉','Ивенты'],['quests','🎯','Задания'],['shop','🛒','Магазин'],['profile','👤','Профиль']];
-function navHtml(){return TABS.map(([k,i,n])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${n}${(k==='guild'&&typeof gDot==='function'&&gDot())||(k==='wboss'&&typeof dvDot==='function'&&dvDot())||(k==='events'&&typeof evDot==='function'&&evDot())||(k==='romance'&&typeof romDot==='function'&&romDot())||(k==='harem'&&typeof romHDot==='function'&&romHDot())?'<u class="dot"></u>':''}</button>`).join('')}
+const TABS=[['summon','✨','Призыв'],['battle','⚔️','Бой'],['story','📖','Сюжет'],['romance','💞','Романтика'],['harem','🌸','Гарем'],['heroes','📜','Герои'],['guild','🏰','Гильдия'],['wboss','🌍','Мир-босс'],['events','🎉','Ивенты'],['quests','🎯','Задания'],['shop','🛒','Магазин'],['hero','🧙','Герой'],['profile','👤','Профиль']];
+function navHtml(){return TABS.map(([k,i,n])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${n}${(k==='guild'&&typeof gDot==='function'&&gDot())||(k==='wboss'&&typeof dvDot==='function'&&dvDot())||(k==='events'&&typeof evDot==='function'&&evDot())||(k==='romance'&&typeof romDot==='function'&&romDot())||(k==='harem'&&typeof romHDot==='function'&&romHDot())||(k==='hero'&&typeof plDotOn==='function'&&plDotOn())?'<u class="dot"></u>':''}</button>`).join('')}
 function navFit(){try{const n=$('nav'),a=n.querySelector('.on');if(a)n.scrollLeft=Math.max(0,a.offsetLeft-(n.clientWidth-a.offsetWidth)/2)}catch(e){}}
 function render(){
  $('nav').innerHTML=navHtml();navFit();
- $('app').innerHTML=({summon:vSummon,battle:vBattle,story:vStory,heroes:vHeroes,guild:vGuild,wboss:vWboss,events:vEvents,romance:vRomance,harem:vHarem,quests:vQuests,shop:vShop,profile:vProfile})[tab]();hud();
+ $('app').innerHTML=({summon:vSummon,battle:vBattle,story:vStory,heroes:vHeroes,guild:vGuild,wboss:vWboss,events:vEvents,romance:vRomance,harem:vHarem,quests:vQuests,shop:vShop,hero:vHero,profile:vProfile})[tab]();hud();
 }
 function go(k){try{if(VN)vnClose(1)}catch(e){}if(B&&k!=='battle'&&!confirm('Выйти из боя? Прогресс боя будет потерян.'))return;if(k!=='battle'){if(B&&B.guild)gBossEnd(B,1);B=null}tab=k;render();window.scrollTo(0,0)}
 
@@ -2895,7 +2896,7 @@ function admHtml(){
  <select id="ad_w" style="${inp}">${wopts}</select><div class="small">Для «До главы N» введите N в поле валюты выше.</div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admWorld('all')">Пройти мир</button><button class="btn sm" onclick="admWorld('to')">До главы N</button><button class="btn sm" onclick="admWorld('reset')">Сбросить мир</button></div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPity()">🎯 Гарант мифика на след. крутку</button></div></div>
- ${typeof pfAdmPanel==='function'?pfAdmPanel():''}${typeof admEvPanel==='function'?admEvPanel():''}${typeof dgAdmPanel==='function'?dgAdmPanel():''}
+ ${typeof pfAdmPanel==='function'?pfAdmPanel():''}${typeof plAdmPanel==='function'?plAdmPanel():''}${typeof admEvPanel==='function'?admEvPanel():''}${typeof dgAdmPanel==='function'?dgAdmPanel():''}
  <div class="panel"><b>⚙ Аккаунт</b><input id="ad_nm" placeholder="Новый ник" maxlength="16" style="${inp}"><button class="btn sm" onclick="admRename()">Сменить ник</button>
  <input id="ad_p" type="password" placeholder="Новый пароль (от 4 символов)" style="${inp}"><button class="btn sm" onclick="admPass()">Сменить пароль</button>
  <div class="row" style="margin-top:8px"><button class="btn sm" onclick="admGuildReset()">🏰 Сбросить гильдию</button><button class="btn sm" style="background:#5b1a2a" onclick="admReset()">Сбросить прогресс</button><button class="btn sm" style="background:#5b1a2a" onclick="admDel()">Удалить аккаунт</button></div></div>
@@ -5719,7 +5720,7 @@ function romHeroine(id){const h=ROM_H[id],H0=romH(id),ice=h.ice,nx=romNextCh(id)
  const ch=h.ch.map((c,i)=>{const d=H0.ch[i]&&H0.ch[i].d,rq=romReq(id,i),cur=S.rom.cur&&S.rom.cur.hid===id&&S.rom.cur.ci===i&&!S.rom.cur.rp;
   const hidden=!d&&!rq.ok&&c.need&&c.need.secret;
   const rw=c.rw||{};const rt=[rw.gems?'💎'+rw.gems:'',rw.gold?'🪙'+rw.gold:'',rw.gift?(ROM_GIFTS.find(g=>g.id===rw.gift)||{ic:'🎁'}).ic:''].filter(Boolean).join(' ');
-  return `<div class="rm-ch" style="opacity:${d||rq.ok?1:.6}"><div><b>${i+1}. ${hidden?'???':esc(c.t)}</b> ${d?'✅':''}${cur?' <span class="small">(продолжить)</span>':''}<div class="small">${hidden?'Условие скрыто':d?'Награда получена':esc(rq.L.join(' · '))}${!d&&rt?' · '+rt:''}</div></div>${d?`<button class="btn sm" onclick="vnOpen('${id}',${i},1)">↺</button>`:rq.ok?`<button class="btn sm gold" onclick="vnOpen('${id}',${i})">${cur?'Далее':'Читать'}</button>`:'<span>🔒</span>'}</div>`}).join('');
+  return `<div class="rm-ch" style="opacity:${d||rq.ok?1:.6}"><div><b>${i+1}. ${hidden?'???':esc(c.t)}</b> ${d?'✅':''}${cur?' <span class="small">(продолжить)</span>':''}<div class="small">${hidden?'Условие скрыто':d?'Награда получена':esc(rq.L.join(' · '))}${!d&&rt?' · '+rt:''}${!hidden&&c.duel?' · ⚔ дуэль (рек. ур. '+c.duel.rec+')':''}</div></div>${d?`<button class="btn sm" onclick="vnOpen('${id}',${i},1)">↺</button>`:rq.ok?`<button class="btn sm gold" onclick="vnOpen('${id}',${i})">${cur?'Далее':'Читать'}</button>`:'<span>🔒</span>'}</div>`}).join('');
  return `<div class="panel ${ice?'rm-ice':''}" style="--c:${h.col};position:relative">${ice?romSnow():''}<div class="row sb" style="margin-bottom:8px"><b>${ice?'❄ ':''}${esc(h.name)}</b><button class="btn sm" style="width:auto;margin:0" onclick="RV.v='hub';render()">← Героини</button></div>
  <div class="rm-hd"><img src="img/${h.img}.jpg" alt=""><div><div class="small">${esc(h.from)}</div><div style="margin:4px 0;font-size:13px;line-height:1.35">${esc(h.desc)}</div><div class="small">♥ ${H0.love} · ${esc(romLvName(id))}${nxt?' → '+nxt:''}</div><div class="rm-bar"><i style="width:${Math.min(100,Math.round(H0.love/(nxt||H0.love||1)*100))}%"></i></div>${H0.open?`<button class="btn sm" onclick="HV.id='${id}';go('harem')">🌸 В Гарем</button>`:'<div class="small" style="margin-top:4px">В Гарем — после 1-й главы</div>'}</div></div>
  ${ch}</div>${H0.end?`<div class="panel small">Концовка: <b>${esc((h.ends[H0.end]||{}).t||H0.end)}</b>. Пройдите финал снова, когда вырастет симпатия — концовка может стать лучше.</div>`:''}`}
@@ -5734,6 +5735,7 @@ function vnOpen(hid,ci,rp){if(!ROM_H[hid]||!romVis(hid))return;const r=romS();if
  if(!rp&&cur&&cur.hid===hid&&cur.ci===ci&&!cur.rp)st={i:cur.i,ob:cur.ob||null,fin:cur.fin||0,ek:cur.ek||''};
  VN={hid,ci,rp:!!rp,i:st.i,ob:st.ob,fin:st.fin,ek:st.ek,nodes:romNodes(hid,ci).slice(),ty:null,mode:'',log:[],auto:!!r.opts.auto,skip:false,bg:''};
  if(VN.fin&&VN.ek){VN.nodes=VN.nodes.concat(romEndNodes(hid,VN.ek))}
+ try{plVnInit()}catch(e){console.error(e)}
  if(VN.ob){const c=VN.nodes[VN.ob.c];if(!c||!c.o[VN.ob.o]){VN.ob=null}}
  if(!rp)r.cur={hid,ci,i:VN.i,ob:VN.ob,fin:VN.fin,ek:VN.ek,rp:0};
  const el=document.createElement('div');el.id='vn';el.className=h.ice?'ice':'';el.style.cssText=`--c:${h.col};--cg:${h.col}88`;
@@ -5761,14 +5763,15 @@ function vnNext(){if(!VN)return;let n=null,guard=0;
  while(guard++<400){
   if(VN.ob){const c=VN.nodes[VN.ob.c],lst=c.o[VN.ob.o].r;if(VN.ob.j>=lst.length){VN.ob=null;continue}n=lst[VN.ob.j];VN.ob.j++;
    if(!vnCond(n)){continue}
-  }else{n=VN.nodes[VN.i];
+  }else{if(VN.dv&&VN.i>=VN.dv.end){if(plVnPost())return;continue}n=VN.nodes[VN.i];
    if(!n){if(!VN.fin&&ROM_H[VN.hid].ch[VN.ci].fin){VN.fin=1;VN.ek=romEndKey(VN.hid);VN.nodes=VN.nodes.concat(romEndNodes(VN.hid,VN.ek));continue}return vnFinish()}
    VN.i++;if(!vnCond(n))continue}
   if(n.k==='bg'){vnBg(n.v);continue}
+  if(n.k==='duelgo'){return plVnGo()}
   if(n.k==='c'){VN.i=VN.nodes.indexOf(n)+1;return vnChoice(n)}
   return vnLine(n)}
  vnFinish()}
-function vnSave(){if(VN&&!VN.rp){const r=romS();r.cur={hid:VN.hid,ci:VN.ci,i:VN.i,ob:VN.ob?{c:VN.ob.c,o:VN.ob.o,j:VN.ob.j}:null,fin:VN.fin,ek:VN.ek,rp:0};save()}}
+function vnSave(){if(VN&&!VN.rp){const r=romS();r.cur={hid:VN.hid,ci:VN.ci,i:VN.dv||VN.mode==='duel'?VN.dvi:VN.i,ob:VN.ob?{c:VN.ob.c,o:VN.ob.o,j:VN.ob.j}:null,fin:VN.fin,ek:VN.ek,rp:0};save()}}
 function vnLine(n){const h=ROM_H[VN.hid];VN.mode='line';VN.seen=!!romS().seen[vnKey()];romS().seen[vnKey()]=1;
  const nm=vnEl('vn_nm'),tx=vnEl('vn_tx'),pt=vnEl('vn_pt'),em=vnEl('vn_em');vnEl('vn_ch').style.display='none';
  let name='',cls='';const x=romTx(n.x);
@@ -5794,7 +5797,7 @@ function vnLog(){if(!VN)return;let e=vnEl('vn_lgw');if(e){e.remove();return}e=do
  e.innerHTML=`<p class="small"><button class="btn sm" style="width:auto" onclick="vnLog()">Закрыть журнал</button></p>`+VN.log.map(l=>`<p>${l.w?'<b>'+esc(l.w)+':</b> ':''}${l.k==='t'?'<i>'+esc(l.x)+'</i>':esc(l.x)}</p>`).join('');VN.el.appendChild(e);e.scrollTop=e.scrollHeight}
 function vnExit(){if(!VN)return;vnSave();vnClose();render()}
 function vnClose(keepR){if(!VN)return;vnStop();window.removeEventListener('resize',vnFit);try{VN.el.remove()}catch(e){}VN=null;document.body.classList.remove('invn');try{window.scrollTo(0,VN_SY||0)}catch(e){}try{if(!keepR&&AUD.on.m)AUD.setMode(audMode())}catch(e){}}
-function romEndKey(id){const h=ROM_H[id],H0=romH(id);if(H0.love>=(h.gl||70)&&h.sp&&H0.fl[h.sp]&&h.ends.special)return 'special';if(H0.love>=(h.gl||70))return 'good';return 'neutral'}
+function romEndKey(id){const h=ROM_H[id],H0=romH(id);if(H0.love>=(h.gl||70)&&h.sp&&H0.fl[h.sp]&&h.ends.special&&h.ch.every((c,i)=>!(c.duel&&c.duel.must)||H0.fl['duel'+i]))return 'special';if(H0.love>=(h.gl||70))return 'good';return 'neutral'}
 function romEndNodes(id,k){const e=ROM_H[id].ends[k];return [{k:'bg',v:e.bg||'astral'},{k:'t',x:'— Концовка: '+e.t+' —'}].concat(romParse(e.x))}
 const ROM_RANK={neutral:1,good:2,special:3};
 function vnFinish(){vnStop();const v=VN,id=v.hid,h=ROM_H[id],c=h.ch[v.ci],H0=romH(id),r=romS(),first=!v.rp&&!(H0.ch[v.ci]&&H0.ch[v.ci].d);let msg='',rw=c.rw||{};
@@ -5842,6 +5845,7 @@ function harHeroine(id){const h=ROM_H[id],H0=romH(id),mi=romMoodInfo(id),nxt=rom
  <div class="rm-say"><span class="w">${esc(HV.who||h.name)}</span>${esc(HV.say)}</div>
  <div class="rm-st"><span>♥ ${H0.love}${nxt?'/'+nxt:''}</span><span>Ур. ${lv} · ${esc(romLvName(id))}</span><span>${mi[1]} ${mi[0]}</span></div><div class="rm-bar" style="margin-bottom:10px"><i style="width:${Math.min(100,Math.round(H0.love/(nxt||H0.love||1)*100))}%"></i></div>
  <div class="rm-acts"><button class="btn" onclick="harGiftUi('${id}')">🎁 Подарок (${harLeft(id,'gift')})</button><button class="btn" onclick="harTalk('${id}')" ${harLeft(id,'talk')?'':'disabled'}>💬 Поговорить (${harLeft(id,'talk')})</button><button class="btn" onclick="harDateUi('${id}')" ${harLeft(id,'date')?'':'disabled'}>💞 Свидание (${harLeft(id,'date')})</button><button class="btn ${romVisitOk(id)?'gold':''}" onclick="harVisit('${id}')" ${romVisitOk(id)?'':'disabled'}>🎀 Визит${romVisitOk(id)?'':' ✓'}</button></div>
+ <button class="btn" style="width:100%;margin-bottom:8px" onclick="plSparUi('${id}')" ${typeof plSparLeft==='function'&&plSparLeft(id)?'':'disabled'}>⚔ Тренировка / Спарринг (${typeof plSparLeft==='function'?plSparLeft(id):0})</button>
  <div class="panel" style="margin:0 0 8px;padding:10px"><b style="font-size:14px">📋 Просьба</b>${q}</div>
  <div class="small">🏠 Бонус дома: ${lv>=2?esc(bn||'—'):'🔒 с 2 уровня отношений'}</div>
  <div class="row" style="margin-top:8px"><button class="btn sm" onclick="RV.v='h';RV.id='${id}';RV.t='h';go('romance')">💞 Главы</button></div></div>`}
@@ -5867,7 +5871,7 @@ function harVisit(id){if(!romVisitOk(id))return;const lv=romLv(id),h=ROM_H[id],g
  const vl=h.visit||['Ты пришёл. Вот и хорошо.'];harSay(id,'b',romTx(romPick(vl)));save();toast('Визит: +💎'+gems+' +🪙'+gold);render()}
 // ---------- свидание ----------
 function harDateUi(id){const h=ROM_H[id],lv=romLv(id);
- modal(`<h3>💞 Свидание с ${esc(h.name)}</h3><div class="small">Раз в день. Выберите место — потом вы решите, как себя вести.</div><div class="rm-sc">${Object.keys(ROM_DATES).map(k=>{const d=ROM_DATES[k],ok=lv>=d.lv;return `<button class="btn ${ok?'gold':''}" ${ok?`onclick="harDate('${id}','${k}')"`:'disabled'}>${d.ic} ${esc(d.n)}${ok?' · 🪙'+d.gold:' · 🔒 ур. отношений '+d.lv}</button>`}).join('')}</div><div class="row c" style="margin-top:10px"><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+ modal(`<h3>💞 Свидание с ${esc(h.name)}</h3><div class="small">Раз в день. Выберите место — потом вы решите, как себя вести.</div><div class="rm-sc">${Object.keys(ROM_DATES).map(k=>{const d=ROM_DATES[k],ok=lv>=d.lv;return `<button class="btn ${ok?'gold':''}" ${ok?`onclick="harDate('${id}','${k}')"`:'disabled'}>${d.ic} ${esc(d.n)}${ok?' · 🪙'+d.gold:' · 🔒 ур. отношений '+d.lv}</button>`}).join('')}<button class="btn" onclick="closeM();plSparUi('${id}')">⚔ Тренировка / Спарринг</button></div><div class="row c" style="margin-top:10px"><button class="btn" onclick="closeM()">Отмена</button></div>`)}
 function harDate(id,pl){const h=ROM_H[id],d=ROM_DATES[pl];if(harLeft(id,'date')<=0)return toast('Свидание на сегодня уже было');if(romLv(id)<d.lv)return;if(S.gold<d.gold)return toast('Не хватает 🪙');
  S.gold-=d.gold;harUse(id,'date');save();HV.dt={id,pl};const dd=(h.date&&h.date[pl])||{};
  modal(`<h3>${d.ic} ${esc(d.n)}</h3><div style="margin:8px 0;line-height:1.5;font-size:14px">${esc(d.intro)}</div><div style="margin:8px 0;line-height:1.5;font-size:14px"><b>${esc(h.short||h.name)}:</b> ${esc(romTx(dd.open||'Ну что, пойдём?'))}</div><div class="rm-sc">${ROM_DCH[pl].map(([t,tx])=>`<button class="btn" onclick="harDateEnd('${id}','${pl}','${t}')">${esc(tx)}</button>`).join('')}</div>`)}
@@ -5890,6 +5894,904 @@ function harQDone(id){const q=harQuestDef(id),s=romS();if(!q||!s.day.q[id]||s.da
 // ---------- магазин ----------
 function romShopPanel(){if(!S)return '';const r=romS();return `<div class="panel"><h3>💝 Подарки для героинь</h3><div class="small" style="margin-bottom:8px">Дарить можно в Гареме. В запасе: ${ROM_GIFTS.map(g=>g.ic+(r.inv[g.id]||0)).join(' ')}</div>${ROM_GIFTS.map(g=>`<div class="q"><div><b>${g.ic} ${esc(g.n)}</b><div class="small">♥ +${g.love}</div></div><button class="btn sm" style="width:auto;margin:0" onclick="harBuy('${g.id}')">${g.gem?'💎'+g.gem:'🪙'+g.gold}</button></div>`).join('')}</div>`}
 (function(){try{const v0=vShop;globalThis.vShop=function(){return v0()+romShopPanel()};const r0=roll;globalThis.roll=function(){const h=r0();try{if(h.r<5&&romRnd()<romLuck()){const p=HEROES.filter(x=>x.r===5);return p[Math.floor(romRnd()*p.length)]||h}}catch(e){}return h}}catch(e){console.error(e)}})();
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: данные (ASTRAL_PLAYER_V1) ======
+// Калибровка (см. pl_core.js → plCalib): при уровне Призывателя 200, «сбалансированной» раскладке очков и топовом снаряжении
+// HP ≈ 42 700 и АТК ≈ 5 600 — это среднее по 17 мифическим 6★ героям на макс. уровне/возвышении
+// (формула героя: b = 1+(lv-1)*.06+dup*.05+asc*.25 = 9.04 при lv110/dup5/asc5; Berserker 6★: 50 624 HP / 6 328 АТК).
+const PL_MARK='ASTRAL_PLAYER_V1';
+const PL_MAX=200;
+const PL_SLOTS=[['head','Голова','🪖'],['chest','Грудь','🥋'],['lh','Левая рука','🛡️'],['rh','Правая рука','⚔️'],['legs','Ноги','👢'],['r1','Кольцо 1','💍'],['r2','Кольцо 2','💍'],['r3','Кольцо 3','💍'],['neck','Ожерелье','📿']];
+const PL_SLOT_W={head:1,chest:1.2,lh:.9,rh:1.5,legs:1,r1:.7,r2:.7,r3:.7,neck:.9};
+const PL_RAR=[{k:'c',n:'Обычный',col:'#b8bcc8',m:1},{k:'u',n:'Необычный',col:'#5fd068',m:1.3},{k:'r',n:'Редкий',col:'#4aa8ff',m:1.7},{k:'e',n:'Эпический',col:'#b06bff',m:2.2},{k:'l',n:'Легендарный',col:'#ffb830',m:2.9},{k:'m',n:'Мифический',col:'#ff4d7d',m:3.8}];
+// статы: hp, atk, def, spd, crit (%), cdmg (%)
+const PL_ST=[['hp','❤','HP'],['atk','⚔','АТК'],['def','🛡','ЗАЩ'],['spd','💨','СКОР'],['crit','🎯','Крит. шанс'],['cdmg','💥','Крит. урон']];
+const PL_PT={hp:40,atk:6,def:4.4,spd:.5,crit:.12,cdmg:.4};      // прирост за 1 очко статов (или за 1 «очко мощности» предмета)
+const PL_CAP={hp:999,atk:999,def:999,spd:300,crit:300,cdmg:250}; // максимум очков, вкладываемых вручную в один стат
+const PL_PTS=5;            // очков статов за уровень
+const PL_INV_MAX=150;
+// описания уникальных эффектов (моды): [название, единица]
+const PL_FXN={hpP:['❤ HP','%'],atkP:['⚔ АТК','%'],defP:['🛡 ЗАЩ','%'],spdP:['💨 СКОР','%'],crit:['🎯 Крит. шанс','%'],cdmg:['💥 Крит. урон','%'],vamp:['Вампиризм','%'],regen:['Регенерация','% HP/ход'],dodge:['Уклонение','%'],thorns:['Отражение урона','%'],shield0:['Щит в начале боя','% HP'],stun:['Шанс оглушить','%'],burn:['Шанс поджечь','%'],pierce:['Пробивание ЗАЩ','%'],skillDmg:['Урон навыков','%'],energy:['Энергия','/ход'],revive:['Воскрешение (1 раз)','% HP'],dmgRed:['Снижение урона','%'],lowAtk:['АТК при HP<35%','%'],firstHit:['Урон первого удара','%'],extra:['Шанс доп. удара','%']};
+// сеты: бонус за 2 и 4 предмета
+const PL_SETS={
+ knights:{n:'Рыцарь Круглого Стола',ic:'🏰',b2:{defP:8,hpP:8},b4:{dmgRed:8,skillDmg:15}},
+ cloud:{n:'Багровые Облака',ic:'☁️',b2:{crit:5,spdP:8},b4:{atkP:12,dodge:8}},
+ shadow:{n:'Теневой Монарх',ic:'🌑',b2:{atkP:8,vamp:3},b4:{cdmg:25,extra:15}},
+ ice:{n:'Ледяной Двор',ic:'❄️',b2:{defP:10,hpP:6},b4:{stun:12,dmgRed:6,shield0:10}},
+ gems:{n:'Шесть Самоцветов',ic:'💎',b2:{atkP:8,energy:2},b4:{skillDmg:25,revive:25,crit:5}},
+ teigu:{n:'Императорский Арсенал',ic:'⚙️',b2:{atkP:6,pierce:10},b4:{burn:20,thorns:15,hpP:10}},
+ captain:{n:'Вольный Капитан',ic:'🏴‍☠️',b2:{hpP:10,spdP:6},b4:{dmgRed:10,regen:1.5,atkP:8}}
+};
+// предметы: [id, название, эмодзи, слот(head|chest|rh|lh|hand|legs|ring|neck), тип, редкость 0..5, треб. уровень, доли статов, эффекты, сет, описание, флаги]
+const PL_IT=[];
+function _I(id,n,ic,slot,ty,r,req,s,fx,set,d,fl){PL_IT.push({id,n,ic,slot,ty,r,req,s,fx:fx||{},set:set||'',d,fl:fl||''})}
+// ---- голова ----
+_I('h_cap','Кожаный шлем новобранца','🪖','head','Шлем',0,1,{hp:.5,def:.5},0,0,'Потёртая кожа, но голову держит.');
+_I('h_goggles','Очки механика Разлома','🥽','head','Шлем',1,18,{atk:.5,crit:.5},0,0,'Линзы подсвечивают слабые места врага.');
+_I('h_band','Повязка странника','🎗️','head','Шлем',1,10,{spd:.4,crit:.3,def:.3},0,0,'Лёгкая повязка тех, кто идёт дорогами миров.');
+_I('h_helm','Шлем Круглого Стола','⛑️','head','Шлем',2,30,{def:.5,hp:.5},0,'knights','Гербовый шлем с выбитым кругом из семи звёзд.');
+_I('h_hood','Капюшон Багровых Облаков','🥷','head','Шлем',3,50,{crit:.4,spd:.3,atk:.3},{dodge:4},'cloud','Красные облака на чёрном — знак отступника.');
+_I('h_teigu','Маска Императорского Легиона','👺','head','Шлем',4,100,{def:.4,hp:.4,atk:.2},{pierce:8},'teigu','Древний артефакт с собственной волей.');
+_I('h_straw','Шляпа вольного капитана','👒','head','Шлем',4,70,{hp:.5,atk:.3,spd:.2},{hpP:5},'captain','Выцветшая лента и дух безбашенной мечты.');
+_I('h_mask','Маска Теневого Монарха','🎭','head','Шлем',4,90,{atk:.4,crit:.3,cdmg:.3},{skillDmg:8},'shadow','Тени слушаются того, кто носит эту маску.');
+_I('h_halo','Нимб Серафима','😇','head','Шлем',5,160,{hp:.4,def:.3,atk:.3},{regen:1.5,dmgRed:4},0,'Тёплый свет, который не гаснет даже в Бездне.');
+_I('h_crown','Ледяной Венец Королевы','👑','head','Шлем',5,110,{hp:.3,def:.3,atk:.4},{stun:8,defP:8},'ice','Венец, выкованный из вечной мерзлоты. Награда за победу над Эсдес.','uniq');
+// ---- грудь ----
+_I('c_tunic','Стёганая куртка','🥋','chest','Броня',0,1,{hp:.6,def:.4},0,0,'Набита ватой — от ножа спасёт, от меча нет.');
+_I('c_chain','Кольчуга стража','🛡️','chest','Броня',1,12,{def:.6,hp:.4},0,0,'Звенья мелкие, плотные, надёжные.');
+_I('c_kimono','Кимоно лунного света','👘','chest','Броня',1,20,{hp:.4,spd:.3,def:.3},0,0,'Ткань мягко светится по ночам.');
+_I('c_armor','Латы Рыцаря Круга','🛡️','chest','Броня',2,35,{def:.5,hp:.5},0,'knights','Тяжёлый доспех, не знавший поражений на турнирах.');
+_I('c_cloak','Плащ Багровых Облаков','🧥','chest','Броня',3,55,{atk:.4,hp:.3,spd:.3},{crit:3},'cloud','Длинный плащ с красными облаками. Шуршит тише тени.');
+_I('c_frost','Китель Ледяного Генерала','🥼','chest','Броня',3,60,{def:.4,hp:.4,crit:.2},{defP:5},'ice','Белый китель с инеем по швам.');
+_I('c_coat','Плащ вольного капитана','🧥','chest','Броня',4,75,{hp:.5,def:.3,atk:.2},{dmgRed:4},'captain','Пахнет солью, ромом и свободой.');
+_I('c_shadow','Мантия Теневого Монарха','🦇','chest','Броня',4,95,{hp:.4,atk:.3,def:.3},{vamp:6},'shadow','Ткань, сшитая из самой темноты.');
+_I('c_teigu','Доспех Тысячи Клинков','⚙️','chest','Броня',4,110,{def:.5,hp:.3,atk:.2},{thorns:15},'teigu','Каждый, кто ударит, ранит сам себя.');
+_I('c_astral','Астральные латы Первого Призывателя','✨','chest','Броня',5,150,{hp:.4,def:.3,atk:.3},{shield0:20,hpP:6},0,'Латы из застывшего света Врат.');
+// ---- правая рука ----
+_I('w_sword','Ржавый меч рекрута','🗡️','hand','Меч',0,1,{atk:1},0,0,'Ржавчина — не помеха, если держать крепко.');
+_I('w_spear','Копьё стражника','🔱','rh','Копьё',1,8,{atk:.8,spd:.2},0,0,'Длинный древок и честное жало.');
+_I('w_bow','Охотничий лук','🏹','rh','Лук',1,14,{atk:.7,crit:.3},0,0,'Лук лесных следопытов. Бьёт далеко и точно.');
+_I('w_katana','Катана ветра','⚔️','hand','Катана',2,28,{atk:.6,crit:.2,cdmg:.2},0,0,'Клинок поёт, когда рассекает воздух.');
+_I('w_staff','Посох искр','🪄','rh','Посох',2,32,{atk:.8,spd:.2},{burn:10},0,'Из навершия сыплются горячие искры.');
+_I('w_kusa','Меч лугов и гроз','⚡','hand','Меч',3,58,{atk:.7,spd:.3},{stun:8},0,'Клинок змеиного бога: ударяет грозовым эхом.');
+_I('w_gae','Копьё Пронзающее Сердце','🔴','rh','Копьё',3,65,{atk:.7,crit:.3},{pierce:25},0,'Алое копьё, которое находит сердце сквозь броню.');
+_I('w_storm','Лук Звёздопада','🌠','rh','Лук',3,72,{atk:.6,crit:.4},{firstHit:30},0,'Первая стрела всегда летит как падающая звезда.');
+_I('w_gram','Посох Архимага Разлома','🔮','rh','Посох',4,80,{atk:.7,crit:.15,cdmg:.15},{energy:4},0,'Кристалл внутри шепчет чужие заклинания.');
+_I('w_zan','Великий мясницкий тесак','🪓','rh','Меч',4,85,{atk:.8,cdmg:.2},{lowAtk:25},0,'Чем ближе к краю, тем он тяжелее и яростнее.');
+_I('w_exc','Клинок Короля Рыцарей','🌟','rh','Меч',4,100,{atk:.7,cdmg:.3},{skillDmg:20},'knights','Золотой свет сходит с лезвия, когда его обнажают.');
+_I('w_mura','Клинок одного касания','☠️','rh','Меч',4,105,{atk:.7,crit:.3},{burn:20},'teigu','Лёгкая царапина — и яд делает остальное.');
+_I('w_ubw','Бесконечные клинки','🗡️','rh','Меч',5,140,{atk:.6,cdmg:.4},{extra:18,pierce:10},0,'Мир внутри него — поле из мечей без числа.');
+_I('w_eternal','Вечный меч мироздания','🌌','rh','Меч',5,180,{atk:.7,cdmg:.3},{skillDmg:30,crit:6},0,'Меч, которым когда-то разрезали границу миров.');
+// ---- левая рука ----
+_I('l_buckler','Деревянный щит','🛡️','lh','Щит',0,1,{def:.6,hp:.4},0,0,'Круглый, лёгкий, держит первые удары.');
+_I('l_dagger','Кинжал скрытника','🔪','hand','Кинжал',1,10,{atk:.5,spd:.3,crit:.2},0,0,'Узкий клинок для тех, кто бьёт вторым.');
+_I('l_kite','Щит Стража Врат','🛡️','lh','Щит',2,30,{def:.6,hp:.4},{dmgRed:4},'knights','Высокий щит с гербом рыцарского ордена.');
+_I('l_kunai','Трёхпалый кунай','🥢','hand','Кунай',2,40,{atk:.4,spd:.4,crit:.2},{dodge:3},'cloud','Метательный нож с кольцом на рукояти.');
+_I('l_tome','Гримуар звёздных врат','📕','lh','Фолиант',3,62,{atk:.4,crit:.3,hp:.3},{energy:3},0,'Страницы сами переворачиваются к нужному заклинанию.');
+_I('l_fang','Клык Тени','🗡️','hand','Кинжал',4,92,{atk:.5,crit:.3,spd:.2},{vamp:5},'shadow','Тёмный кинжал, пьющий свет.');
+_I('l_aegis','Эгида двенадцати ворот','🔰','lh','Щит',4,115,{def:.6,hp:.4},{shield0:12,thorns:10},0,'Двенадцать ворот, двенадцать отражённых ударов.');
+_I('l_gaunt','Перчатка шести самоцветов','🧤','lh','Перчатка',5,170,{atk:.4,def:.3,hp:.3},{skillDmg:12},'gems','Щелчок пальцев — и слабый враг перестаёт быть проблемой.');
+// ---- ноги ----
+_I('g_boots','Поношенные сапоги','🥾','legs','Обувь',0,1,{spd:.5,hp:.5},0,0,'Прошли не одну дорогу и не развалились.');
+_I('g_greaves','Поножи стража','🦵','legs','Обувь',1,12,{def:.5,hp:.5},0,0,'Стальные пластины на крепких ремнях.');
+_I('g_sandal','Сандалии ветра','👡','legs','Обувь',2,26,{spd:.6,crit:.2,hp:.2},{dodge:4},0,'Шаг лёгкий, как порыв ветра.');
+_I('g_knight','Сабатоны Рыцаря Круга','🦿','legs','Обувь',2,36,{def:.5,hp:.5},0,'knights','Тяжело шагать, но ещё тяжелее сбить с ног.');
+_I('g_cloud','Сандалии странника багрового','👢','legs','Обувь',3,52,{spd:.5,atk:.3,hp:.2},0,'cloud','Следов почти не оставляют.');
+_I('g_frost','Сапоги вечной мерзлоты','🥶','legs','Обувь',3,60,{def:.4,hp:.4,spd:.2},0,'ice','Под ногами хрустит лёд, даже летом.');
+_I('g_shadow','Поступь Тени','👣','legs','Обувь',4,88,{spd:.5,crit:.3,hp:.2},{dodge:6},'shadow','Шаг в одну тень — и уже в другой.');
+_I('g_astral','Сапоги небесной дороги','🪽','legs','Обувь',5,145,{spd:.4,hp:.3,def:.3},{energy:3,dodge:5},0,'Под подошвой вспыхивает ступенька из света.');
+// ---- кольца ----
+_I('n_copper','Медное кольцо','💍','ring','Кольцо',0,1,{hp:.5,atk:.5},0,0,'Простой обруч на удачу.');
+_I('n_luck','Кольцо счастливой монеты','🪙','ring','Кольцо',1,16,{crit:.4,hp:.3,spd:.3},0,0,'Монета вплавлена в ободок.');
+_I('n_eye','Кольцо меткого глаза','👁️','ring','Кольцо',1,10,{crit:.7,atk:.3},0,0,'Камень следит за врагом вместе с вами.');
+_I('n_vamp','Перстень кровопийцы','🩸','ring','Кольцо',2,30,{atk:.5,hp:.3,crit:.2},{vamp:6},0,'Красный камень греется от чужой боли.');
+_I('n_heal','Кольцо живой воды','💧','ring','Кольцо',2,34,{hp:.6,def:.4},{regen:1.5},0,'Раны затягиваются, пока оно на пальце.');
+_I('n_ward','Печать защитника','🔷','ring','Кольцо',2,38,{def:.6,hp:.4},{shield0:8},0,'Тонкая рябь щита окружает руку.');
+_I('n_cloud','Кольцо багровой луны','🌙','ring','Кольцо',3,56,{atk:.5,crit:.3,cdmg:.2},0,'cloud','Кольцо с красным символом на чёрном камне.');
+_I('n_ice','Перстень инея','🧊','ring','Кольцо',3,58,{crit:.4,atk:.3,hp:.3},{stun:6},'ice','Холод пробирает до кости тех, кого коснёшься.');
+_I('n_phoenix','Перстень феникса','🔥','ring','Кольцо',3,66,{hp:.6,atk:.4},{revive:30},0,'Пламя внутри возрождает тех, кто готов гореть.');
+_I('n_compass','Кольцо компаса бури','🧭','ring','Кольцо',4,78,{spd:.4,crit:.3,hp:.3},{dodge:5},'captain','Стрелка всегда указывает на приключение.');
+_I('n_shadow','Кольцо теневого солдата','🌑','ring','Кольцо',4,90,{atk:.5,crit:.3,spd:.2},{extra:10},'shadow','Внутри кольца спит безмолвный воин.');
+_I('n_red','Кольцо алого самоцвета','🟥','ring','Кольцо',4,100,{atk:.6,cdmg:.4},{skillDmg:8},'gems','Камень Силы: кровь закипает.');
+_I('n_blue','Кольцо лазурного самоцвета','🟦','ring','Кольцо',4,100,{spd:.3,crit:.4,atk:.3},{energy:2},'gems','Камень Разума: мысли опережают движения.');
+_I('n_green','Кольцо изумрудного самоцвета','🟩','ring','Кольцо',4,100,{hp:.5,def:.5},{regen:1.5},'gems','Камень Жизни: рана закрывается за вдох.');
+_I('n_time','Кольцо вечного часа','⏳','ring','Кольцо',5,155,{spd:.4,crit:.3,cdmg:.3},{energy:5},0,'Мгновение в нём длится чуть дольше.');
+// ---- ожерелья ----
+_I('k_cord','Шнурок-оберег','📿','neck','Амулет',0,1,{hp:.6,def:.4},0,0,'Бабушкин оберег, вязанный на удачу.');
+_I('k_fang','Клык дикого зверя','🦷','neck','Амулет',1,12,{atk:.6,crit:.4},0,0,'Трофей первой охоты.');
+_I('k_amulet','Амулет стража','🧿','neck','Амулет',2,32,{def:.5,hp:.5},{dmgRed:3},0,'Защитный знак, освящённый в гарнизоне.');
+_I('k_moon','Ожерелье лунной жрицы','🌙','neck','Амулет',2,36,{hp:.5,spd:.2,def:.3},{regen:1},0,'Серебряный месяц на тонкой цепочке.');
+_I('k_fruit1','Плод резиновой воли','🍇','neck','Артефакт',3,60,{hp:.5,spd:.3,def:.2},{dmgRed:6},'captain','Странный плод: удары отскакивают, как от мяча.');
+_I('k_ice','Кулон ледяного сердца','💠','neck','Амулет',3,62,{hp:.4,def:.3,crit:.3},{shield0:8},'ice','Внутри кристалла бьётся холодное сердце.');
+_I('k_fruit2','Плод вечного пламени','🍎','neck','Артефакт',4,95,{atk:.6,cdmg:.4},{burn:25},0,'Откусишь — и руки запылают.');
+_I('k_teigu','Ошейник зверя-повелителя','🐺','neck','Артефакт',4,108,{atk:.5,hp:.3,spd:.2},{stun:10},'teigu','Артефакт, подчиняющий себе любых созданий.');
+_I('k_time','Амулет камня времени','🟢','neck','Артефакт',5,165,{hp:.4,def:.3,spd:.3},{revive:40},'gems','Позволяет отмотать собственную смерть — один раз.');
+_I('k_star','Звёздный кулон Призывателя','⭐','neck','Амулет',1,20,{hp:.4,atk:.3,crit:.3},0,0,'Кулон, выданный каждому, кто впервые открыл Врата.');
+const PL_TPL={};PL_IT.forEach(t=>{PL_TPL[t.id]=t});
+// ====== НАВЫКИ ======
+// [id, название, эмодзи, ветка, тип(A|P|U), тир, треб.ур., предусл.(id|''), макс. ранг, цена за ранг, энергия, откат, fx(r)]
+const PL_BR=[['w','Воин','⚔️','#ff7a59'],['m','Маг','🔥','#ff5fa2'],['s','Тень','🌑','#9b6bff'],['p','Поддержка','✨','#5fd6a0']];
+const PL_SK=[];
+function _S(id,n,ic,br,ty,tier,req,pre,max,cost,en,cd,fx,d){PL_SK.push({id,n,ic,br,ty,tier,req,pre,max,cost,en,cd,fx,d})}
+// активные: m = множитель АТК за удар, h = число ударов, остальное — эффекты (см. plApplyFx)
+_S('w1','Рубящий удар','🗡️','w','A',1,1,'',5,1,15,0,r=>({m:1.5+.12*r}),'Простой, но надёжный удар клинком.');
+_S('w2','Закалка воина','💪','w','P',1,2,'',5,1,0,0,r=>({hpP:3*r,defP:2*r}),'Годы тренировок закаляют тело.');
+_S('w3','Вихрь клинков','🌀','w','A',2,8,'w1',5,1,28,2,r=>({m:.62+.05*r,h:3}),'Серия из трёх быстрых ударов.');
+_S('w4','Боевой клич','📣','w','A',2,12,'w2',5,1,10,4,r=>({buff:{atkP:20+3*r,t:3},en:20}),'Рёв, поднимающий боевой дух: АТК вверх и прилив энергии.');
+_S('w5','Сфера вихря','🔵','w','A',3,22,'w3',6,2,40,3,r=>({m:2.9+.3*r,pierce:30}),'Сгусток вращающейся энергии, пробивающий защиту.');
+_S('w6','Стойка мастера меча','🥋','w','P',3,28,'w4',6,2,0,0,r=>({atkP:2*r,cdmg:3*r}),'Идеальная стойка делает каждый удар тяжелее.');
+_S('w7','Лунный разрез','🌙','w','A',4,45,'w5',8,2,50,4,r=>({m:3.4+.33*r,stun:15+3*r}),'Широкий серп клинка, способный оглушить врага.');
+_S('w8','Несгибаемая воля','🔥','w','P',4,55,'w6',8,2,0,0,r=>({dmgRed:1.5*r,lowAtk:3*r}),'Чем хуже дела, тем упрямее воин.');
+_S('w9','Клинок Короля','🌟','w','U',5,80,'w7',8,3,100,6,r=>({m:6.4+.75*r,pierce:40}),'Золотой свет разом обрушивается на врага.');
+_S('m1','Огненный шар','🔥','m','A',1,1,'',5,1,15,0,r=>({m:1.35+.11*r,burn:{p:30,t:2}}),'Горящий шар, оставляющий ожог.');
+_S('m2','Поток маны','💠','m','P',1,2,'',5,1,0,0,r=>({energy:.8*r,atkP:1.5*r}),'Энергия течёт свободнее, заклинания сильнее.');
+_S('m3','Ледяное копьё','🧊','m','A',2,8,'m1',5,1,25,1,r=>({m:1.8+.15*r,slow:{p:20,t:3}}),'Копьё из льда замедляет врага.');
+_S('m4','Громовая цепь','⚡','m','A',2,14,'m2',5,1,30,3,r=>({m:.95+.07*r,h:2,stun:20+3*r}),'Две молнии подряд, иногда парализующие.');
+_S('m5','Эксплозия!','💥','m','A',3,24,'m3',6,2,45,5,r=>({m:3.8+.4*r,self:8}),'Один мощнейший взрыв — и усталость (−8% HP).');
+_S('m6','Знание стихий','📖','m','P',3,30,'m4',6,2,0,0,r=>({skillDmg:3*r,crit:1*r}),'Понимание стихий усиливает навыки.');
+_S('m7','Круг пламени','🌋','m','A',4,46,'m5',8,2,40,4,r=>({m:1.9+.17*r,burn:{p:55+5*r,t:4}}),'Огненное кольцо сжигает врага по ходам.');
+_S('m8','Ледяной барьер','🧊','m','A',4,52,'m6',8,2,30,5,r=>({shield:10+1.6*r}),'Щит из инея поглощает урон.');
+_S('m9','Звёздный метеор','☄️','m','U',5,85,'m7',8,3,100,6,r=>({m:7.8+.9*r,burn:{p:60,t:3}}),'С неба падает осколок звезды.');
+_S('s1','Двойной укол','🗡️','s','A',1,1,'',5,1,12,0,r=>({m:.75+.06*r,h:2}),'Два быстрых укола.');
+_S('s2','Шаг в тени','👣','s','P',1,2,'',5,1,0,0,r=>({dodge:1.5*r,spdP:1.5*r}),'Тень скрывает каждое движение.');
+_S('s3','Кровавый клинок','🩸','s','A',2,8,'s1',5,1,26,2,r=>({m:1.45+.12*r,bleed:{p:35,t:3},drain:15}),'Рана кровоточит, а вы — исцеляетесь.');
+_S('s4','Острый глаз','👁️','s','P',2,14,'s2',5,1,0,0,r=>({crit:1.5*r,cdmg:3*r}),'Видите слабое место с полувзгляда.');
+_S('s5','Теневой солдат','👤','s','A',3,24,'s3',6,2,35,5,r=>({summon:{p:75+8*r,t:4}}),'Призывает теневого бойца: бьёт каждый ход.');
+_S('s6','Жажда крови','🧛','s','P',3,30,'s4',6,2,0,0,r=>({vamp:1.5*r,lowAtk:2*r}),'Чем сильнее бьёте, тем больше возвращается.');
+_S('s7','Удар из-за спины','🎯','s','A',4,45,'s5',8,2,45,4,r=>({m:2.8+.3*r,crit100:1}),'Гарантированный критический удар.');
+_S('s8','Повелитель теней','🌒','s','P',4,55,'s6',8,2,0,0,r=>({skillDmg:2.5*r,cdmg:2.5*r}),'Тени подчиняются вам всё охотнее.');
+_S('s9','Армия Теней','🌑','s','U',5,80,'s7',8,3,100,6,r=>({m:4.6+.55*r,summon:{p:90,t:4,n:3}}),'Вызывает целый отряд теней и бьёт по врагу.');
+_S('p1','Малое исцеление','💚','p','A',1,1,'',5,1,20,2,r=>({heal:18+2*r}),'Мягкий свет затягивает раны.');
+_S('p2','Регенерация','🌿','p','P',1,2,'',5,1,0,0,r=>({regen:.5*r,hpP:1.5*r}),'Тело восстанавливается само.');
+_S('p3','Щит света','🔆','p','A',2,8,'p1',5,1,25,3,r=>({shield:12+2*r}),'Световая оболочка принимает удар на себя.');
+_S('p4','Гейс подчинения','👁‍🗨','p','A',2,16,'p2',5,1,35,6,r=>({stun:100,debuff:{atkP:-(10+3*r),t:3}}),'Приказ, которому нельзя не подчиниться. Боссы сопротивляются.');
+_S('p5','Благословение','🙏','p','A',3,24,'p3',6,2,30,5,r=>({buff:{atkP:15+2*r,defP:15+2*r,t:4}}),'Усиливает атаку и защиту на 4 хода.');
+_S('p6','Закалённая душа','🛡️','p','P',3,30,'p4',6,2,0,0,r=>({defP:2.5*r,dmgRed:1*r}),'Дух крепче стали.');
+_S('p7','Великое исцеление','💖','p','A',4,44,'p5',8,2,45,5,r=>({heal:35+3*r,cleanse:1}),'Сильное лечение и снятие дурных эффектов.');
+_S('p8','Вторая жизнь','🕊️','p','P',4,56,'p6',8,2,0,0,r=>({revive:15+4*r}),'Однажды смерть отступит.');
+_S('p9','Круг Призыва','🔯','p','U',5,80,'p7',8,3,100,6,r=>({heal:60,shield:30,buff:{atkP:40+4*r,t:3}}),'Круг света: исцеление, щит и мощь.');
+const PL_SKB={};PL_SK.forEach(s=>{PL_SKB[s.id]=s});
+const PL_BAR_MAX=5;
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: ядро (ASTRAL_PLAYER_V1) ======
+// Сохранение: S.pl = {lv,xp,st:{hp,atk,def,spd,crit,cdmg},sk:{id:ранг},bar:[id..],inv:[{u,t,up}],eq:{слот:uid},uid,sh,pot:{hp,en},fr:{st,sk},duel:{},day:{}} — создаётся лениво (plD).
+// ---------- КАЛИБРОВКА под 6★ ----------
+// Герой 6★ на максимуме (ур.110, 5 копий, вознесение 5): b = 1+109*.06+5*.05+5*.25 = 9.04 → среднее по 17 мификам: HP ≈ 42 754, АТК ≈ 5 615 (Berserker: 50 624 / 6 328).
+// Призыватель 200 ур.: база (HP 300+26·(ур−1), АТК 30+2.6·(ур−1), ЗАЩ 10+1.6·(ур−1)) + 1000 очков (эталон: HP 400, АТК 300, ЗАЩ 150, СКОР 40, крит 60, крит.урон 50) + эталонный топ-комплект (9 слотов, +5) + %-бонусы ⇒ см. plCalib(): HP/АТК в пределах ±12% от среднего 6★.
+const PL_GK=.35;                                                        // множитель мощности предметов (подобран под калибровку)
+function plRnd(){return (typeof window!=='undefined'&&window.PL_RNG)?window.PL_RNG():Math.random()}
+function plD(d){d=d||S;let p=d.pl;if(!p||typeof p!=='object')p=d.pl={};
+ if(!(p.lv>=1))p.lv=1;p.lv=Math.min(PL_MAX,Math.floor(p.lv));if(!(p.xp>=0))p.xp=0;
+ if(!p.st||typeof p.st!=='object')p.st={};PL_ST.forEach(x=>{if(!(p.st[x[0]]>=0))p.st[x[0]]=0});
+ if(!p.sk||typeof p.sk!=='object')p.sk={};if(!Array.isArray(p.bar))p.bar=[];if(!Array.isArray(p.inv))p.inv=[];if(!p.eq||typeof p.eq!=='object')p.eq={};
+ if(!(p.uid>=1))p.uid=1;if(!(p.sh>=0))p.sh=0;if(!p.pot||typeof p.pot!=='object')p.pot={hp:3,en:1};if(!p.fr||typeof p.fr!=='object')p.fr={st:0,sk:0};
+ if(!p.duel||typeof p.duel!=='object')p.duel={};if(!p.day||typeof p.day!=='object')p.day={};if(!p.stat||typeof p.stat!=='object')p.stat={w:0,l:0};
+ if(!p.init){p.init=1;['w_sword','c_tunic','h_cap','g_boots','k_cord','n_copper'].forEach(t=>{const it={u:p.uid++,t,up:0};p.inv.push(it);const tp=PL_TPL[t];p.eq[tp.slot==='ring'?'r1':tp.slot==='hand'?'rh':tp.slot]=it.u})}
+ return p}
+function plS(){return plD(S)}
+function plDay(p){p=p||plS();if(p.day.d!==today())p.day={d:today(),dx:0,b:{},sp:{}};return p.day}
+function plNeed(L){return Math.round(60+14*L+.03*Math.pow(L,2.4))}
+function plRewardXp(frac){const p=plS();return Math.max(15,Math.round(plNeed(p.lv)*frac*(p.lv>=100?.8:1)))}
+function plAddXp(n,quiet){const p=plS();if(p.lv>=PL_MAX||!(n>0))return 0;let g=0;p.xp+=Math.round(n);
+ while(p.lv<PL_MAX&&p.xp>=plNeed(p.lv)){p.xp-=plNeed(p.lv);p.lv++;g++;}
+ if(p.lv>=PL_MAX)p.xp=0;
+ if(g&&!quiet)setTimeout(()=>{try{toast('🧙 Уровень Призывателя '+p.lv+'! +'+g*PL_PTS+' оч. статов, +'+g+' оч. навыков')}catch(e){}},700);return g}
+function plPtsLeft(p){p=p||plS();return p.lv*PL_PTS-PL_ST.reduce((a,x)=>a+p.st[x[0]],0)}
+function plSpTotal(lv){return lv+Math.floor(lv/10)}
+function plSpSpent(p){p=p||plS();return Object.keys(p.sk).reduce((a,k)=>a+(PL_SKB[k]?PL_SKB[k].cost*p.sk[k]:0),0)}
+function plSpLeft(p){p=p||plS();return plSpTotal(p.lv)-plSpSpent(p)}
+function plDotOn(){try{if(!S)return false;const p=plS();return plPtsLeft(p)>0||plSpLeft(p)>0&&PL_SK.some(s=>plCanLearn(s.id)===true)}catch(e){return false}}
+// ---------- предметы ----------
+function plItem(u,p){p=p||plS();return p.inv.find(i=>i.u===u)}
+function plTpl(it){return PL_TPL[it.t]}
+function plPool(t){return Math.round((6+t.req*.9)*PL_RAR[t.r].m*PL_GK)}
+function plItemPts(it){const t=PL_TPL[it.t],o={},k=plPool(t)*(1+.07*(it.up||0));for(const s in t.s)o[s]=Math.round(k*t.s[s]);return o}
+function plSlotsOf(t){return ({head:['head'],chest:['chest'],legs:['legs'],neck:['neck'],ring:['r1','r2','r3'],rh:['rh'],lh:['lh'],hand:['rh','lh']})[t.slot]}
+function plEqItems(p){p=p||plS();return PL_SLOTS.map(s=>{const u=p.eq[s[0]];return u?plItem(u,p):null}).filter(Boolean)}
+function plSetCounts(items){const c={};items.forEach(it=>{const s=PL_TPL[it.t].set;if(s)c[s]=(c[s]||0)+1});return c}
+function plMods(p,items){p=p||plS();items=items||plEqItems(p);const m={};const add=(o)=>{for(const k in o)m[k]=(m[k]||0)+o[k]};
+ items.forEach(it=>add(PL_TPL[it.t].fx||{}));const sc=plSetCounts(items);
+ for(const s in sc){const d=PL_SETS[s];if(sc[s]>=2)add(d.b2);if(sc[s]>=4)add(d.b4)}
+ PL_SK.forEach(s=>{const r=p.sk[s.id]|0;if(s.ty==='P'&&r>0)add(s.fx(r))});return m}
+function plBase(lv){return{hp:300+26*(lv-1),atk:30+2.6*(lv-1),def:10+1.6*(lv-1)}}
+// чистый расчёт статов (для калибровки/симуляции): o={lv,st,items,sk}
+function plStatsFor(o){const fake={sk:o.sk||{}},m=plMods(fake,o.items||[]),b=plBase(o.lv),g={hp:0,atk:0,def:0,spd:0,crit:0,cdmg:0};
+ (o.items||[]).forEach(it=>{const q=plItemPts(it);for(const k in q)g[k]+=q[k]});
+ const P=k=>(o.st[k]||0)+g[k];
+ const hp=(b.hp+P('hp')*PL_PT.hp)*(1+(m.hpP||0)/100),atk=(b.atk+P('atk')*PL_PT.atk)*(1+(m.atkP||0)/100),def=(b.def+P('def')*PL_PT.def)*(1+(m.defP||0)/100),
+  spd=(100+P('spd')*PL_PT.spd)*(1+(m.spdP||0)/100),crit=Math.min(80,5+P('crit')*PL_PT.crit+(m.crit||0)),cdmg=Math.min(400,150+P('cdmg')*PL_PT.cdmg+(m.cdmg||0));
+ return{hp:Math.round(hp),atk:Math.round(atk),def:Math.round(def),spd:Math.round(spd),crit:Math.round(crit*10)/10,cdmg:Math.round(cdmg),m}}
+function plStats(p){p=p||plS();return plStatsFor({lv:p.lv,st:p.st,items:plEqItems(p),sk:p.sk})}
+function plPower(s){return Math.round(s.hp/10+s.atk*3+s.def*2+s.spd+s.crit*8+s.cdmg/2)}
+function plHero6(){const hs=HEROES.filter(h=>h.r===6),b=1+109*.06+5*.05+5*.25;let hp=0,atk=0;hs.forEach(h=>{hp+=h.hp*b;atk+=h.atk*b});return{hp:Math.round(hp/hs.length),atk:Math.round(atk/hs.length),n:hs.length}}
+// эталонный топ-комплект и раскладка — для калибровки
+function plRefGear(up){const best=(f)=>PL_IT.filter(f).sort((a,b)=>b.r-a.r||b.req-a.req);const pick=[];
+ const take=(slot,n)=>best(t=>t.slot===slot).slice(0,n).forEach(t=>pick.push({t:t.id,up}));
+ take('head',1);take('chest',1);take('legs',1);take('neck',1);take('ring',3);
+ const w=best(t=>t.slot==='rh'||t.slot==='hand')[0];pick.push({t:w.id,up});const l=best(t=>t.slot==='lh')[0];pick.push({t:l.id,up});return pick}
+const PL_REF_ST={hp:400,atk:300,def:150,spd:40,crit:60,cdmg:50};
+function plCalib(up){const items=plRefGear(up==null?5:up),s=plStatsFor({lv:200,st:PL_REF_ST,items,sk:{}}),h=plHero6();
+ return{player:s,hero6:h,ratioHp:s.hp/h.hp,ratioAtk:s.atk/h.atk,power:plPower(s)}}
+// ---------- статы ----------
+function plAlloc(k,n){const p=plS();if(!(k in PL_CAP))return false;const left=plPtsLeft(p);n=Math.min(n,left,PL_CAP[k]-p.st[k]);if(!(n>0))return false;p.st[k]+=n;save();return true}
+function plUi(k,n){if(!plAlloc(k,n))toast('Нельзя добавить');plRender()}
+function plResetSt(){const p=plS();const free=p.fr.st<2;if(!free){if(S.gems<200)return toast('Нужно 💎200');S.gems-=200}else p.fr.st++;PL_ST.forEach(x=>p.st[x[0]]=0);save();toast(free?'Очки статов возвращены (бесплатно)':'Очки статов возвращены за 💎200');plRender()}
+// ---------- навыки ----------
+function plCanLearn(id){const p=plS(),s=PL_SKB[id];if(!s)return 'Нет такого навыка';const r=p.sk[id]|0;if(r>=s.max)return 'Максимум';if(p.lv<s.req)return 'Нужен ур. '+s.req;if(s.pre&&!(p.sk[s.pre]|0))return 'Сначала: '+PL_SKB[s.pre].n;if(plSpLeft(p)<s.cost)return 'Не хватает очков навыков';return true}
+function plLearn(id){const c=plCanLearn(id);if(c!==true){toast(c);return false}const p=plS();p.sk[id]=(p.sk[id]|0)+1;const s=PL_SKB[id];if(p.sk[id]===1&&(s.ty==='A'||s.ty==='U')&&p.bar.length<PL_BAR_MAX&&!p.bar.includes(id))p.bar.push(id);save();plRender();return true}
+function plBarTog(id){const p=plS(),s=PL_SKB[id];if(!s||!(p.sk[id]|0)||s.ty==='P')return;const i=p.bar.indexOf(id);if(i>=0)p.bar.splice(i,1);else{if(p.bar.length>=PL_BAR_MAX)return toast('Боевых слотов '+PL_BAR_MAX+' — сначала уберите навык');p.bar.push(id)}save();plRender()}
+function plResetSk(){const p=plS();const free=p.fr.sk<2;if(!free){if(S.gems<200)return toast('Нужно 💎200');S.gems-=200}else p.fr.sk++;p.sk={};p.bar=[];save();toast(free?'Навыки сброшены (бесплатно)':'Навыки сброшены за 💎200');plRender()}
+function plSkDesc(s,r){r=Math.max(1,r|0);const f=s.fx(r),o=[];
+ if(f.m!=null)o.push('урон ×'+(f.m*(f.h||1)).toFixed(2).replace(/\.?0+$/,'')+(f.h>1?' ('+f.h+' удара)':''));
+ if(f.pierce)o.push('пробивает '+f.pierce+'% ЗАЩ');if(f.burn)o.push('ожог '+f.burn.p+'% ('+f.burn.t+' х.)');if(f.bleed)o.push('кровотечение '+f.bleed.p+'%');
+ if(f.slow)o.push('замедление '+f.slow.p+'%');if(f.stun&&s.ty!=='P')o.push('оглушение '+f.stun+'%');if(f.drain)o.push('крадёт '+f.drain+'% урона');
+ if(f.heal)o.push('лечит '+f.heal+'% HP');if(f.shield)o.push('щит '+Math.round(f.shield)+'% HP');if(f.summon)o.push('тень: '+f.summon.p+'% АТК ×'+(f.summon.n||1)+', '+f.summon.t+' х.');
+ if(f.crit100)o.push('всегда крит');if(f.self)o.push('−'+f.self+'% HP себе');if(f.cleanse)o.push('снимает дебаффы');
+ if(f.buff)o.push('бафф '+Object.keys(f.buff).filter(k=>k!=='t').map(k=>PL_FXN[k]?PL_FXN[k][0]+' +'+f.buff[k]+'%':'').join(', ')+' ('+f.buff.t+' х.)');
+ if(f.debuff)o.push('враг: АТК '+f.debuff.atkP+'% ('+f.debuff.t+' х.)');if(f.en)o.push('+'+f.en+' энергии');
+ if(s.ty==='P')for(const k in f){if(PL_FXN[k])o.push(PL_FXN[k][0]+' +'+(Math.round(f[k]*10)/10)+PL_FXN[k][1])}
+ return o.join(' · ')}
+// ---------- инвентарь ----------
+function plSell(it){const t=PL_TPL[it.t],rm=PL_RAR[t.r].m;return Math.round((20+t.req*3)*rm*rm*(1+(it.up||0)*.5))}
+function plShards(it){return [1,2,4,8,16,32][PL_TPL[it.t].r]}
+function plUpCost(it){const t=PL_TPL[it.t],rm=PL_RAR[t.r].m,n=(it.up||0)+1;return{gold:Math.round((100+t.req*12)*rm*Math.pow(n,1.5)),sh:n*[1,1,2,3,4,6][t.r]}}
+function plAddItem(tid,quiet){const p=plS();if(!PL_TPL[tid])return null;if(p.inv.length>=PL_INV_MAX){const g=Math.round(plSell({t:tid,up:0})*.5);S.gold+=g;if(!quiet)toast('Инвентарь полон — предмет продан за 🪙'+g);return null}
+ const it={u:p.uid++,t:tid,up:0};p.inv.push(it);return it}
+function plEquipped(u,p){p=p||plS();return Object.keys(p.eq).find(k=>p.eq[k]===u)||null}
+function plEquip(u,slot){const p=plS(),it=plItem(u,p);if(!it)return false;const t=PL_TPL[it.t];if(p.lv<t.req){toast('Нужен уровень Призывателя '+t.req);return false}
+ const ok=plSlotsOf(t);if(!slot||!ok.includes(slot))slot=ok.find(s=>!p.eq[s])||ok[0];
+ const cur=plEquipped(u,p);if(cur)delete p.eq[cur];p.eq[slot]=u;save();return true}
+function plUnequip(slot){const p=plS();delete p.eq[slot];save()}
+function plBreak(u){const p=plS(),it=plItem(u,p);if(!it||plEquipped(u,p))return false;const g=plSell(it),sh=plShards(it);p.inv=p.inv.filter(i=>i.u!==u);S.gold+=g;p.sh+=sh;save();return{g,sh}}
+function plUpgrade(u){const p=plS(),it=plItem(u,p);if(!it)return false;if((it.up||0)>=10){toast('Максимальное улучшение +10');return false}const c=plUpCost(it);if(S.gold<c.gold||p.sh<c.sh){toast('Не хватает 🪙 или осколков ✦');return false}S.gold-=c.gold;p.sh-=c.sh;it.up=(it.up||0)+1;save();return true}
+// ---------- магазин ----------
+function plPrice(t){const r=t.r;if(r===0)return{gold:250+t.req*50,gems:30};if(r===1)return{gold:1800+t.req*220,gems:200+t.req*8};
+ const base=[0,0,3000,18000,80000,300000][r],v=Math.round(base*(.6+t.req/150*.8)/10)*10;return{gems:v}}
+function plMulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function plShopList(){const seed=parseInt(hash('plshop'+today()).slice(0,6),36)||7,R=plMulberry(seed),pick=(r)=>{const a=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq');return a[Math.floor(R()*a.length)]};
+ const rs=[0,0,1,1,1,2,2,3,3,4,4,R()<.4?5:4];const seen={};const out=[];
+ rs.forEach((r,i)=>{let t,g=0;do{t=pick(r)}while(seen[t.id]&&g++<20);seen[t.id]=1;out.push({i,tid:t.id})});return out}
+function plBuy(i,cur){const p=plS(),day=plDay(p),o=plShopList()[i];if(!o||day.b[i])return;const t=PL_TPL[o.tid],pr=plPrice(t);
+ if(cur==='gold'){if(!pr.gold||t.r>1)return;if(S.gold<pr.gold)return toast('Не хватает 🪙');S.gold-=pr.gold}
+ else{if(!pr.gems)return;if(S.gems<pr.gems)return toast('Не хватает 💎');S.gems-=pr.gems}
+ const it=plAddItem(o.tid);if(!it)return toast('Инвентарь полон');day.b[i]=1;save();toast('Куплено: '+t.n);plRender()}
+function plBuyPot(k){const p=plS(),day=plDay(p);day.pb=day.pb||{};const lim=6,n=day.pb[k]||0;if(n>=lim)return toast('Лимит на сегодня');const c=k==='hp'?400:600;if(S.gold<c)return toast('Не хватает 🪙');S.gold-=c;day.pb[k]=n+1;p.pot[k]=(p.pot[k]||0)+1;save();plRender()}
+// ---------- дропы и награды ----------
+function plDrop(src){const W={stage:[[0,55],[1,32],[2,12],[3,1]],boss:[[0,20],[1,40],[2,32],[3,8]],dungeon:[[0,30],[1,42],[2,24],[3,4]],wboss:[[1,30],[2,50],[3,20]],duel:[[1,40],[2,45],[3,15]],rom:[[1,40],[2,45],[3,15]]}[src]||[[0,1]];
+ const tot=W.reduce((a,x)=>a+x[1],0);let x=plRnd()*tot,r=0;for(const w of W){x-=w[1];if(x<=0){r=w[0];break}}
+ const p=plS();let c=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq'&&t.req<=p.lv+20);if(!c.length)c=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq');
+ const t=c[Math.floor(plRnd()*c.length)];return plAddItem(t.id,1)}
+// источники: [доля опыта, шанс дропа, тип дропа]
+const PL_SRC={stage:[.10,.06,'stage'],story:[.12,.07,'stage'],storyBoss:[.20,.22,'boss'],dungeon:[.12,.10,'dungeon'],wboss:[.30,.35,'wboss'],rom:[.30,.30,'rom']};
+function plReward(k,bossy){const p=plS();const c=PL_SRC[bossy?'storyBoss':k]||PL_SRC.stage;const xp=plRewardXp(c[0]);plAddXp(xp);let it=null;if(plRnd()<c[1])it=plDrop(c[2]);save();
+ setTimeout(()=>{try{toast('🧙 +'+xp+' опыта Призывателя'+(it?' · 🎁 '+PL_TPL[it.t].n:''))}catch(e){}},1600);return{xp,it}}
+(function(){try{
+ const w0=winStory;globalThis.winStory=function(){let boss=false,ok=false;try{boss=!!(B&&B.st&&B.st.boss);ok=!!B}catch(e){}const r=w0.apply(this,arguments);try{if(ok)plReward('story',boss)}catch(e){console.error(e)}return r};
+ const d0=dgEnd;globalThis.dgEnd=function(win,quit){let ok=false;try{ok=!!(B&&B.dg&&!B.dg.done&&win)}catch(e){}const r=d0.apply(this,arguments);try{if(ok)plReward('dungeon')}catch(e){console.error(e)}return r};
+ const k0=win;globalThis.win=function(){let ok=false;try{ok=!!(B&&!B.dg&&!B.guild&&!B.story)}catch(e){}const r=k0.apply(this,arguments);try{if(ok)plReward('stage')}catch(e){console.error(e)}return r};
+ const e0=wbEnd;globalThis.wbEnd=function(){const r=e0.apply(this,arguments);try{plReward('wboss')}catch(e){console.error(e)}return r};
+ const v0=vnFinish;globalThis.vnFinish=function(){let first=false;try{first=!!(VN&&!VN.rp&&!(romH(VN.hid).ch[VN.ci]&&romH(VN.hid).ch[VN.ci].d))}catch(e){}const r=v0.apply(this,arguments);try{if(first)plReward('rom')}catch(e){console.error(e)}return r};
+}catch(e){console.error(e)}})();
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: движок дуэлей 1 на 1 (ASTRAL_PLAYER_V1) ======
+// Отдельный простой пошаговый движок. Действия: атака, защита, предмет, навыки (до 5 слотов). Противник показывает «намерение» на ход вперёд (защита вдвое ослабляет удар).
+// Формулы: урон = АТК·множитель·(1−ЗАЩ/(ЗАЩ+500+10·ур.))·крит. Энергия: +15 за атаку, +25 за защиту, +8 за ход. Кто быстрее (СКОР) — ходит первым.
+const PL_FK=1;
+function plFoeStats(def,mode){const L=def.rec||1,k=def.k||{},f=1-((mode&&mode.easy)||0),w=1-((mode&&mode.weak)||0);
+ // кривая «типичного» игрока своего уровня (см. симуляцию): HP 500+100L+.6L², АТК 40+12L+.12L², ЗАЩ 10+8L+.04L²
+ return{hp:Math.round((500+100*L+.6*L*L)*(k.hp||1)*f),atk:Math.round((40+12*L+.12*L*L)*(k.atk||1)*f*w),def:Math.round((10+8*L+.04*L*L)*(k.def||1)),spd:Math.round((100+.7*L)*(k.spd||1)),crit:def.crit==null?8:def.crit,cdmg:150}}
+// противники: k — множители (hp/atk/def/spd), skills — умения, seq — порядок действий ('a' — обычный удар, число — индекс умения), phases — смена фазы по доле HP
+const PL_FOES={
+ dummy:{n:'Тренировочный манекен',ic:'🪵',rec:1,k:{hp:.8,atk:.5,def:.5},skills:[],seq:['a','a','a'],intro:'Соломенное чучело в латах. Терпит всё.',col:'#c9a36a'},
+ bandit:{n:'Разбойник с большой дороги',ic:'🗡️',rec:10,k:{hp:.9,atk:.85},skills:[{n:'Подлый удар',ic:'🗡️',m:1.8,tell:'целится в спину'}],seq:['a','a',0],intro:'Ухмыляется и крутит кинжал.',col:'#c98a5a'},
+ guard:{n:'Страж Врат',ic:'🛡️',rec:25,k:{hp:1.1,atk:.8,def:1.2},skills:[{n:'Удар щитом',ic:'🛡️',m:1.4,stun:1,tell:'поднимает щит'},{n:'Стойка',ic:'🔰',shield:12,tell:'готовит стойку'}],seq:['a',1,'a',0],intro:'Тяжёлый доспех, спокойный взгляд.',col:'#8aa0c9'},
+ assassin:{n:'Теневой ассасин',ic:'🥷',rec:45,k:{hp:.85,atk:1.05,spd:1.3},crit:25,skills:[{n:'Кровавый росчерк',ic:'🩸',m:1.3,bleed:1,tell:'скрывается в тени'},{n:'Удар из тени',ic:'🌑',m:2.4,tell:'готовит рывок'}],seq:['a',0,'a',1],intro:'Тень отделяется от стены.',col:'#7a6bd0'},
+ knight:{n:'Рыцарь Круга',ic:'⚔️',rec:70,k:{hp:1.15,atk:.95,def:1.2},skills:[{n:'Клинок присяги',ic:'⚔️',m:2.2,tell:'поднимает меч'},{n:'Щит чести',ic:'🔰',shield:10,tell:'закрывается щитом'}],seq:['a','a',0,1],intro:'Рыцарь кланяется — и обнажает меч.',col:'#e8c35a'},
+ frostmage:{n:'Ледяной маг',ic:'🧊',rec:95,k:{hp:.95,atk:1.15},skills:[{n:'Ледяное копьё',ic:'🧊',m:2,slow:1,tell:'собирает иней'},{n:'Морозный вихрь',ic:'🌨️',m:1.2,h:2,tell:'раскручивает вихрь'}],seq:['a',0,1,'a'],intro:'Воздух вокруг мага покрывается узором.',col:'#7fd6ff'},
+ demon:{n:'Демон Разлома',ic:'👹',rec:130,k:{hp:1.3,atk:1.1},skills:[{n:'Коготь бездны',ic:'🩸',m:1.6,bleed:1,tell:'тянется когтем'},{n:'Вой Разлома',ic:'🌀',m:2.6,tell:'набирает тьму'}],seq:['a',0,'a',1],intro:'Трещина между мирами дрожит.',col:'#ff5a7a'},
+ astral:{n:'Астральный Страж',ic:'🌠',rec:170,k:{hp:1.4,atk:1.15,def:1.15},skills:[{n:'Луч Врат',ic:'✨',m:2.6,tell:'заряжает луч'},{n:'Свет-щит',ic:'🔆',shield:14,heal:6,tell:'сияет'}],seq:['a',0,'a',1,'a'],intro:'Страж света, вечно охраняющий Врата.',col:'#fff3a0'},
+ // ---- героини (спарринги, главы, свидания) ----
+ tsunade:{n:'Цунаде',ic:'👊',img:'tsunade',rec:15,k:{hp:1.2,atk:1.05},skills:[{n:'Сокрушительный кулак',ic:'👊',m:2.3,stun:1,tell:'сжимает кулак'},{n:'Печать Сотни Исцелений',ic:'💚',heal:14,tell:'касается лба'}],seq:['a','a',0,'a',1],intro:'Цунаде разминает запястья. «Не переживай, калечить не буду. Почти».',col:'#f5c84a',boss:0},
+ erza:{n:'Эрза Скарлет',ic:'⚔️',img:'erza',rec:40,k:{hp:1.1,atk:1.15,def:1.15},skills:[{n:'Танец клинков',ic:'🗡️',m:.85,h:3,tell:'призывает клинки'},{n:'Доспех Сердца',ic:'🛡️',shield:12,tell:'меняет доспех'}],seq:['a',0,'a',1,0],intro:'Эрза поднимает меч: «Рыцарский поединок. Без пощады и без обид».',col:'#dc2626'},
+ annie:{n:'Энни Леонхарт',ic:'🥊',img:'annie',rec:10,k:{hp:1,atk:.95,spd:1.1},skills:[{n:'Захват',ic:'🤼',m:1.5,stun:1,tell:'сокращает дистанцию'},{n:'Кристальный кулак',ic:'💎',m:2.1,tell:'покрывает кулак кристаллом'}],seq:['a','a',0,'a',1],intro:'Энни встаёт в стойку. «Только не жалуйся потом».',col:'#60a5fa'},
+ nero:{n:'Нерон Клавдий',ic:'🎭',img:'nero',rec:14,k:{hp:1.05,atk:1.1},skills:[{n:'Золотое Представление',ic:'🌟',m:2.4,tell:'раскидывает руки для аплодисментов'},{n:'Овации!',ic:'👏',buff:1,tell:'раззадоривает зал'}],seq:['a',1,'a',0],intro:'Нерон сияет: «Сцена — наша! Зрители уже замерли!»',col:'#ef4444'},
+ yor:{n:'Йор Форджер',ic:'🪡',img:'yor',rec:25,k:{hp:1,atk:1.1,spd:1.25},crit:18,skills:[{n:'Иглы терновой принцессы',ic:'🪡',m:1.3,bleed:1,tell:'достаёт иглы'},{n:'Удар ногой',ic:'🦵',m:2.2,tell:'приседает для рывка'}],seq:['a',0,'a',1],intro:'Йор кланяется: «Простите заранее, если… чересчур».',col:'#e11d48'},
+ nami:{n:'Нами',ic:'⚡',img:'nami',rec:20,k:{hp:.9,atk:1.1,spd:1.25},skills:[{n:'Гром Клима-Такта',ic:'⚡',m:2,stun:1,tell:'поднимает посох к тучам'},{n:'Мираж',ic:'🌫️',shield:10,tell:'плетёт мираж'}],seq:['a',1,'a',0],intro:'Нами ухмыляется: «Поймаешь — забирай сокровище. Если успеешь».',col:'#fb923c'},
+ najenda:{n:'Наджеда',ic:'🦾',img:'najenda',rec:12,k:{hp:1,atk:1,def:1.1},skills:[{n:'Ловушка',ic:'🪤',m:1.3,slow:1,tell:'ставит ловушку'},{n:'Залп Революции',ic:'💥',m:2.3,tell:'берёт прицел'}],seq:['a',0,'a',1],intro:'Наджеда сверяется с картой: «Тактика решает больше силы».',col:'#84cc16'},
+ esdeath_mid:{n:'Эсдес',ic:'❄️',img:'esdeath',rec:60,k:{hp:1.25,atk:1.1,def:1.2},skills:[{n:'Ледяной разрез',ic:'❄️',m:2.1,tell:'взмахивает саблей'},{n:'Гробница льда',ic:'🧊',m:1.2,stun:1,tell:'сковывает землю льдом'}],seq:['a',0,'a',1],intro:'«Докажи, что твоя сила — не случайность».',col:'#9fe3ff'},
+ esdeath:{n:'Эсдес · Ледяная Королева',ic:'❄️',img:'esdeath',rec:100,boss:1,k:{hp:1.5,atk:1.12,def:1.2,spd:1.1},crit:12,
+  skills:[{n:'Ледяной разрез',ic:'❄️',m:2.2,tell:'взмахивает саблей'},{n:'Гробница льда',ic:'🧊',m:1.3,stun:1,tell:'сковывает землю льдом'},{n:'Ледяная буря',ic:'🌨️',m:1.1,h:3,slow:1,tell:'зовёт бурю'},{n:'Накопление холода',ic:'🥶',charge:1,tell:'копит холод…'},{n:'Махападма: Абсолютный ноль',ic:'💠',m:4.2,tell:'обрушивает Абсолютный ноль! (защита вдвое ослабит)'},{n:'Ледяной покров',ic:'🔷',shield:10,tell:'одевается льдом'}],
+  seq:['a',0,'a',1],
+  phases:[{at:.66,msg:'❄ Эсдес улыбается: «Неплохо. Теперь всерьёз». Вокруг поднимается метель.',seq:['a',0,2,1,'a',5],atk:1.1},
+          {at:.33,msg:'💠 Эсдес поднимает саблю: «Я покажу тебе мою настоящую силу!» Воздух звенит.',seq:['a',3,4,0,2,5],atk:1.1,shield:8}],
+  intro:'Эсдес отбрасывает китель и обнажает саблю. В её глазах — восторг: наконец-то равный.',col:'#9fe3ff'}
+};
+// ---------- логика боя ----------
+function plMe(){const p=plS(),s=plStats(p);return{hp:s.hp,max:s.hp,atk:s.atk,def:s.def,spd:s.spd,crit:s.crit,cdmg:s.cdmg,m:s.m,en:30,sh:0,st:{},cd:{},guard:0,revUsed:0,ds:0,bar:p.bar.filter(id=>PL_SKB[id]&&(p.sk[id]|0)>0),rk:Object.assign({},p.sk),sum:null,pots:0}}
+function plDuelNew(did,mode,over){const def=typeof did==='string'?PL_FOES[did]:did;mode=mode||{};const fs=plFoeStats(def,mode),me=plMe();
+ if(over&&over.rec){}
+ const D={def,id:typeof did==='string'?did:def.id,mode,me,foe:Object.assign({},fs,{max:fs.hp,sh:0,st:{},cd:{},ph:0,buffAtk:1,chg:0}),turn:1,log:[],ev:[],over:0,win:0,seq:def.seq||['a'],si:0,intent:null,first:1,dmgDone:0,dmgTaken:0,foeFirst:false,busy:0};
+ me.sh=Math.round(me.max*(me.m.shield0||0)/100);D.foeFirst=D.foe.spd>me.spd*1.15;
+ plLog(D,'⚔ Дуэль: '+def.n+'. '+(def.intro||''));if(me.sh)plLog(D,'🔰 Щит снаряжения: '+me.sh);plPick(D);return D}
+function plLog(D,t){D.log.unshift(t);if(D.log.length>40)D.log.pop()}
+function plEv(D,side,txt,cls){D.ev.push({s:side,t:txt,c:cls||''})}
+function plPick(D){const a=D.seq[D.si%D.seq.length];D.si++;D.intent=a==='a'?{n:'Удар',ic:'👊',m:1,tell:'замахивается'}:D.def.skills[a];D.ik=a}
+function plDefRed(def,lv){return def/(def+500+10*lv)}
+function plCalc(atk,mult,defv,pierce,lv){return atk*mult*(1-plDefRed(defv*(1-(pierce||0)/100),lv))}
+function plBuffOf(u,k){const b=u.buff;return b&&b.t>0&&b[k]?b[k]:0}
+function plDmgMe(D,mult,opt){ // удар по врагу
+ opt=opt||{};const me=D.me,f=D.foe,p=plS();let atk=me.atk*(1+plBuffOf(me,'atkP')/100);if(me.hp<me.max*.35&&me.m.lowAtk)atk*=1+me.m.lowAtk/100;
+ let m=mult*(opt.sk?1+(me.m.skillDmg||0)/100:1);if(D.first&&me.m.firstHit){m*=1+me.m.firstHit/100}
+ const crit=opt.crit100||plRnd()*100<me.crit;let d=plCalc(atk,m,f.def,(opt.pierce||0)+(me.m.pierce||0),p.lv)*(f.debuffSlow?1:1);if(crit)d*=me.cdmg/100;d*=.93+plRnd()*.14;d=Math.max(1,Math.round(d));
+ if(f.sh>0){const a=Math.min(f.sh,d);f.sh-=a;d-=a;if(a)plEv(D,'f','🔰'+a,'sh')}
+ f.hp-=d;D.dmgDone+=d;D.first=0;plEv(D,'f',(crit?'💥':'')+d,crit?'crit':'dmg');
+ if(me.m.vamp&&d>0){const h=Math.round(d*me.m.vamp/100);me.hp=Math.min(me.max,me.hp+h);if(h)plEv(D,'m','+'+h,'heal')}
+ if(opt.drain&&d>0){const h=Math.round(d*opt.drain/100);me.hp=Math.min(me.max,me.hp+h);plEv(D,'m','+'+h,'heal')}
+ const bossK=D.def.boss?.35:1;
+ if(me.m.stun&&plRnd()*100<me.m.stun*bossK&&!f.st.stun){f.st.stun=1;plLog(D,'💫 '+D.def.n+' оглушён!')}
+ if(me.m.burn&&plRnd()*100<me.m.burn&&!f.st.burn){f.st.burn={t:2,d:Math.round(atk*.3)};plLog(D,'🔥 '+D.def.n+' горит!')}
+ return{d,crit}}
+function plHitFoeSk(D,f,sid,r){const me=D.me,out={d:0};const n=f.h||1;
+ if(f.m!=null){for(let i=0;i<n;i++){const x=plDmgMe(D,f.m,{sk:1,pierce:f.pierce,crit100:f.crit100,drain:f.drain});out.d+=x.d}}
+ if(f.burn&&plRnd()*100<f.burn.p){D.foe.st.burn={t:f.burn.t,d:Math.round(me.atk*.3)};plLog(D,'🔥 Ожог!')}
+ if(f.bleed&&plRnd()*100<f.bleed.p){D.foe.st.bleed={t:f.bleed.t,d:Math.round(me.atk*.25)};plLog(D,'🩸 Кровотечение!')}
+ if(f.slow&&plRnd()*100<f.slow.p){D.foe.st.slow=f.slow.t;plLog(D,'🐌 Противник замедлен (−20% урона)')}
+ if(f.stun&&D.foe.hp>0){const ch=f.stun*(D.def.boss?.35:1);if(plRnd()*100<ch){D.foe.st.stun=1;plLog(D,'💫 '+D.def.n+' оглушён!')}else if(f.stun>=100)plLog(D,'💢 '+D.def.n+' сопротивляется приказу')}
+ if(f.debuff){D.foe.debuff={atkP:f.debuff.atkP,t:f.debuff.t}}
+ if(f.heal){const h=Math.round(me.max*f.heal/100);me.hp=Math.min(me.max,me.hp+h);plEv(D,'m','+'+h,'heal')}
+ if(f.cleanse){delete me.st.bleed;delete me.st.burn;delete me.st.slow;delete me.st.stun}
+ if(f.shield){const s=Math.round(me.max*f.shield/100);me.sh+=s;plEv(D,'m','🔰'+s,'sh')}
+ if(f.summon){me.sum={p:f.summon.p,t:f.summon.t,n:f.summon.n||1}}
+ if(f.buff){me.buff=Object.assign({},f.buff)}
+ if(f.en)me.en=Math.min(100,me.en+f.en);
+ if(f.self){const l=Math.round(me.max*f.self/100);me.hp=Math.max(1,me.hp-l);plEv(D,'m','-'+l,'dmg')}
+ return out}
+function plFoeHit(D,mult,opt){opt=opt||{};const me=D.me,f=D.foe,p=plS();
+ const dodge=Math.min(40,(me.m.dodge||0)+Math.max(0,Math.min(20,(me.spd-f.spd)/f.spd*10)));
+ if(plRnd()*100<dodge){plEv(D,'m','Уклон','dodge');plLog(D,'💨 Вы уклонились от удара!');return 0}
+ let atk=f.atk*f.buffAtk*(1+(f.debuff&&f.debuff.t>0?f.debuff.atkP/100:0))*(f.st.slow?.8:1);
+ const crit=plRnd()*100<f.crit;let d=plCalc(atk,mult,me.def*(1+plBuffOf(me,'defP')/100),0,p.lv);if(crit)d*=f.cdmg/100;
+ d*=.93+plRnd()*.14;if(me.guard)d*=.5;const red=Math.min(50,(me.m.dmgRed||0));d*=1-red/100;d=Math.max(1,Math.round(d));
+ if(me.sh>0){const a=Math.min(me.sh,d);me.sh-=a;d-=a;if(a)plEv(D,'m','🔰'+a,'sh')}
+ me.hp-=d;D.dmgTaken+=d;plEv(D,'m',(crit?'💥':'')+d,crit?'crit':'dmg');
+ if(me.m.thorns&&d>0){const t=Math.round(d*me.m.thorns/100);f.hp-=t;plEv(D,'f',t,'dmg')}
+ if(me.hp<=0&&!me.revUsed&&me.m.revive){me.revUsed=1;me.hp=Math.round(me.max*me.m.revive/100);plLog(D,'🕊 Вторая жизнь! HP восстановлено до '+me.m.revive+'%');plEv(D,'m','✦','heal')}
+ return d}
+function plFoeAct(D){if(D.over)return;const f=D.foe,me=D.me,it=D.intent;
+ if(f.st.stun){delete f.st.stun;plLog(D,'💫 '+D.def.n+' пропускает ход (оглушён)');plPick(D);return}
+ const sk=it;let txt=sk.ic+' '+D.def.n+': «'+sk.n+'»';
+ if(sk.charge){f.chg=1;plLog(D,txt+' — накапливает силу…');plPick(D);return}
+ if(sk.m!=null){const n=sk.h||1;let tot=0;for(let i=0;i<n;i++){if(me.hp<=0)break;tot+=plFoeHit(D,sk.m)}plLog(D,txt+(tot?' → вам '+tot:' (мимо)')+(me.guard&&tot?' 🛡':''));
+  if(tot>0){if(sk.stun&&!me.guard){me.st.stun=1;plLog(D,'💫 Вы оглушены!')}else if(sk.stun)plLog(D,'🛡 Защита спасла от оглушения');if(sk.bleed){me.st.bleed={t:3,d:Math.round(f.atk*.12)};plLog(D,'🩸 Вы истекаете кровью')}if(sk.slow){me.st.slow=2;plLog(D,'🐌 Вы замедлены')}}}
+ else plLog(D,txt);
+ if(sk.shield){const s=Math.round(f.max*sk.shield/100);f.sh+=s;plEv(D,'f','🔰'+s,'sh')}
+ if(sk.heal){const h=Math.round(f.max*sk.heal/100);f.hp=Math.min(f.max,f.hp+h);plEv(D,'f','+'+h,'heal')}
+ if(sk.buff){f.buffAtk*=1.15;plLog(D,'📣 Противник воодушевлён (+15% АТК)')}
+ plPick(D)}
+function plTicks(D){ // конец хода: эффекты
+ const f=D.foe,me=D.me;
+ ['burn','bleed'].forEach(k=>{if(f.st[k]){f.hp-=f.st[k].d;D.dmgDone+=f.st[k].d;plEv(D,'f',f.st[k].d,'dmg');plLog(D,(k==='burn'?'🔥':'🩸')+' '+D.def.n+' получает '+f.st[k].d);if(--f.st[k].t<=0)delete f.st[k]}});
+ if(me.sum&&me.sum.t>0){const d=Math.max(1,Math.round(plCalc(me.atk*me.sum.p/100*me.sum.n,1,f.def,0,plS().lv)));f.hp-=d;D.dmgDone+=d;plEv(D,'f',d,'dmg');plLog(D,'👤 Тени бьют врага: '+d);me.sum.t--}
+ if(f.st.slow)f.st.slow=Math.max(0,f.st.slow-1)||0;if(!f.st.slow)delete f.st.slow;
+ if(f.debuff&&--f.debuff.t<=0)f.debuff=null;
+ ['burn','bleed'].forEach(k=>{if(me.st[k]){const d=me.st[k].d;me.hp-=d;D.dmgTaken+=d;plEv(D,'m',d,'dmg');plLog(D,'🩸 Вы получаете '+d);if(--me.st[k].t<=0)delete me.st[k]}});
+ if(me.st.slow){me.st.slow--;if(!me.st.slow)delete me.st.slow}
+ if(me.buff&&--me.buff.t<=0)me.buff=null;
+ if(me.m.regen&&me.hp>0){const h=Math.round(me.max*me.m.regen/100);me.hp=Math.min(me.max,me.hp+h);plEv(D,'m','+'+h,'heal')}
+ me.en=Math.min(100,me.en+8+(me.m.energy||0));
+ Object.keys(me.cd).forEach(k=>{if(me.cd[k]>0)me.cd[k]--});me.guard=0}
+function plPhases(D){const f=D.foe,ph=D.def.phases;if(!ph)return;while(f.ph<ph.length&&f.hp<=f.max*ph[f.ph].at&&f.hp>0){const x=ph[f.ph++];plLog(D,x.msg);if(x.seq){D.seq=x.seq;D.si=0;plPick(D)}if(x.atk)f.buffAtk*=x.atk;if(x.shield){f.sh+=Math.round(f.max*x.shield/100);plEv(D,'f','🔰','sh')}D.phaseFlash=1}}
+function plCheck(D){plPhases(D);if(D.over)return true;if(D.foe.hp<=0){D.over=1;D.win=1;plLog(D,'🏆 '+D.def.n+' повержен!');return true}
+ if(D.me.hp<=0){D.over=1;D.win=0;plLog(D,'💀 Вы пали в бою…');return true}
+ if(D.turn>45){D.over=1;D.win=0;plLog(D,'⌛ Дуэль затянулась — ничья считается поражением');return true}return false}
+// один ход игрока: act = {k:'atk'|'def'|'item',i:'hp'|'en'} или {k:'sk',id}. Возвращает false, если действие недоступно.
+function plPlayer(D,act){if(D.over||D.turn<0)return false;const me=D.me,p=plS();
+ if(me.st.stun){delete me.st.stun;plLog(D,'💫 Вы пропускаете ход (оглушены)');return true}
+ if(act.k==='atk'){const x=plDmgMe(D,1,{});plLog(D,'⚔ Атака → '+x.d+(x.crit?' 💥':''));me.en=Math.min(100,me.en+15);
+  if(me.m.extra&&plRnd()*100<me.m.extra&&D.foe.hp>0){const y=plDmgMe(D,.6,{});plLog(D,'⚡ Доп. удар → '+y.d)}}
+ else if(act.k==='def'){me.guard=1;me.en=Math.min(100,me.en+25);const h=Math.round(me.max*.04);me.hp=Math.min(me.max,me.hp+h);plLog(D,'🛡 Защитная стойка: урон вдвое меньше, +'+h+' HP')}
+ else if(act.k==='item'){if(me.pots>=3){return false}const k=act.i;if(!(p.pot[k]>0))return false;p.pot[k]--;me.pots++;
+  if(k==='hp'){const h=Math.round(me.max*.4);me.hp=Math.min(me.max,me.hp+h);plEv(D,'m','+'+h,'heal');plLog(D,'🧪 Зелье: +'+h+' HP')}else{me.en=Math.min(100,me.en+60);plLog(D,'⚡ Эликсир: +60 энергии')}}
+ else if(act.k==='sk'){const s=PL_SKB[act.id],r=me.rk[act.id]|0;if(!s||!r||s.ty==='P')return false;if(me.en<s.en||(me.cd[act.id]|0)>0)return false;me.en-=s.en;me.cd[act.id]=s.cd+1;
+  plLog(D,s.ic+' «'+s.n+'» (ур.'+r+')');plHitFoeSk(D,s.fx(r),act.id,r)}
+ else return false;
+ return true}
+function plRoundEnd(D){if(D.over)return;plCheck(D);if(D.over)return;plTicks(D);if(plCheck(D))return;D.turn++;D.first=0}
+// полный цикл (без задержек): ход игрока → ход врага → конец хода
+function plStep(D,act){if(D.over)return false;
+ if(D.foeFirst&&!D.preActed){D.preActed=1;plFoeAct(D);if(plCheck(D))return true}
+ if(!plPlayer(D,act))return false;if(plCheck(D))return true;
+ if(!D.foeFirst)plFoeAct(D);if(plCheck(D))return true;plRoundEnd(D);D.preActed=0;return true}
+// бот для тестов/симуляций: разумная стратегия
+function plBot(D){const me=D.me,f=D.foe,p=plS();
+ const ik=D.intent,danger=ik&&ik.m!=null&&ik.m>=2.5;
+ if(me.hp<me.max*.3&&p.pot.hp>0&&me.pots<3)return{k:'item',i:'hp'};
+ if(danger&&!me.st.stun&&me.hp<me.max*.85)return{k:'def'};
+ let best=null,bv=0;me.bar.forEach(id=>{const s=PL_SKB[id],r=me.rk[id];if(!r||me.en<s.en||(me.cd[id]|0)>0)return;const fx=s.fx(r);let v=(fx.m||0)*(fx.h||1)+(fx.heal&&me.hp<me.max*.5?4:0)+(fx.shield&&me.sh<me.max*.1?2:0)+(fx.buff&&!me.buff?2:0)+(fx.summon&&!(me.sum&&me.sum.t>0)?3:0)+(fx.stun&&fx.stun>=100?2.5:0);if(v>bv){bv=v;best=id}});
+ if(best)return{k:'sk',id:best};
+ if(me.en<25&&me.hp<me.max*.6)return{k:'def'};return{k:'atk'}}
+function plRunAuto(D,maxT){let g=0;while(!D.over&&g++<(maxT||200)){const a=plBot(D);if(!plStep(D,a))plStep(D,{k:'atk'})}return D}
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: экран дуэли (ASTRAL_PLAYER_V1) ======
+// Оверлей #pd поверх игры/VN. Анимации: только transform/opacity (без box-shadow в анимациях — WebKit). Тесты: window.PD_FAST (без пауз), window.ROM_DUEL_AUTO ('win'|'lose') — мгновенный исход.
+let PD=null;
+const pdWait=ms=>new Promise(r=>setTimeout(r,(typeof window!=='undefined'&&window.PD_FAST)?0:ms));
+function plSilId(){return 'plg'+(plSilId.n=(plSilId.n||0)+1)}
+function plTopRar(p){p=p||plS();let m=0;plEqItems(p).forEach(it=>{m=Math.max(m,PL_TPL[it.t].r)});return m}
+function plSil(size,col){const id=plSilId(),eq=(typeof S!=='undefined'&&S)?plS().eq:{};
+ return `<svg class="pl-sil" viewBox="0 0 100 120" width="${size}" height="${Math.round(size*1.2)}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}"/><stop offset="1" stop-color="#1a1f57"/></linearGradient></defs>
+ <ellipse cx="50" cy="114" rx="30" ry="4" fill="#0008"/>
+ <path d="M50 12c-9 0-15 7-15 16 0 6 3 11 7 14-14 4-24 14-24 34v32h64V76c0-20-10-30-24-34 4-3 7-8 7-14 0-9-6-16-15-16z" fill="url(#${id})" stroke="${col}" stroke-width="1.6"/>
+ <path d="M38 30c4-6 20-6 24 0-2 8-6 11-12 11s-10-3-12-11z" fill="#0b0d2c" opacity=".85"/><circle cx="44" cy="31" r="1.7" fill="${col}"/><circle cx="56" cy="31" r="1.7" fill="${col}"/>
+ <path d="M50 52l4 7 8 1-6 5 2 8-8-4-8 4 2-8-6-5 8-1z" fill="${col}" opacity=".9"/>
+ ${eq.rh?`<path d="M80 110V34" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/><path d="M76 80h8" stroke="#ffd76a" stroke-width="3"/>`:''}
+ ${eq.lh?`<path d="M14 62h16v18c0 7-8 11-8 11s-8-4-8-11z" fill="#232a74" stroke="${col}" stroke-width="1.6"/>`:''}</svg>`}
+function pdFoeFace(D){const d=D.def;return d.img?`<img class="pd-img" src="img/${d.img}.jpg" alt="" onerror="this.style.display='none'">`:`<span class="pd-emo">${d.ic}</span>`}
+function plDuelRun(o){ // o:{foe,mode,title,reward(D)->html,done(res),sub}
+ const D=plDuelNew(o.foe,o.mode||{});D.opts=o;
+ if(typeof window!=='undefined'&&window.ROM_DUEL_AUTO){D.over=1;D.win=window.ROM_DUEL_AUTO==='win'?1:0;D.turn=3;let h='';try{h=o.reward?o.reward(D):''}catch(e){console.error(e)}D.rewHtml=h;try{o.done&&o.done({win:!!D.win,D})}catch(e){console.error(e)}return D}
+ pdClose();PD=D;const el=document.createElement('div');el.id='pd';D.el=el;
+ el.innerHTML=`<div class="pd-bg"></div><div class="pd-top"><button class="pd-x" onclick="pdFlee()" title="Сдаться">🏳</button><div class="pd-t" id="pd_t"></div><div class="pd-turn" id="pd_turn"></div></div>
+ <div class="pd-arena"><div class="pd-side pd-foe" id="pd_foe"><div class="pd-face" id="pd_ff">${pdFoeFace(D)}</div><div class="pd-info"><b id="pd_fn"></b><div class="pd-hpw"><div class="pd-hp f"><i id="pd_fhp"></i><u id="pd_fsh"></u></div><span id="pd_fhpt"></span></div><div class="pd-st" id="pd_fst"></div></div></div>
+  <div class="pd-int" id="pd_int"></div>
+  <div class="pd-fl" id="pd_fl"></div><div class="pd-ban" id="pd_ban"></div>
+  <div class="pd-side pd-me" id="pd_me"><div class="pd-face me" id="pd_mf">${plSil(58,PL_RAR[plTopRar()].col)}</div><div class="pd-info"><b>${esc(S.name)} · ур. ${plS().lv}</b><div class="pd-hpw"><div class="pd-hp m"><i id="pd_mhp"></i><u id="pd_msh"></u></div><span id="pd_mhpt"></span></div><div class="pd-hpw"><div class="pd-hp e"><i id="pd_men"></i></div><span id="pd_ment"></span></div><div class="pd-st" id="pd_mst"></div></div></div></div>
+ <div class="pd-log" id="pd_log"></div><div class="pd-acts" id="pd_acts"></div><div class="pd-flash" id="pd_flash"></div>`;
+ document.body.appendChild(el);document.body.classList.add('inpd');
+ try{AUD.play('start')}catch(e){}
+ pdUpd(D);return D}
+function pdClose(){const e=document.getElementById('pd');if(e)e.remove();document.body.classList.remove('inpd');PD=null}
+const pdE=id=>document.getElementById(id);
+function pdStChips(u,foe){const a=[];const s=u.st||{};if(s.stun)a.push('💫');if(s.slow)a.push('🐌');if(s.burn)a.push('🔥');if(s.bleed)a.push('🩸');if(u.debuff&&u.debuff.t>0)a.push('📉');if(u.buff&&u.buff.t>0)a.push('✨'+u.buff.t);if(!foe){if(u.guard)a.push('🛡');if(u.sum&&u.sum.t>0)a.push('👤'+u.sum.t)}else if(u.buffAtk>1)a.push('📣');return a.join(' ')}
+function pdUpd(D){if(!D.el)return;const f=D.foe,me=D.me,d=D.def;
+ pdE('pd_t').textContent=(D.opts&&D.opts.title)||('Дуэль: '+d.n);pdE('pd_turn').textContent='Ход '+D.turn;pdE('pd_fn').textContent=d.n+' · ур. '+(d.rec||1);
+ const pct=(a,b)=>Math.max(0,Math.min(100,a/b*100));
+ pdE('pd_fhp').style.width=pct(f.hp,f.max)+'%';pdE('pd_fsh').style.width=pct(f.sh,f.max)+'%';pdE('pd_fhpt').textContent=fmtHp(Math.max(0,f.hp))+'/'+fmtHp(f.max);
+ pdE('pd_mhp').style.width=pct(me.hp,me.max)+'%';pdE('pd_msh').style.width=pct(me.sh,me.max)+'%';pdE('pd_mhpt').textContent=fmtHp(Math.max(0,me.hp))+'/'+fmtHp(me.max)+(me.sh>0?' 🔰'+fmtHp(me.sh):'');
+ pdE('pd_men').style.width=me.en+'%';pdE('pd_ment').textContent='⚡'+Math.round(me.en);
+ pdE('pd_fst').textContent=pdStChips(f,1);pdE('pd_mst').textContent=pdStChips(me,0);
+ const it=D.intent,hot=it&&it.m!=null&&it.m>=2.5;
+ pdE('pd_int').innerHTML=D.over?'':(f.st.stun?'💫 Оглушён — пропустит ход':`<span class="${hot?'hot':''}">${hot?'⚠ ':'👁 '}${esc(d.n.split(' ')[0])} ${esc(it.tell||'атакует')} — <b>${it.ic||''} ${esc(it.n)}</b></span>`);
+ pdE('pd_log').innerHTML=D.log.slice(0,4).map((x,i)=>`<div style="opacity:${1-i*.22}">${x}</div>`).join('');
+ pdActs(D)}
+function pdActs(D){const box=pdE('pd_acts'),me=D.me,p=plS();if(D.over){box.innerHTML=D.resHtml||'';return}
+ const dis=D.busy?'disabled':'';
+ if(D.itemMenu){box.innerHTML=`<button class="btn" ${dis} ${p.pot.hp>0&&me.pots<3?'':'disabled'} onclick="pdAct({k:'item',i:'hp'})">🧪 Зелье +40% HP <small>×${p.pot.hp}</small></button><button class="btn" ${dis} ${p.pot.en>0&&me.pots<3?'':'disabled'} onclick="pdAct({k:'item',i:'en'})">⚡ Эликсир +60 <small>×${p.pot.en}</small></button><button class="btn" onclick="PD.itemMenu=0;pdUpd(PD)">← Назад</button>`;return}
+ const sk=me.bar.map(id=>{const s=PL_SKB[id],r=me.rk[id],cd=me.cd[id]|0,ok=me.en>=s.en&&!cd;return `<button class="btn pd-sk ${s.ty==='U'?'ult':''}" ${dis||ok?'':'disabled'} ${D.busy?'disabled':''} onclick="pdAct({k:'sk',id:'${id}'})"><span>${s.ic} ${esc(s.n)}</span><small>${cd?'⏳'+cd:'⚡'+s.en} · ур.${r}</small></button>`}).join('');
+ box.innerHTML=`<button class="btn gold" ${dis} onclick="pdAct({k:'atk'})">⚔ Атака</button><button class="btn" ${dis} onclick="pdAct({k:'def'})">🛡 Защита</button><button class="btn" ${dis} ${me.pots>=3?'disabled':''} onclick="PD.itemMenu=1;pdUpd(PD)">🧪 Предмет</button>${sk}`}
+function pdFloat(side,txt,cls){const L=pdE('pd_fl');if(!L)return;const e=document.createElement('b');e.className='pd-fn '+cls;e.textContent=txt;e.style.left=(side==='f'?50+Math.round((Math.random()-.5)*30):42+Math.round((Math.random()-.5)*30))+'%';e.style.top=(side==='f'?'8%':'70%');L.appendChild(e);setTimeout(()=>{try{e.remove()}catch(x){}},1100)}
+function pdShake(id){const e=pdE(id);if(!e)return;e.classList.remove('shk');void e.offsetWidth;e.classList.add('shk');setTimeout(()=>{try{e.classList.remove('shk')}catch(x){}},420)}
+function pdFlash(cls){const e=pdE('pd_flash');if(!e)return;e.className='pd-flash '+cls;setTimeout(()=>{try{e.className='pd-flash'}catch(x){}},260)}
+function pdFlush(D){const ev=D.ev;D.ev=[];let hf=0,hm=0;ev.forEach((x,i)=>{setTimeout(()=>pdFloat(x.s,x.t,x.c),(window.PD_FAST?0:i*110));if(x.c==='dmg'||x.c==='crit'){if(x.s==='f')hf=1;else hm=1}});
+ if(hf){pdShake('pd_ff');try{AUD.play('slash')}catch(e){}}if(hm){pdShake('pd_mf');pdFlash('red');try{AUD.play('foe')}catch(e){}}
+ if(D.phaseFlash){D.phaseFlash=0;const b=pdE('pd_ban');if(b){b.textContent='❄ ФАЗА СИЛЫ';b.classList.add('on');setTimeout(()=>{try{b.classList.remove('on')}catch(x){}},1300)}pdFlash('ice')}}
+async function pdAct(act){const D=PD;if(!D||D.over||D.busy)return;D.busy=1;D.itemMenu=0;
+ try{
+ if(D.foeFirst&&!D.preActed){D.preActed=1;plFoeAct(D);pdFlush(D);pdUpd(D);await pdWait(650);if(plCheck(D)){return pdEnd(D)}}
+ D.ev=[];if(!plPlayer(D,act)){D.busy=0;pdUpd(D);return}
+ if(act.k==='sk'){try{AUD.play('skill')}catch(e){}}
+ pdFlush(D);pdUpd(D);await pdWait(650);if(plCheck(D)){return pdEnd(D)}
+ if(!D.foeFirst){plFoeAct(D);pdFlush(D);pdUpd(D);await pdWait(650);if(plCheck(D)){return pdEnd(D)}}
+ plRoundEnd(D);D.preActed=0;pdFlush(D);D.busy=0;if(D.over){return pdEnd(D)}pdUpd(D)
+ }catch(e){console.error(e);D.busy=0}}
+function pdFlee(){const D=PD;if(!D||D.over)return;if(!confirm('Сдаться? Это засчитается как поражение.'))return;D.over=1;D.win=0;plLog(D,'🏳 Вы сдались');pdEnd(D)}
+function pdEnd(D){D.busy=1;D.over=1;pdUpd(D);let h='';try{h=D.opts&&D.opts.reward?D.opts.reward(D):''}catch(e){console.error(e)}D.rewHtml=h;
+ const p=plS();if(D.win)p.stat.w++;else p.stat.l++;save();
+ try{AUD.play(D.win?'ping':'deny')}catch(e){}
+ D.resHtml=`<div class="pd-res ${D.win?'w':'l'}"><h2>${D.win?'🏆 Победа!':'💀 Поражение'}</h2><div class="small">Ходов: ${D.turn} · нанесено ${fmtHp(D.dmgDone)} · получено ${fmtHp(D.dmgTaken)}</div><div class="pd-rw">${h}</div><div class="row c" style="margin-top:8px">${D.opts&&D.opts.retry&&!D.win?`<button class="btn" onclick="pdRetry()">↺ Ещё раз</button>`:''}<button class="btn gold" id="pd_ok" onclick="pdDone()">Продолжить</button></div></div>`;
+ setTimeout(()=>{if(PD===D){pdUpd(D);const b=pdE('pd_ban');if(b){b.textContent=D.win?'ПОБЕДА':'ПОРАЖЕНИЕ';b.classList.add('on')}}},(window.PD_FAST?0:500))}
+function pdRetry(){const D=PD;if(!D||!D.opts)return;const o=D.opts;if(o.retryMode)o.mode=o.retryMode(D);plDuelRun(o)}
+function pdDone(){const D=PD;if(!D)return;const o=D.opts;pdClose();try{o&&o.done&&o.done({win:!!D.win,D})}catch(e){console.error(e)}}
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: вкладка «Герой» (ASTRAL_PLAYER_V1) ======
+let PLV={t:'ov',br:'w',inv:{sort:'rar',f:''}};
+function plRender(){if(tab==='hero'){const y=window.scrollY;render();try{window.scrollTo(0,y)}catch(e){}}else render()}
+function plReal(k,pts){const v=pts*PL_PT[k];return k==='crit'||k==='cdmg'?'+'+(Math.round(v*10)/10)+'%':'+'+fmtHp(Math.round(v))}
+function plRc(r){return PL_RAR[r].col}
+function plFxText(fx){return Object.keys(fx||{}).map(k=>PL_FXN[k]?PL_FXN[k][0]+' +'+fx[k]+PL_FXN[k][1]:'').filter(Boolean).join(' · ')}
+function plStatLine(it){const q=plItemPts(it);return Object.keys(q).map(k=>{const s=PL_ST.find(x=>x[0]===k);return s[1]+' '+plReal(k,q[k])}).join('  ')}
+function plSlotName(t){return ({head:'Голова',chest:'Грудь',rh:'Правая рука',lh:'Левая рука',hand:'Одноручное (любая рука)',legs:'Ноги',ring:'Кольцо',neck:'Ожерелье'})[t.slot]}
+function plItemHtml(it,o){o=o||{};const t=PL_TPL[it.t],eq=plEquipped(it.u),low=plS().lv<t.req,set=t.set?PL_SETS[t.set]:null;
+ return `<div class="pl-it r${t.r}" style="--rc:${plRc(t.r)}" ${o.click?`onclick="${o.click}"`:''}><div class="pl-ic">${t.ic}</div><div class="pl-tx"><b>${esc(t.n)}${it.up?` <em>+${it.up}</em>`:''}</b><div class="pl-m"><span style="color:${plRc(t.r)}">${PL_RAR[t.r].n}</span> · ${t.ty} · ${low?'<u class="bad">ур. '+t.req+'</u>':'ур. '+t.req}${eq?' · <span class="on">надето</span>':''}</div><div class="pl-s">${plStatLine(it)}</div>${Object.keys(t.fx).length?`<div class="pl-f">✦ ${plFxText(t.fx)}</div>`:''}${set?`<div class="pl-set">${set.ic} ${esc(set.n)}</div>`:''}${o.desc?`<div class="small">${esc(t.d)}</div>`:''}</div></div>`}
+function vHero(){const p=plS(),s=plStats(p),pl=plPtsLeft(p),sp=plSpLeft(p),need=plNeed(p.lv),mx=p.lv>=PL_MAX;
+ const tabs=[['ov','🧙 Обзор'],['inv','🎒 Вещи'],['sk','📘 Навыки'],['shop','🛒 Лавка'],['ar','⚔ Арена']];
+ const head=`<!-- ${PL_MARK} --><div class="panel pl-head"><div class="pl-port">${plSil(74,plRc(plTopRar(p)))}</div><div class="pl-hi"><h2>${esc(S.name)}</h2><div class="small">Призыватель · ур. <b>${p.lv}</b>/${PL_MAX}</div><div class="bar xp"><i style="width:${mx?100:Math.round(p.xp/need*100)}%"></i></div><div class="small">${mx?'Максимальный уровень':fmtHp(p.xp)+' / '+fmtHp(need)+' опыта'}</div><div class="small">⚡ Сила: <b>${fmtHp(plPower(s))}</b></div></div></div>
+ <div class="pl-tabs">${tabs.map(t=>`<button class="btn ${PLV.t===t[0]?'gold':''}" onclick="PLV.t='${t[0]}';render()">${t[1]}${t[0]==='ov'&&pl>0||t[0]==='sk'&&sp>0&&PL_SK.some(x=>plCanLearn(x.id)===true)?'<u class="dot"></u>':''}</button>`).join('')}</div>`;
+ return head+({ov:plOv,inv:plInv,sk:plSk,shop:plShop,ar:plArena})[PLV.t](p,s)}
+// ---------- обзор ----------
+function plOv(p,s){const pl=plPtsLeft(p),sp=plSpLeft(p),its=plEqItems(p),sc=plSetCounts(its);
+ const rows=PL_ST.map(([k,ic,n])=>{const v=k==='crit'||k==='cdmg'?s[k]+'%':fmtHp(s[k]);return `<div class="pl-row"><div class="pl-rn">${ic} ${n}<small>очков ${p.st[k]}</small></div><b class="pl-rv">${v}</b><div class="pl-rb"><button class="btn sm" ${pl>0&&p.st[k]<PL_CAP[k]?'':'disabled'} onclick="plUi('${k}',1)">+1</button><button class="btn sm" ${pl>=5&&p.st[k]<PL_CAP[k]?'':'disabled'} onclick="plUi('${k}',5)">+5</button><button class="btn sm" ${pl>=25&&p.st[k]<PL_CAP[k]?'':'disabled'} onclick="plUi('${k}',25)">+25</button></div></div>`}).join('');
+ const grid=['head','neck','r1','lh','chest','rh','r2','legs','r3'].map(sl=>{const meta=PL_SLOTS.find(x=>x[0]===sl),u=p.eq[sl],it=u?plItem(u,p):null,t=it?PL_TPL[it.t]:null;
+  return `<div class="pl-sl ${it?'f r'+t.r:''}" ${t?`style="--rc:${plRc(t.r)}"`:''} onclick="plSlotUi('${sl}')"><div class="sn">${meta[1]}</div><div class="si">${t?t.ic:meta[2]}</div><div class="sv">${t?esc(t.n):'пусто'}${it&&it.up?' +'+it.up:''}</div></div>`}).join('');
+ const setsH=Object.keys(PL_SETS).filter(k=>sc[k]).map(k=>{const d=PL_SETS[k];return `<div class="pl-setrow"><b>${d.ic} ${esc(d.n)}</b> <span class="small">${sc[k]} шт.</span><div class="small ${sc[k]>=2?'on':''}">2 предм.: ${plFxText(d.b2)}</div><div class="small ${sc[k]>=4?'on':''}">4 предм.: ${plFxText(d.b4)}</div></div>`}).join('');
+ const mods=Object.keys(s.m).filter(k=>PL_FXN[k]&&!['hpP','atkP','defP','spdP','crit','cdmg'].includes(k)).map(k=>PL_FXN[k][0]+' '+(Math.round(s.m[k]*10)/10)+PL_FXN[k][1]);
+ const pct=['hpP','atkP','defP','spdP','crit','cdmg'].filter(k=>s.m[k]).map(k=>PL_FXN[k][0]+' +'+(Math.round(s.m[k]*10)/10)+PL_FXN[k][1]);
+ return `<div class="panel"><div class="row sb" style="margin-bottom:6px"><b>📊 Характеристики</b><span class="pl-pts ${pl>0?'hot':''}">Очков: ${pl}</span></div>${rows}<div class="small" style="margin:6px 0">За уровень +${PL_PTS} оч. статов и +1 оч. навыков (+1 за каждые 10 ур.). Очков навыков: <b>${sp}</b>.</div>
+ <div class="row"><button class="btn sm" onclick="plResetSt()">↺ Сбросить очки статов (${p.fr.st<2?'бесплатно '+(2-p.fr.st)+'/2':'💎200'})</button></div></div>
+ <div class="panel"><b>🎽 Снаряжение</b><div class="pl-eq">${grid}</div>${pct.length||mods.length?`<div class="small" style="margin-top:8px">${pct.concat(mods).join(' · ')}</div>`:''}</div>
+ ${setsH?`<div class="panel"><b>🔗 Сеты</b>${setsH}</div>`:''}
+ <div class="panel small">🧪 Зелья HP: ${p.pot.hp} · ⚡ Эликсиры: ${p.pot.en} · ✦ Осколки: ${p.sh} · ⚔ Дуэли: ${p.stat.w} побед / ${p.stat.l} поражений</div>`}
+function plSlotUi(sl){const p=plS(),meta=PL_SLOTS.find(x=>x[0]===sl),cur=p.eq[sl]?plItem(p.eq[sl],p):null;
+ const c=p.inv.filter(it=>{const t=PL_TPL[it.t];return plSlotsOf(t).includes(sl)}).sort((a,b)=>PL_TPL[b.t].r-PL_TPL[a.t].r||PL_TPL[b.t].req-PL_TPL[a.t].req);
+ modal(`<h3>${meta[2]} ${meta[1]}</h3>${cur?`<div class="small">Сейчас:</div>${plItemHtml(cur,{click:`plItemUi(${cur.u})`})}<button class="btn sm" onclick="plUneq('${sl}')">Снять</button>`:'<div class="small">Слот пуст.</div>'}<div class="small" style="margin-top:8px">Подходящие предметы (${c.length}):</div><div class="pl-list">${c.map(it=>plItemHtml(it,{click:`plEq(${it.u},'${sl}')`})).join('')||'<div class="small">Нет подходящих предметов. Загляните в Лавку и на Арену.</div>'}</div><div class="row c" style="margin-top:10px"><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function plEq(u,sl){if(plEquip(u,sl)){closeM();plRender()}}
+function plUneq(sl){plUnequip(sl);closeM();plRender()}
+// ---------- инвентарь ----------
+const PL_FLT=[['','Все'],['head','Голова'],['chest','Грудь'],['hand','Руки'],['legs','Ноги'],['ring','Кольца'],['neck','Шея']];
+function plInvList(p){const f=PLV.inv.f,so=PLV.inv.sort;let a=p.inv.filter(it=>{const t=PL_TPL[it.t];if(!f)return true;if(f==='hand')return ['rh','lh','hand'].includes(t.slot);return t.slot===f});
+ a.sort((x,y)=>{const tx=PL_TPL[x.t],ty=PL_TPL[y.t];if(so==='lv')return ty.req-tx.req||ty.r-tx.r;if(so==='type')return tx.slot.localeCompare(ty.slot)||ty.r-tx.r;return ty.r-tx.r||ty.req-tx.req});return a}
+function plInv(p){const a=plInvList(p);
+ return `<div class="panel"><div class="row sb"><b>🎒 Инвентарь ${p.inv.length}/${PL_INV_MAX}</b><span class="small">✦ ${p.sh}</span></div>
+ <div class="row" style="margin:8px 0;gap:5px">${PL_FLT.map(x=>`<button class="btn sm ${PLV.inv.f===x[0]?'gold':''}" style="width:auto;margin:0;padding:6px 8px" onclick="PLV.inv.f='${x[0]}';render()">${x[1]}</button>`).join('')}</div>
+ <div class="row" style="gap:5px;margin-bottom:8px"><span class="small">Сортировка:</span>${[['rar','Редкость'],['lv','Уровень'],['type','Тип']].map(x=>`<button class="btn sm ${PLV.inv.sort===x[0]?'gold':''}" style="width:auto;margin:0;padding:6px 8px" onclick="PLV.inv.sort='${x[0]}';render()">${x[1]}</button>`).join('')}</div>
+ <button class="btn sm" onclick="plBreakLow()">♻ Разобрать все обычные и необычные (не надетые)</button></div>
+ <div class="pl-list">${a.map(it=>plItemHtml(it,{click:`plItemUi(${it.u})`})).join('')||'<div class="panel small">Пусто.</div>'}</div>`}
+function plItemUi(u){const p=plS(),it=plItem(u,p);if(!it)return;const t=PL_TPL[it.t],eq=plEquipped(u,p),uc=plUpCost(it),slots=plSlotsOf(t);
+ modal(`${plItemHtml(it,{desc:1})}<div class="small" style="margin:6px 0">Слот: ${plSlotName(t)}${it.up<10?` · улучшение до +${it.up+1}: 🪙${fmtHp(uc.gold)} ✦${uc.sh}`:' · максимум'}</div>
+ ${t.set?`<div class="small">${PL_SETS[t.set].ic} ${esc(PL_SETS[t.set].n)}: 2 — ${plFxText(PL_SETS[t.set].b2)}; 4 — ${plFxText(PL_SETS[t.set].b4)}</div>`:''}
+ <div class="row c" style="margin-top:10px">${eq?`<button class="btn" onclick="plUneq('${eq}')">Снять</button>`:slots.map(sl=>`<button class="btn gold" onclick="plEq(${u},'${sl}');">Надеть${slots.length>1?' · '+PL_SLOTS.find(x=>x[0]===sl)[1]:''}</button>`).join('')}
+ <button class="btn" ${it.up>=10?'disabled':''} onclick="plUpUi(${u})">⬆ Улучшить</button>${eq?'':`<button class="btn" onclick="plBreakUi(${u})">♻ Разобрать · 🪙${plSell(it)} ✦${plShards(it)}</button>`}<button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function plUpUi(u){if(plUpgrade(u)){plItemUi(u);plRender()}else{plItemUi(u)}}
+function plBreakUi(u){const r=plBreak(u);if(r){toast('Разобрано: +🪙'+r.g+' +✦'+r.sh);closeM();plRender()}}
+function plBreakLow(){const p=plS();let g=0,sh=0,n=0;p.inv.slice().forEach(it=>{if(PL_TPL[it.t].r<=1&&!plEquipped(it.u,p)&&!(it.up>0)){const r=plBreak(it.u);if(r){g+=r.g;sh+=r.sh;n++}}});toast(n?'Разобрано '+n+': +🪙'+g+' +✦'+sh:'Нечего разбирать');plRender()}
+// ---------- навыки ----------
+function plSkCard(s,p){const r=p.sk[s.id]|0,c=plCanLearn(s.id),onBar=p.bar.includes(s.id),col=PL_BR.find(b=>b[0]===s.br)[3],locked=!r&&c!==true;
+ return `<div class="pl-sk ${r?'has':''} ${locked?'lk':''} t${s.ty}" style="--bc:${col}"><div class="sk-i">${s.ic}</div><div class="sk-t"><b>${esc(s.n)}</b> <small>${s.ty==='A'?'Актив':s.ty==='U'?'УЛЬТА':'Пассив'}${s.ty!=='P'?' · ⚡'+s.en+' · откат '+s.cd:''}</small><div class="small">${esc(s.d)}</div><div class="small sk-e">${r?'Ур.'+r+': '+plSkDesc(s,r):'Ур.1: '+plSkDesc(s,1)}${r&&r<s.max?'<br>След.: '+plSkDesc(s,r+1):''}</div><div class="sk-pips">${Array.from({length:s.max},(_,i)=>`<i class="${i<r?'on':''}"></i>`).join('')}<span class="small">${r}/${s.max}</span></div><div class="small">${s.pre?'Треб.: '+esc(PL_SKB[s.pre].n)+' · ':''}ур. Призывателя ${s.req} · цена ${s.cost} оч.</div></div>
+  <div class="sk-b"><button class="btn sm ${c===true?'gold':''}" ${c===true?'':'disabled'} onclick="plLearn('${s.id}')">${r>=s.max?'МАКС':r?'Улучшить':'Изучить'}</button>${r&&s.ty!=='P'?`<button class="btn sm ${onBar?'gold':''}" onclick="plBarTog('${s.id}')">${onBar?'✓ В бою':'В бой'}</button>`:''}${locked&&typeof c==='string'?`<small class="lkt">${esc(c)}</small>`:''}</div></div>`}
+function plSk(p){const sp=plSpLeft(p),br=PLV.br;
+ return `<div class="panel"><div class="row sb"><b>📘 Навыки</b><span class="pl-pts ${sp>0?'hot':''}">Очков: ${sp}</span></div>
+ <div class="small" style="margin:4px 0">Боевые слоты (${p.bar.length}/${PL_BAR_MAX}): ${Array.from({length:PL_BAR_MAX},(_,i)=>p.bar[i]?`<span class="pl-bs">${PL_SKB[p.bar[i]].ic}</span>`:'<span class="pl-bs e">＋</span>').join('')}</div>
+ <div class="row" style="gap:5px;margin:8px 0">${PL_BR.map(b=>`<button class="btn sm ${br===b[0]?'gold':''}" style="width:auto;margin:0;padding:6px 10px" onclick="PLV.br='${b[0]}';render()">${b[2]} ${b[1]}</button>`).join('')}</div>
+ <button class="btn sm" onclick="plResetSk()">↺ Сбросить навыки (${p.fr.sk<2?'бесплатно '+(2-p.fr.sk)+'/2':'💎200'})</button></div>
+ ${PL_SK.filter(s=>s.br===br).map(s=>plSkCard(s,p)).join('')}`}
+// ---------- лавка ----------
+function plShop(p){const day=plDay(p),list=plShopList();
+ const card=o=>{const t=PL_TPL[o.tid],pr=plPrice(t),bought=day.b[o.i],it={u:0,t:o.tid,up:0};
+  return `<div class="pl-shop">${plItemHtml(it,{})}<div class="row" style="margin-top:6px">${bought?'<span class="small">✅ Куплено</span>':`${pr.gold&&t.r<=1?`<button class="btn sm" onclick="plBuy(${o.i},'gold')">🪙 ${fmtHp(pr.gold)}</button>`:''}${pr.gems?`<button class="btn sm gold" onclick="plBuy(${o.i},'gems')">💎 ${fmtHp(pr.gems)}</button>`:''}`}</div></div>`};
+ return `<div class="panel"><b>🛒 Лавка снаряжения</b><div class="small" style="margin:4px 0">Ассортимент обновляется каждый день. Обычное и необычное можно купить за 🪙 — остальное продаётся за 💎; топовые вещи очень дороги.</div></div>
+ <div class="pl-list">${list.map(card).join('')}</div>
+ <div class="panel"><b>🧪 Расходники</b><div class="small" style="margin:4px 0">В дуэли — до 3 применений. Лимит 6/день каждого.</div>
+ <div class="row sb"><span>🧪 Зелье +40% HP (есть ${p.pot.hp})</span><button class="btn sm" style="width:auto;margin:0" onclick="plBuyPot('hp')">🪙 400</button></div>
+ <div class="row sb" style="margin-top:6px"><span>⚡ Эликсир +60 энергии (есть ${p.pot.en})</span><button class="btn sm" style="width:auto;margin:0" onclick="plBuyPot('en')">🪙 600</button></div></div>`}
+// ---------- арена ----------
+const PL_ARENA=['dummy','bandit','guard','assassin','knight','frostmage','demon','astral'];
+function plArenaCap(){return 5}
+function plArena(p){const day=plDay(p),left=Math.max(0,plArenaCap()-day.dx);
+ return `<div class="panel"><b>⚔ Арена Призывателя</b><div class="small" style="margin:4px 0">Дуэли 1 на 1: атака, защита, предметы и навыки. Над врагом видно его намерение — защита вдвое ослабляет удар. Наград за день: ${left}/${plArenaCap()}. Героини ждут на свидании «Спарринг» в Гареме.</div><div class="small">Побед ${p.stat.w} · поражений ${p.stat.l}</div></div>`+
+ PL_ARENA.map(id=>{const d=PL_FOES[id],ok=p.lv+10>=d.rec,first=!(p.duel['a_'+id]);const diff=p.lv>=d.rec+15?'легко':p.lv>=d.rec-3?'на равных':p.lv>=d.rec-15?'сложно':'очень сложно';
+  return `<div class="panel row sb"><div style="min-width:0;flex:1"><b>${d.ic} ${esc(d.n)}</b><div class="small">${esc(d.intro)}</div><div class="small">Рек. уровень: <b style="color:${p.lv>=d.rec?'#7fe88f':'#ffb36a'}">${d.rec}</b> · ${diff}${first?' · 💎 за первую победу: '+plArenaGems(d):''}</div></div><button class="btn ${ok?'gold':''}" onclick="plArenaGo('${id}')">В бой</button></div>`}).join('')}
+function plArenaGems(d){return Math.round(10+d.rec*1.2)}
+function plArenaGo(id){const d=PL_FOES[id],p=plS();if(p.inv.length&&!p.eq.rh&&!p.eq.lh&&!confirm('Без оружия бой будет тяжёлым. Всё равно начать?'))return;
+ plDuelRun({foe:id,title:'Арена: '+d.n,retry:1,reward:D=>plArenaRw(id,D),done:r=>{render()}})}
+function plArenaRw(id,D){const p=plS(),d=PL_FOES[id],day=plDay(p);if(!D.win)return '<div class="small">Поражение — награды нет. Прокачайте героя, навыки или снаряжение.</div>';
+ if(day.dx>=plArenaCap())return '<div class="small">Дневной лимит наград исчерпан — победа засчитана без награды.</div>';
+ day.dx++;const gold=Math.round(120+d.rec*14),xp=plRewardXp(.12+Math.min(.12,d.rec/1500));let gem=0;
+ if(!p.duel['a_'+id]){p.duel['a_'+id]=1;gem=plArenaGems(d);S.gems+=gem}
+ S.gold+=gold;plAddXp(xp,1);let it=null;if(plRnd()<.22)it=plDrop('duel');try{prog('win')}catch(e){}
+ return `<div>+${fmtHp(xp)} опыта Призывателя · 🪙${fmtHp(gold)}${gem?' · 💎'+gem:''}${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}</div>`}
+// ---------- вход ----------
+(function(){try{
+ const p0=vProfile;globalThis.vProfile=function(){const h=p0();return h.replace('<div class="small" style="margin-top:12px">Сменить аватар:</div>',`<button class="btn sm" style="margin-top:10px" onclick="go('hero')">🧙 Герой (Призыватель): уровень ${plS().lv}${plDotOn()?' 🔴':''}</button><div class="small" style="margin-top:12px">Сменить аватар:</div>`)};
+}catch(e){console.error(e)}})();
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: стили (ASTRAL_PLAYER_V1). Анимации — только transform/opacity (без box-shadow/filter в keyframes — WebKit). ======
+(function(){const css=`
+.pl-head{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,#1d2a6ecc,#3b1d6ecc);border-color:#7c8cff88}
+.pl-port{flex:none;width:84px;height:100px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#5b6cff55,#0000 70%);border-radius:14px}
+.pl-hi{flex:1;min-width:0}.pl-hi h2{font-size:18px;overflow-wrap:anywhere}
+.pl-sil{display:block}
+.pl-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:10px}
+.pl-tabs .btn{position:relative;padding:8px 2px;font-size:12px;min-width:0;min-height:40px;overflow-wrap:anywhere}
+.pl-tabs .dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:#f43f5e;border:1px solid #fff8}
+.pl-pts{font-weight:700;font-size:13px;padding:3px 9px;border-radius:10px;background:#ffffff14}.pl-pts.hot{background:#b4233a;color:#fff}
+.pl-row{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid #ffffff10}
+.pl-rn{flex:1 1 0;min-width:0;font-size:14px}.pl-rn small{display:block;font-size:10px;opacity:.6}
+.pl-rv{flex:none;min-width:58px;text-align:right;font-size:15px;color:#ffe9a8}
+.pl-rb{flex:none;display:flex;gap:4px}.pl-rb .btn{width:auto;min-width:38px;margin:0;padding:6px 6px;font-size:12px;min-height:36px}
+.pl-eq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
+.pl-sl{border:2px solid #333a80;border-radius:12px;background:#141838;padding:5px 3px;text-align:center;cursor:pointer;min-width:0;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
+.pl-sl.f{border-color:var(--rc)}
+.pl-sl .sn{font-size:10px;opacity:.65}.pl-sl .si{font-size:26px;line-height:1.1}.pl-sl .sv{font-size:10px;line-height:1.15;overflow-wrap:anywhere;max-width:100%}
+.pl-it{display:flex;gap:9px;padding:9px;border:2px solid var(--rc,#333a80);background:#101436d9;border-radius:12px;margin-bottom:8px;min-width:0;cursor:pointer}
+.pl-ic{flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:26px;background:#0008;border-radius:10px;border:1px solid var(--rc)}
+.pl-tx{flex:1;min-width:0}.pl-tx b{font-size:14px;overflow-wrap:anywhere}.pl-tx b em{font-style:normal;color:#ffd76a}
+.pl-m{font-size:11px;opacity:.85}.pl-m .on{color:#7fe88f}.pl-m .bad{color:#ff8a8a;text-decoration:none}
+.pl-s{font-size:12px;margin-top:2px;overflow-wrap:anywhere}.pl-f{font-size:11px;color:#ffd76a;margin-top:2px;overflow-wrap:anywhere}.pl-set{font-size:11px;color:#9fe3ff;margin-top:2px}
+.pl-list{margin-bottom:12px}.pl-shop{margin-bottom:10px}
+.pl-setrow{margin-top:8px}.pl-setrow .on{color:#7fe88f;opacity:1}
+.pl-sk{display:flex;gap:8px;padding:10px;border:1px solid var(--bc);border-left-width:4px;border-radius:12px;background:#101436d9;margin-bottom:8px;min-width:0}
+.pl-sk.lk{opacity:.55}.pl-sk.tU{background:linear-gradient(135deg,#2a1450d9,#101436d9)}
+.sk-i{flex:none;font-size:26px;width:36px;text-align:center}.sk-t{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}.sk-t small{opacity:.7}.sk-e{color:#cfe;margin-top:2px}
+.sk-b{flex:none;width:86px;display:flex;flex-direction:column;gap:4px}.sk-b .btn{margin:0;width:100%}.lkt{font-size:10px;opacity:.75;text-align:center}
+.sk-pips{display:flex;gap:3px;align-items:center;margin:4px 0}.sk-pips i{width:10px;height:6px;border-radius:2px;background:#ffffff26}.sk-pips i.on{background:var(--bc)}.sk-pips span{margin-left:4px}
+.pl-bs{display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;border:1px solid #7c8cff;border-radius:8px;margin-right:4px;background:#1a2260}.pl-bs.e{opacity:.4}
+body.inpd{overflow:hidden}
+#pd{position:fixed;top:0;right:0;bottom:0;left:0;z-index:40;display:flex;flex-direction:column;background:#07081a;color:#fff;overflow:hidden;padding:calc(6px + env(safe-area-inset-top)) 10px calc(8px + env(safe-area-inset-bottom))}
+.pd-bg{position:absolute;top:0;right:0;bottom:0;left:0;background:radial-gradient(circle at 50% 20%,#3a2a8c88,#0000 60%),linear-gradient(#0b0a2b,#1a1250 60%,#0a0a22);z-index:0}
+#pd>*{position:relative;z-index:1}#pd>.pd-bg{position:absolute}
+.pd-top{display:flex;align-items:center;gap:8px;min-height:40px}.pd-t{flex:1;min-width:0;font-weight:700;font-size:14px;overflow-wrap:anywhere}.pd-turn{font-size:12px;opacity:.8;flex:none}
+.pd-x{flex:none;width:40px;height:40px;border-radius:10px;border:1px solid #ffffff44;background:#0008;color:#fff;font-size:18px}
+.pd-arena{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:6px;position:relative}
+.pd-side{display:flex;gap:10px;align-items:center;padding:8px;border-radius:14px;background:#0f1230cc;border:1px solid #333a80}
+.pd-foe{border-color:#f43f5e88}.pd-me{border-color:#5b8cff88}
+.pd-face{flex:none;width:72px;height:72px;border-radius:14px;overflow:hidden;background:#20124a;display:flex;align-items:center;justify-content:center;border:2px solid #fff3}
+.pd-face.me{background:#10164a}.pd-img{width:100%;height:100%;object-fit:cover;object-position:top}.pd-emo{font-size:44px}
+.pd-info{flex:1;min-width:0}.pd-info b{font-size:14px;display:block;overflow-wrap:anywhere}
+.pd-hpw{display:flex;align-items:center;gap:6px;margin-top:4px}.pd-hpw span{font-size:11px;min-width:84px;text-align:right;flex:none}
+.pd-hp{position:relative;flex:1;height:11px;border-radius:6px;background:#0008;overflow:hidden}
+.pd-hp i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#e03a5a,#ff7a8a);transition:width .35s}.pd-hp.m i{background:linear-gradient(90deg,#2fbf6a,#7fe88f)}.pd-hp.e i{background:linear-gradient(90deg,#3a7cff,#7fd6ff)}
+.pd-hp u{position:absolute;left:0;top:0;bottom:0;background:#9fd6ffcc;transition:width .35s;text-decoration:none}
+.pd-st{font-size:13px;min-height:16px;margin-top:2px}
+.pd-int{text-align:center;font-size:12px;padding:6px 8px;border-radius:10px;background:#2a0f1f99;border:1px solid #f43f5e55;min-height:32px;display:flex;align-items:center;justify-content:center}.pd-int .hot{color:#ffd76a;font-weight:700}
+.pd-fl{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;overflow:hidden}
+.pd-fn{position:absolute;font-size:22px;font-weight:800;text-shadow:0 2px 4px #000;animation:pdfn 1.1s ease-out forwards;white-space:nowrap}
+.pd-fn.dmg{color:#fff}.pd-fn.crit{color:#ffd76a;font-size:28px}.pd-fn.heal{color:#7fe88f}.pd-fn.sh{color:#9fd6ff}.pd-fn.dodge{color:#cfc}
+@keyframes pdfn{0%{opacity:0;transform:translateY(8px) scale(.7)}15%{opacity:1;transform:translateY(0) scale(1.15)}100%{opacity:0;transform:translateY(-44px) scale(1)}}
+.shk{animation:pdshk .4s linear}
+@keyframes pdshk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.pd-ban{position:absolute;left:0;right:0;top:40%;text-align:center;font-size:26px;font-weight:900;letter-spacing:2px;color:#ffe9a8;text-shadow:0 2px 10px #000;opacity:0;transform:scale(.8);transition:opacity .35s,transform .35s;pointer-events:none}.pd-ban.on{opacity:1;transform:scale(1)}
+.pd-flash{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;opacity:0;z-index:5}.pd-flash.red{background:#ff2a4a44;animation:pdfl .26s ease-out}.pd-flash.ice{background:#9fe3ff66;animation:pdfl .5s ease-out}
+@keyframes pdfl{0%{opacity:1}100%{opacity:0}}
+.pd-log{font-size:12px;line-height:1.35;min-height:70px;max-height:84px;overflow:hidden;padding:6px 8px;border-radius:10px;background:#0008;margin:6px 0}
+.pd-acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-height:40vh;overflow:auto}
+.pd-acts .btn{padding:8px 4px;font-size:13px;min-width:0;min-height:44px;overflow-wrap:anywhere;line-height:1.15}
+.pd-sk{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}.pd-sk small{font-size:10px;opacity:.8}.pd-sk.ult{background:linear-gradient(#8a3ae8,#4b1d9a);border-color:#d9a8ff}
+.pd-res{grid-column:1/-1;text-align:center;padding:10px;border-radius:12px;background:#0f1230f2;border:1px solid #ffd76a66}.pd-res.l{border-color:#f43f5e88}.pd-res h2{font-size:20px;margin-bottom:4px}.pd-rw{margin-top:6px;font-size:13px;line-height:1.4}
+#vn .dpre{display:flex;flex-direction:column;gap:6px}#vn .dpre .info{font-size:12px;text-align:center;background:#0008;padding:6px;border-radius:10px;line-height:1.35}
+@media(max-width:340px){.pd-face{width:56px;height:56px}.pd-emo{font-size:34px}.pl-tabs .btn{font-size:11px}.sk-b{width:74px}}
+`;const s=document.createElement('style');s.id='plcss';s.textContent=css;document.head.appendChild(s)})();
+
+// ====== ДУЭЛИ В РОМАНТИКЕ: поле duel у глав (ASTRAL_PLAYER_V1) ======
+// duel:{foe (ключ PL_FOES), rec (рек. ур. Призывателя), min (мин. ур. для допуска), at (после скольки узлов главы; по умолчанию — в конце),
+//       lw (симпатия за победу), gems/gold (награда за первую победу), item (id уникального предмета), must (без победы глава не засчитывается),
+//       pre/win/lose — сцены в формате VN (см. romance_data.js)}
+// Проигрыш не блокирует: каждая неудача ослабляет противника на 8% (до −32%), есть «совет героини» (−10%) и зелья; в необязательных главах можно отступить (глава засчитывается с меньшей симпатией, без награды и особой концовки).
+(function(){
+const D=(hid,ci,o)=>{const h=ROM_H[hid];if(h&&h.ch[ci])h.ch[ci].duel=o};
+D('tsunade',2,{foe:'tsunade',rec:20,min:8,lw:3,gems:60,gold:700,hint:'Цунаде бьёт редко, но страшно. Защита перед «Сокрушительным кулаком» спасает от оглушения.',
+ pre:`
+. Позже, когда ярмарка редеет, у тира с кольцами вдруг становится тише. Цунаде разминает плечи и хрустит шеей — громко, как ломают ветки.
+@p Знаешь, я тут подумала. Удача у меня никакая, зато кулак — отличный. Давай так: спарринг. Выиграешь — ужин за мной. Проиграешь — ужин всё равно за тобой.
+> Это нечестные условия!
+@n Зато честная драка. Ну? Смотреть на вас, толкующих про «технику», я больше не могу.
+. Вы уходите за палатки, где утоптанный пятачок. Зеваки быстро собираются в кружок.
+`,win:`
+. Последний удар приходится прямо в блок. Цунаде отлетает на два шага, но на ногах — и смеётся, вытирая щёку.
+@w Ха! Тренировочный бой, а меня задели! Запомнят же теперь на этой ярмарке.
+@s Молодец. Без шуток. Я не ожидала, что ты выдержишь хотя бы первый кулак.
+. Она хлопает тебя по плечу так, что ты слегка приседаешь, и тут же подхватывает.
+@b Ужин за мной. И это — первый раз, когда я проиграла и не злюсь.
+`,lose:`
+. Кулак замирает в сантиметре от твоего лица. Ветер от него треплет волосы, а сердце колотится где-то в горле.
+@p Вот и всё. Ты живой, я сдержалась — результат засчитан в мою пользу.
+. Цунаде протягивает руку и рывком ставит тебя на ноги.
+@n Не расстраивайся. Я тренировалась тридцать лет. Подготовься, подтяни навыки — и приходи. Реванш разрешён.
+`});
+D('erza',4,{foe:'erza',rec:42,min:20,lw:5,gems:150,gold:1200,hint:'Эрза меняет доспехи и отвечает серией клинков. Держите энергию для сильного навыка.',
+ pre:`
+. Позже вы стоите посреди тренировочной площадки. Эрза в полном доспехе, меч опущен остриём вниз. Ветер дёргает алый плащ.
+@n Я хочу сказать тебе то, что нельзя сказать словами. Поэтому скажу клинком.
+> Ты хочешь дуэль?
+@s Рыцарский поединок. По всем правилам. Я не буду сдерживаться, и ты тоже не смей. Иначе оскорбишь нас обоих.
+. Она отсалютует мечом, коротко и красиво. Вокруг площадки стихают даже птицы.
+`,win:`
+. Звон стали, последний выпад — и меч Эрзы чертит дугу в воздухе, втыкаясь в землю у твоих ног. Она стоит с пустыми руками, тяжело дыша.
+@w …Я проиграла. Впервые за много лет.
+. Эрза медленно поднимает голову, и на лице у неё — не злость, не досада. Свет.
+@b Ты сражаешься, как тот, кто защищает, а не тот, кто нападает. Я искала такого человека всю жизнь.
+@s Признание принято. Моё — тоже.
+`,lose:`
+. Удар Эрзы выбивает клинок у тебя из руки. Кончик её меча замирает у самого воротника.
+@n Хорошо. Но рано. Ты колеблешься в последний момент.
+. Она убирает меч и подаёт тебе руку в латной перчатке — холодную, но надёжную.
+@s Не стыдись. Рыцарь проигрывает, чтобы знать, чему учиться. Возвращайся, когда будешь готов, я подожду.
+`});
+D('annie',1,{foe:'annie',rec:11,min:3,lw:3,gems:40,gold:400,hint:'Энни часто хватает — защита перед «Захватом» не даст себя оглушить.',
+ pre:`
+. После часа разминки Энни вдруг выкидывает клинки в траву и встаёт в боевую стойку, руки кулаками.
+@n Хватит возни с деревяшками. По-настоящему. Кулаками.
+> Я же не умею...
+@n Поэтому и говорю: не умеешь — научишься. Только быстро.
+`,win:`
+. Ты чудом перехватываешь её запястье и, не думая, заводишь в сторону. Энни теряет равновесие и опускается на колено.
+@w …Что это было?
+@s Ты ушёл от захвата. Никто не уходит. Я… неплохо, правда.
+. Она поднимается, отряхивает штаны и косо смотрит на тебя, пряча что-то вроде улыбки.
+@b Завтра — ещё. Я хочу разобраться, как ты это сделал.
+`,lose:`
+. Мир переворачивается, и ты снова оказываешься на земле. Энни сидит рядом и спокойно дышит.
+@n Третий раз за минуту. Поздравляю — у тебя талант падать.
+. Она протягивает руку и, впервые, чуть улыбается.
+@s Тренируйся. Я тоже не с первого раза научилась. Приходи, когда захочешь.
+`});
+D('nero',2,{foe:'nero',rec:15,min:5,lw:3,gems:60,gold:600,hint:'Нерон усиливает себя «Овациями» — не затягивайте бой.',
+ pre:`
+. Но вечер не заканчивается. Нерон резко поднимает руку, и из темноты вспыхивает прожектор. Зал — в восторге ожидания.
+@w А теперь — ДУЭЛЬ! Единственный бой, где зрители будут кричать моё имя, а не своё!
+> Ты это всерьёз?
+@s Театр не терпит полумер. Защищайся, мой дорогой партнёр по сцене!
+. Она вскидывает золотой клинок. Занавес взлетает.
+`,win:`
+. Клинок Нерон описывает красивую дугу и падает на сцену. Она театрально прижимает руку ко лбу, но глаза её горят.
+@w Ах! Пала жертвой собственной затеи! Аплодисменты — мне!
+. Призрачные зрители встают, хлопают, свистят. Нерон быстро встряхивается и улыбается уже без игры.
+@b Ты был великолепен. Забавно: проиграть и чувствовать себя победительницей.
+`,lose:`
+. Золотой клинок стягивает к тебе блеск прожектора, и ты оказываешься на полу сцены. Призрачный зал взрывается овацией.
+@s Браво! Пал достойно! Но финал дописываю я!
+. Нерон легко помогает тебе подняться и шепчет на ухо.
+@n Только не сдавайся — реванш у нас в репертуаре.
+`});
+D('yor',3,{foe:'yor',rec:28,min:12,lw:3,gems:80,gold:800,hint:'Йор очень быстра и часто наносит серии. Используйте защиту и оглушение.',
+ pre:`
+. Утром дождь прошёл, и на мокрой площадке перед домом так тихо, что слышно, как капает с карниза. Йор вдруг выпрямляется.
+@n Вы… не могли бы помочь мне потренироваться? Просто тренировочный бой. Я очень аккуратно.
+> Ты? Аккуратно?
+@w Ну… я постараюсь. Очень-очень. Честно. Только если вы не против…
+. Она берёт два тонких стержня и кланяется, как будто просит прощения заранее.
+`,win:`
+. В последний момент ты успеваешь подставить плечо и закрыться, и стержень Йор замирает у твоей шеи — а не наоборот.
+@w Ой! Получилось?! То есть, вы получили! Простите!
+. Она ахает, прижимает ладони ко рту и краснеет до корней волос.
+@b Вы… правда сильный. Я почти не сдерживалась. Спасибо, что не боитесь.
+`,lose:`
+. Мир делает кульбит, и через секунду ты сидишь на мокрой траве. Йор уже на коленях рядом, ладони у рта.
+@w Простите-простите-простите! Я же просила себя быть аккуратной! Вы целы?
+@n …Всё в порядке. Вы были хорошим противником. Просто я… привыкла.
+@s Давайте ещё раз? Я буду медленнее.
+`});
+D('nami',2,{foe:'nami',rec:19,min:8,lw:3,gems:70,gold:900,hint:'Нами быстра и любит мираж-щит. Бейте сильными навыками, пока щит не восстановился.',
+ pre:`
+. На обратном пути вы находите ещё один сундук, и Нами, не дожидаясь, хватает карту и бросается вперёд — прямо к просвету между деревьями.
+@p Ха! Кто первым коснётся сундука — тот хозяин! Правила: никаких правил!
+> Погоди, это нечестно!
+@a Честно — это когда не ты проигрываешь! Догоняй!
+. Она вскидывает Клима-Такт, и над поляной собираются тучи. Начинается погоня.
+`,win:`
+. Громовой разряд оглушает тебя на миг, но ты всё равно перехватываешь её у самого сундука. Нами с визгом падает в траву, а ты оказываешься сверху.
+@w Эй! Это мой!.. То есть… наш?
+. Она пытается оттолкнуть, но вместо этого смеётся.
+@s Ладно-ладно, твоя взяла. Делим пополам. Хотя я хотела за себя — привычка.
+@b Знаешь, такая погоня — лучшее за долгое время.
+`,lose:`
+. Молния бьёт в землю прямо у ног, и ты отскакиваешь — но этого хватает: Нами уже у сундука, победно поднимая его над головой.
+@p Моё! Сундук мой! Справедливость торжествует!
+. Потом она оглядывается и фыркает.
+@n Ладно. Вернись с новым планом — и с другой скоростью. Второй заход я даю бесплатно.
+`});
+D('najenda',1,{foe:'najenda',rec:12,min:5,lw:3,gems:50,gold:500,hint:'Наджеда ставит ловушки и замедляет. Следите за её намерением.',
+ pre:`
+. Наджеда кладёт карандаш и разворачивает стул к вам. Её взгляд — холодный, оценивающий.
+@n Теория закончилась. Проверим, как ты двигаешься. Тактическая схватка: мой штаб, мои ловушки, твои ноги.
+> Мне нужно знать правила?
+@p Правило одно: не попадаться. Начали.
+`,win:`
+. Ловушка щёлкает вхолостую — ты успеваешь шагнуть в сторону и, используя её же трюк, прижимаешь Наджеду к стене.
+@w Обошёл. Мою же ловушку. Обошёл.
+. Она смеётся негромко и устало, опускает руки.
+@s Хорошо. Очень хорошо. Поздравляю. Можешь считать экзамен пройденным.
+`,lose:`
+. Щёлк — и нога запутывается в верёвке. Через секунду ты подвешен вверх ногами, а Наджеда задумчиво смотрит на схему.
+@n Классика. Не ври себе, что это случайность: ты не смотрел под ноги.
+. Она разрезает верёвку и подаёт руку.
+@s Разбор полётов — за чаем. А потом повторим.
+`});
+D('esdeath',3,{foe:'esdeath_mid',rec:58,min:25,lw:4,gems:120,gold:1500,hint:'Эсдес любит силу. Победа докажет, что вы ей интересны.',
+ pre:`
+. Вы выходите на ледяной плац замка. Эсдес поднимается со ступеней и смотрит на тебя чуть дольше, чем обычно.
+@p Раз уж мы заговорили про силу… Покажи. Без слов, без красивых речей.
+> Сейчас?
+@n Сейчас. Легко, я не собираюсь тебя убивать. Просто проверю.
+`,win:`
+. Ты отбиваешь её последний выпад, и ледяная сабля звенит, вылетая из руки. Эсдес ловит её на лету, но на лице — восторг.
+@w …Ты выстоял. Весь бой — выстоял.
+@b Вот теперь я верю, что ты — не случайность.
+`,lose:`
+. Лёд сковывает ноги, и ты падаешь на колено. Эсдес разглядывает тебя с ленивым интересом.
+@n Неплохо для начала. Слабость — не преступление. Преступление — остаться слабым.
+. Она делает шаг назад.
+@s Приходи ещё. Посмотрим, чему ты научился.
+`});
+D('esdeath',7,{foe:'esdeath',rec:100,min:60,lw:8,must:1,gems:800,gold:5000,item:'h_crown',hint:'Фазы: на 66% и 33% HP Эсдес меняет тактику. «Махападма» (красное предупреждение) лучше встречать защитой. Подготовьте зелья и ульту.',
+ pre:`
+. Смех стихает. Эсдес вдруг отстраняется на шаг. Улыбка остаётся, но взгляд меняется — становится острым, как кромка льда.
+@p Слова «рядом» и «навсегда» красивы. Но я привыкла: слова стоят ровно столько, сколько за ними силы.
+> Ты хочешь проверить меня?
+@n Не проверить. Увидеть. Всю жизнь я любила только тех, кого не могла сломать. Покажи, что ты — из них.
+. Она вытягивает руку, и в ладони вырастает ледяная сабля. Снег вокруг вздрагивает и замирает.
+@s Ни пощады, ни поддавков. Иначе это не будет считаться. Начнём, мой Призыватель.
+`,win:`
+. Твой клинок замирает у самой её шеи. Эсдес не двигается. Лёд на её сабле идёт трещинами и осыпается звонкой крошкой.
+@w …Ты выстоял. Против Махападмы. Против меня.
+. Она смотрит долго, а потом вдруг смеётся — хрипло, счастливо, совсем не по-генеральски.
+@b Победитель. Я так давно не проигрывала, что забыла, как это приятно. Оказывается, проигрывать тоже можно… с любовью.
+> Ты позволила?
+@p Ни на секунду. Поэтому и счастлива.
+`,lose:`
+. Ледяной клинок останавливается у твоего горла. Ты выдыхаешь облачко пара и понимаешь: она могла закончить раньше.
+@n Сильно. Но недостаточно. Пока.
+. Эсдес опускает саблю и протягивает руку, чтобы помочь подняться.
+@s Не опускай взгляд. Побеждённый, который встаёт, опаснее победителя, который расслабился. Подготовься и вернись. Я умею ждать.
+`});
+})();
+// реплики спарринга в Гареме: win/lose по героиням (по умолчанию — общие)
+const PL_SPAR={
+ tsunade:{win:'Ха! Неплохо! Признаю: ты сегодня был быстрее. Но завтра реванш.',lose:'Ну вот. Кулак не подвёл. Но смотри — ты уже держишься лучше, чем неделю назад.'},
+ yor:{win:'Ой! Я… кажется, вас задела. Простите! Вы удивительно ловкий.',lose:'Простите-простите! Я снова не рассчитала… Вы целы? Давайте попробуем чуть медленнее.'},
+ nami:{win:'Ладно-ладно, сдаюсь! Но я хотела, чтобы это было по-честному.',lose:'Ха! Гром — моя стихия. Но ты уже почти поймал ритм.'},
+ nero:{win:'Ах, сражена! Аплодисменты победителю, а побеждённой — цветы!',lose:'Занавес! Победа моя. Но партнёр по сцене был хорош.'},
+ annie:{win:'…Хорошо. Ты вырос. Не зазнавайся.',lose:'Опять не удержал. Ничего. Вставай и ещё раз.'},
+ erza:{win:'Достойный поединок. Признаю твоё мастерство.',lose:'Твои выпады стали увереннее. Продолжай тренироваться.'},
+ najenda:{win:'Удачный манёвр. Я недооценила скорость.',lose:'Ты попался на ловушку. Разбор — за чаем.'},
+ esdeath:{win:'…Ты сегодня был хорош. Я запомню этот бой.',lose:'Слишком рано для победы. Но ты дышишь ровно. Значит, растёшь.'}
+};
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: дуэли в VN-романтике, спарринг в Гареме, админ-читы (ASTRAL_PLAYER_V1) ======
+function plDd(H0,ci){H0.dd=H0.dd||{};return H0.dd[ci]||(H0.dd[ci]={w:0,l:0,adv:0})}
+function plVnDuel(){return VN?ROM_H[VN.hid].ch[VN.ci].duel:null}
+function plDuelEasy(dd){return Math.min(.32,(dd.l||0)*.08)+(dd.adv?.1:0)}
+// раскрытие узла дуэли при открытии главы: [сцена-пролог…, duelgo] вставляется в позицию d.at (по умолчанию — конец; 'c' — после первого выбора)
+function plVnInit(){const d=plVnDuel();if(!d)return;const nodes=VN.nodes;let pos=romNodes(VN.hid,VN.ci).length;
+ if(d.at==='c'){const k=nodes.findIndex(n=>n.k==='c');pos=k>=0?k+1:nodes.length}else if(typeof d.at==='number')pos=Math.min(d.at,nodes.length);
+ const pre=romParse(d.pre);nodes.splice(pos,0,...pre,{k:'duelgo'});VN.dvi=pos+pre.length;VN.dv=null}
+function plVnPanel(html){let e=document.getElementById('vn_dp');if(e)e.remove();e=document.createElement('div');e.className='res';e.id='vn_dp';e.innerHTML=`<div class="card2">${html}</div>`;VN.el.appendChild(e);VN.mode='duel';VN.auto=false;VN.skip=false;try{vnSync()}catch(x){}}
+function plVnPanelOff(){const e=document.getElementById('vn_dp');if(e)e.remove()}
+function plVnGo(){const v=VN,h=ROM_H[v.hid],d=plVnDuel(),H0=romH(v.hid),dd=plDd(H0,v.ci),p=plS();v.mode='duel';vnStop();v.i=v.dvi;
+ if(dd.w){plVnAfter(true,true);return}
+ const fd=PL_FOES[d.foe],easy=plDuelEasy(dd),low=p.lv<(d.min||1);
+ const est=plStatsFor({lv:p.lv,st:p.st,items:plEqItems(p),sk:p.sk});
+ plVnPanel(`<h2>⚔ Дуэль</h2><div class="pd-vs"><b>${fd.ic} ${esc(fd.n)}</b></div><div class="small" style="margin:6px 0;line-height:1.4">${esc(fd.intro||'')}</div>
+  <div class="kv"><span>Рекомендуемый уровень</span><b>${d.rec}</b></div><div class="kv"><span>Минимальный уровень</span><b style="color:${low?'#ff8a8a':'#7fe88f'}">${d.min||1}</b></div><div class="kv"><span>Ваш уровень Призывателя</span><b>${p.lv}</b></div><div class="kv"><span>Ваша сила</span><b>${fmtHp(plPower(est))}</b></div>
+  ${easy?`<div class="small" style="margin-top:6px;color:#7fe88f">Противник ослаблен на ${Math.round(easy*100)}% (прошлые попытки${dd.adv?' и совет':''}).</div>`:''}
+  ${d.hint?`<div class="small" style="margin-top:6px">💡 ${esc(d.hint)}</div>`:''}
+  ${low?`<p style="margin:8px 0;color:#ffb36a">Слишком рано: нужен уровень Призывателя ${d.min}. Прокачайтесь во вкладке «Герой» — прогресс главы сохранён.</p>`:''}
+  ${d.must?'<div class="small" style="margin-top:6px">Без победы глава не завершится, но попыток сколько угодно.</div>':''}
+  <div class="row c" style="flex-direction:column;margin-top:6px">${low?'':`<button class="btn gold" onclick="plVnStart()">⚔ Начать дуэль</button>`}${!dd.adv&&!low?`<button class="btn" onclick="plVnAdvice()">💡 Совет ${esc(h.short||h.name)} (−10% к силе врага)</button>`:''}<button class="btn" onclick="plVnPrep()">🧙 Подготовиться (вкладка «Герой»)</button>${d.must?'':`<button class="btn" onclick="plVnSkip()">Пропустить дуэль</button>`}<button class="btn" onclick="vnExit()">Выйти (прогресс сохранён)</button></div>`)}
+function plVnAdvice(){const d=plVnDuel(),dd=plDd(romH(VN.hid),VN.ci);dd.adv=1;save();toast('Совет получен: противник слабее на 10%');plVnGo()}
+function plVnPrep(){if(!VN)return;vnExit();tab='hero';PLV.t='ov';render();window.scrollTo(0,0)}
+function plVnSkip(){plVnPanelOff();VN.i=VN.dvi+1;VN.dv=null;VN.mode='line';vnNext()}
+function plVnStart(){const v=VN,d=plVnDuel(),H0=romH(v.hid),dd=plDd(H0,v.ci);plVnPanelOff();
+ const fd=PL_FOES[d.foe];
+ plDuelRun({foe:Object.assign({},fd,{id:d.foe,rec:d.rec}),mode:{easy:plDuelEasy(dd)},title:'Дуэль · '+ROM_H[v.hid].short,retry:0,reward:D=>plVnRw(D),done:r=>{if(VN)plVnAfter(r.win)}});
+ if(window.ROM_DUEL_AUTO&&VN){/* plDuelRun уже вызвал done синхронно */}}
+function plVnRw(D){const v=VN;if(!v)return '';const d=plVnDuel(),H0=romH(v.hid),dd=plDd(H0,v.ci),p=plS();let h='';
+ if(D.win){if(!dd.w){dd.w=1;H0.fl['duel'+v.ci]=1;const lv=romLove(v.hid,d.lw||3);S.gems+=d.gems||0;S.gold+=d.gold||0;const xp=plRewardXp(.3);plAddXp(xp,1);let it=null;
+   if(d.item&&PL_TPL[d.item]){it=plAddItem(d.item,1)}else if(plRnd()<.3)it=plDrop('rom');
+   h=`♥ +${lv} · ${d.gems?'💎'+d.gems+' ':''}${d.gold?'🪙'+fmtHp(d.gold)+' ':''}· ✦ +${fmtHp(xp)} опыта${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}`}
+  else h='Победа повторно — награда уже получена.'}
+ else{dd.l=(dd.l||0)+1;const xp=plRewardXp(.05);plAddXp(xp,1);h=`Поражение не страшно: противник в следующей попытке слабее (сейчас −${Math.round(plDuelEasy(dd)*100)}%). +${fmtHp(xp)} опыта за старание.`}
+ save();return h}
+function plVnAfter(win,already){const v=VN,d=plVnDuel(),txt=win?d.win:d.lose,nodes=romParse(txt);
+ v.i=v.dvi+1;v.nodes.splice(v.i,0,...nodes);v.dv={end:v.i+nodes.length,n:nodes.length,win:!!win};v.mode='line';vnSync();vnNext()}
+function plVnPost(){const v=VN,dv=v.dv,d=plVnDuel();if(!dv)return false;
+ const clean=(toDuel)=>{v.nodes.splice(v.dvi+1,dv.n);v.dv=null;v.i=toDuel?v.dvi:v.dvi+1};
+ if(dv.win||dv.skipped){clean(false);return false}
+ plVnPanel(`<h2>💀 Поражение</h2><p class="small" style="margin:8px 0">${d.must?'Эта дуэль решает исход главы, но вы можете повторять её сколько угодно.':'Глава продолжится и без победы, но награда за дуэль достанется только победителю.'}</p>
+  <div class="row c" style="flex-direction:column"><button class="btn gold" onclick="plVnRetry()">↺ Реванш</button><button class="btn" onclick="plVnPrep()">🧙 Подготовиться (вкладка «Герой»)</button>${d.must?'':`<button class="btn" onclick="plVnCont()">Продолжить главу</button>`}<button class="btn" onclick="vnExit()">Выйти (прогресс сохранён)</button></div>`);return true}
+function plVnRetry(){const v=VN;if(!v||!v.dv)return;v.nodes.splice(v.dvi+1,v.dv.n);v.dv=null;v.i=v.dvi+1;plVnGo()}
+function plVnCont(){const v=VN;if(!v||!v.dv)return;plVnPanelOff();v.nodes.splice(v.dvi+1,v.dv.n);v.dv=null;v.i=v.dvi+1;v.mode='line';vnNext()}
+// ---------- спарринг в Гареме ----------
+const PL_SPAR_KEY=id=>id==='esdeath'?'esdeath_mid':id;
+function plSparLeft(id){const d=romS().day;d.spar=d.spar||{};return Math.max(0,1-(d.spar[id]||0))}
+function plSparUi(id){const h=ROM_H[id],p=plS(),left=plSparLeft(id),fk=PL_SPAR_KEY(id);if(!PL_FOES[fk])return toast('Героиня не готова к спаррингу');
+ const opts=[[-8,'Лёгкий','♥ +2'],[0,'Обычный','♥ +3'],[8,'Сложный','♥ +4']];
+ modal(`<h3>⚔ Тренировка · ${esc(h.name)}</h3><div class="small" style="margin:6px 0">Спарринг 1 на 1 в вашем уровне. Раз в день с каждой героиней (осталось: ${left}). Победа — симпатия, 🪙 и опыт Призывателя; поражение тоже даёт немного симпатии.</div><div class="small">Ваш уровень: ${p.lv}</div>
+ <div class="rm-sc">${opts.map(o=>{const rec=Math.max(1,Math.min(PL_MAX,p.lv+o[0]));return `<button class="btn ${o[0]===0?'gold':''}" ${left?'':'disabled'} onclick="plSparGo('${id}',${o[0]})">${o[1]} · ур. ${rec} · ${o[2]}</button>`}).join('')}</div><div class="row c" style="margin-top:10px"><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function plSparGo(id,off){if(!plSparLeft(id))return toast('Сегодня тренировка уже была');const h=ROM_H[id],p=plS(),fk=PL_SPAR_KEY(id),fd=PL_FOES[fk],rec=Math.max(1,Math.min(PL_MAX,p.lv+off));closeM();
+ const d=romS().day;d.spar=d.spar||{};d.spar[id]=(d.spar[id]||0)+1;save();
+ plDuelRun({foe:Object.assign({},fd,{id:fk,rec}),mode:{},title:'Спарринг: '+fd.n,retry:0,reward:D=>{
+   const idx=off<0?0:off===0?1:2,lw=D.win?[2,3,4][idx]:1,got=romLove(id,lw);romMoodSet(id,D.win?12:5);const gold=D.win?Math.round(100+rec*9):Math.round(40+rec*3),xp=plRewardXp(D.win?.1:.04);S.gold+=gold;plAddXp(xp,1);let it=null;if(D.win&&plRnd()<.18)it=plDrop('duel');try{prog('win')}catch(e){}
+   const say=(PL_SPAR[id]||{})[D.win?'win':'lose']||'…';harSay(id,D.win?'s':'p',romTx(say));save();
+   return `<div class="small" style="font-style:italic;margin-bottom:4px">${esc(h.short||h.name)}: «${esc(say)}»</div>♥ +${got} · 🪙${fmtHp(gold)} · ✦ +${fmtHp(xp)}${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}`},done:r=>{if(tab==='harem')render()}})}
+// ---------- админ ----------
+function plAdmPanel(){const d=(typeof AU!=='undefined'&&AU&&users()[AU])?(AU===ME?S:users()[AU].data):S,p=plD(d);
+ return `<div class="panel"><b>🧙 Игрок (Призыватель)</b><div class="small" style="margin:4px 0">Ур. ${p.lv}/${PL_MAX} · предметов ${p.inv.length}. Число берётся из поля выше.</div>
+ <div class="row"><button class="btn sm" onclick="admPlLv(0)">Уровень = N</button><button class="btn sm" onclick="admPlLv(1)">Уровень = 200</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPlItems()">🎁 Все предметы</button><button class="btn sm" onclick="admPlPot()">🧪 +зелья</button><button class="btn sm" style="background:#5b1a2a" onclick="admPlReset()">Сброс игрока</button></div></div>`}
+function admPlLv(mx){admMut(d=>{const p=plD(d);p.lv=mx?PL_MAX:Math.max(1,Math.min(PL_MAX,admNum()||1));p.xp=0});toast('Уровень Призывателя обновлён')}
+function admPlItems(){admMut(d=>{const p=plD(d);PL_IT.forEach(t=>{if(!p.inv.some(i=>i.t===t.id)){p.inv.push({u:p.uid++,t:t.id,up:0})}})});toast('Все предметы выданы')}
+function admPlPot(){admMut(d=>{const p=plD(d);p.pot.hp+=10;p.pot.en+=10;p.sh+=100});toast('+10 зелий, +100 ✦')}
+function admPlReset(){if(!confirm('Сбросить прокачку игрока?'))return;admMut(d=>{delete d.pl});toast('Игрок сброшен')}
 
 
 // ====== ЗВУК И МУЗЫКА (WebAudio, всё синтезируется в игре) ======
