@@ -110,62 +110,52 @@ input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;bac
 .r7 .stars{color:#0ff;text-shadow:1px 0 #f0f;animation:g7t 1.3s steps(1) infinite;letter-spacing:-1px}
 .r7.lock{animation:none;filter:grayscale(.7) brightness(.75)}.r7.lock .pt.g7 img,.r7.lock .pt.g7::after{animation:none}
 .av.f7{border-color:#0ff;animation:g7b .9s steps(1) infinite}
-/* ===== 1★ чёрная звезда: «неизвестность» (багает, но портрет виден; лёгкие steps-анимации, только opacity/transform) ===== */
-.r1{border:3px solid #000!important;background:repeating-linear-gradient(90deg,#0000 0 7px,#a0f1 7px 8px),linear-gradient(#050009,#14000e)!important;box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000;animation:gxb 2.6s steps(1) infinite}
-@keyframes gxb{0%,100%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}18%{box-shadow:-3px 0 0 1px #f03,3px 0 0 1px #0ff,0 0 12px #000,inset 0 0 12px #000}19%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}52%{box-shadow:4px 2px 0 1px #a0f,-4px -1px 0 1px #f03,inset 0 0 18px #000}54%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}81%{box-shadow:0 0 0 1px #fff3,0 0 16px #a0f8,inset 0 0 12px #000}83%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}}
+/* ===== 1★ чёрная звезда v3: «неизвестность» — заметный баг (ASTRAL_ARATA_V3). Анимации: steps(), opacity/transform/clip-path; без filter ===== */
+.r1,.f.r1{position:relative;border:3px solid #000!important;background:repeating-linear-gradient(90deg,#0000 0 7px,#a0f1 7px 8px),linear-gradient(#050009,#14000e)!important;box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000;clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px));animation:gxfr 3.3s steps(1) infinite}
+@keyframes gxfr{0%{clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px))}20%{clip-path:polygon(-4px 5px,6px -4px,calc(100% - 13px) -4px,calc(100% + 4px) 12px,calc(100% + 4px) calc(100% - 6px),calc(100% - 4px) calc(100% + 4px),12px calc(100% + 4px),-4px calc(100% - 13px))}34%{clip-path:polygon(-4px 8px,8px -4px,30% -4px,34% 3px,41% -4px,calc(100% - 9px) -4px,calc(100% + 4px) 8px,calc(100% + 4px) 55%,calc(100% - 3px) 58%,calc(100% + 4px) 62%,calc(100% + 4px) calc(100% - 9px),calc(100% - 8px) calc(100% + 4px),8px calc(100% + 4px),-4px calc(100% - 8px))}52%{clip-path:polygon(-4px 10px,10px -4px,calc(100% - 7px) -4px,calc(100% + 4px) 6px,calc(100% + 4px) calc(100% - 12px),calc(100% - 9px) calc(100% + 4px),4px calc(100% + 4px),-4px calc(100% - 5px))}68%{clip-path:polygon(-4px 8px,8px -4px,30% -4px,34% 3px,41% -4px,calc(100% - 9px) -4px,calc(100% + 4px) 8px,calc(100% + 4px) 55%,calc(100% - 3px) 58%,calc(100% + 4px) 62%,calc(100% + 4px) calc(100% - 9px),calc(100% - 8px) calc(100% + 4px),8px calc(100% + 4px),-4px calc(100% - 8px))}84%{clip-path:polygon(-4px 5px,6px -4px,calc(100% - 13px) -4px,calc(100% + 4px) 12px,calc(100% + 4px) calc(100% - 6px),calc(100% - 4px) calc(100% + 4px),12px calc(100% + 4px),-4px calc(100% - 13px))}}
+.r1::before,.r1::after{content:'';position:absolute;inset:-3px;z-index:3;pointer-events:none;background:repeating-linear-gradient(90deg,#f03 0 15px,#0000 15px 19px,#a0f 19px 35px,#fff 35px 39px,#0000 39px 47px,#0ff 47px 60px,#0000 60px 63px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,#0ff 0 11px,#a0f 11px 29px,#0000 29px 34px,#f03 34px 50px,#fff 50px 53px,#0000 53px 60px) 0 100%/100% 4px no-repeat,repeating-linear-gradient(180deg,#a0f 0 13px,#0000 13px 17px,#f03 17px 31px,#0ff 31px 44px,#0000 44px 50px) 0 0/4px 100% no-repeat,repeating-linear-gradient(180deg,#fff 0 6px,#f03 6px 20px,#0000 20px 26px,#a0f 26px 45px,#0ff 45px 49px,#0000 49px 57px) 100% 0/4px 100% no-repeat}
+.r1::after{background:repeating-linear-gradient(90deg,#0000 0 9px,#0ff 9px 22px,#f03 22px 26px,#0000 26px 33px,#fff 33px 37px,#a0f 37px 58px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,#f03 0 18px,#0000 18px 24px,#0ff 24px 30px,#a0f 30px 47px,#0000 47px 52px,#fff 52px 56px) 0 100%/100% 4px no-repeat,repeating-linear-gradient(180deg,#f03 0 9px,#0ff 9px 26px,#0000 26px 32px,#a0f 32px 40px,#fff 40px 43px,#0000 43px 52px) 0 0/4px 100% no-repeat,repeating-linear-gradient(180deg,#0000 0 11px,#a0f 11px 24px,#f03 24px 30px,#0ff 30px 47px,#0000 47px 53px) 100% 0/4px 100% no-repeat;opacity:0;animation:gxfb 3.3s steps(1) infinite}
+.r1::before{animation:gxfa 3.3s steps(1) infinite}
+@keyframes gxfa{0%,100%{opacity:1;transform:none}58%{opacity:0}72%{opacity:1;transform:translate(1px,-1px)}86%{transform:translate(-1px,1px)}}
+@keyframes gxfb{0%,38%{opacity:0;transform:none}40%{opacity:1;transform:translate(-1px,0)}56%{opacity:1;transform:translate(1px,1px)}74%,100%{opacity:0}}
 .pt.gx{background:#000;contain:paint}
 .pt.gx>i,.pt.gx>b{position:absolute;pointer-events:none;display:block}
-.pt.gx .gxh{inset:0;z-index:2;background:radial-gradient(circle at 0 0,#000 0 15%,transparent 16%),radial-gradient(circle at 100% 22%,#000 0 9%,transparent 10%),radial-gradient(circle at 4% 100%,#000 0 12%,transparent 13%),radial-gradient(circle at 100% 100%,#000 0 15%,transparent 16%),linear-gradient(90deg,#000 0 2%,transparent 2% 98%,#000 98%);animation:gxh 3.4s steps(1) infinite}
+.pt.gx>b u,.bs u{text-decoration:none}
+.pt.gx .gxh{inset:0;z-index:2;background:radial-gradient(circle at 0 0,#000 0 9%,transparent 10%),radial-gradient(circle at 100% 22%,#000 0 6%,transparent 7%),radial-gradient(circle at 4% 100%,#000 0 8%,transparent 9%),radial-gradient(circle at 100% 100%,#000 0 10%,transparent 11%);animation:gxh 3.4s steps(1) infinite}
 @keyframes gxh{0%,100%{transform:none;opacity:1}30%{transform:scale(1.05);opacity:.85}31%{transform:none;opacity:1}62%{transform:translate(2px,-1px) scale(1.08);opacity:.7}64%{transform:scaleX(-1);opacity:1}66%{transform:none}}
-/* горизонтальные глитч-полосы (копии портрета, clip-path) */
-.pt.gx .gxs{inset:0;z-index:1;background:var(--im) center top/cover,#f0a;background-blend-mode:multiply,normal;opacity:0;clip-path:inset(30% 0 52% 0);animation:gxs 2.9s steps(1) infinite}
-@keyframes gxs{0%,55%,100%{opacity:0;transform:none}56%{opacity:.85;clip-path:inset(14% 0 70% 0);transform:translateX(-7px)}58%{opacity:.85;clip-path:inset(58% 0 22% 0);transform:translateX(9px)}60%{opacity:.6;clip-path:inset(40% 0 40% 0);transform:translateX(-3px) scaleX(-1)}62%{opacity:0}86%{opacity:.7;clip-path:inset(78% 0 6% 0);transform:translateX(6px)}88%{opacity:0}}
-.pt.gx .gxs2{background:var(--im) center top/cover,#0ff;background-blend-mode:multiply,normal;animation:gxs2 3.7s steps(1) infinite}
-@keyframes gxs2{0%,20%,100%{opacity:0;transform:none}21%{opacity:.8;clip-path:inset(6% 0 88% 0);transform:translateX(11px)}22%{opacity:.8;clip-path:inset(22% 0 70% 0);transform:translateX(-9px)}24%{opacity:0}47%{opacity:.75;clip-path:inset(66% 0 26% 0);transform:translateX(-12px)}48%{opacity:.75;clip-path:inset(48% 0 46% 0);transform:translateX(8px)}50%{opacity:0}73%{opacity:.7;clip-path:inset(90% 0 4% 0);transform:translateX(14px)}75%{opacity:0}}
-.pt.gx .gxs3{background:var(--im) center top/cover;animation:gxs3 4.9s steps(1) infinite}
-@keyframes gxs3{0%,33%,100%{opacity:0;transform:none}34%{opacity:.9;clip-path:inset(35% 0 60% 0);transform:translateX(-16px)}35%{opacity:.9;clip-path:inset(52% 0 44% 0);transform:translateX(13px)}36%{opacity:.9;clip-path:inset(12% 0 83% 0);transform:translateX(-6px) scaleX(-1)}37%{opacity:0}81%{opacity:.85;clip-path:inset(72% 0 20% 0);transform:translateX(17px)}82%{opacity:.85;clip-path:inset(28% 0 66% 0);transform:translateX(-14px)}84%{opacity:0}}
-/* лёгкое RGB-расслоение: две смещённые тонированные копии (mix-blend + background-blend, без filter) */
-.pt.gx .gxr,.pt.gx .gxc{inset:0;z-index:1;mix-blend-mode:screen;opacity:.3;background:var(--im) center top/cover,#f02;background-blend-mode:multiply,normal;transform:translateX(-3px);animation:gxr 2.4s steps(1) infinite}
-.pt.gx .gxc{background:var(--im) center top/cover,#0ef;background-blend-mode:multiply,normal;transform:translateX(3px);animation-name:gxc2;animation-duration:3.1s}
-@keyframes gxr{0%,100%{transform:translateX(-3px)}25%{transform:translate(-5px,1px)}50%{transform:translateX(-2px)}80%{transform:translate(-7px,-1px);opacity:.42}82%{opacity:.3;transform:translateX(-3px)}}
-@keyframes gxc2{0%,100%{transform:translateX(3px)}30%{transform:translate(5px,-1px)}55%{transform:translateX(2px)}85%{transform:translate(8px,1px);opacity:.42}87%{opacity:.3;transform:translateX(3px)}}
-.pt.gx img{animation:gxi 4.1s steps(1) infinite}
-@keyframes gxi{0%,70%,100%{transform:none}71%{transform:translateX(3px)}73%{transform:translateX(-4px) skewX(2deg)}75%{transform:none}92%{transform:translateX(-2px) scaleY(1.02)}93%{transform:none}}
-/* цифровые помехи и битые пиксели */
-.pt.gx .gxn{left:0;right:0;top:-12px;bottom:0;z-index:2;background:repeating-linear-gradient(0deg,#0000 0 5px,#c6f22 5px 6px,#0000 6px 11px,#0ff1 11px 12px);opacity:.75;animation:gxn .8s steps(4) infinite}
+/* горизонтальные полосы смещения: 6 фиксированных полос-копий портрета (clip-path), в каждый момент видны ровно 3; сдвиг 4–10px шагами, RGB-кромка */
+.pt.gx .gxs{inset:0;z-index:1;opacity:1;animation:gxbd 3.6s steps(1) infinite}
+.pt.gx .gxs1{background:linear-gradient(180deg,#0000 0 6%,#ff2a55 6% calc(6% + 3px),#0000 calc(6% + 3px) calc(14% - 3px),#22e6ff calc(14% - 3px) 14%,#0000 14%),var(--im) center top/cover;clip-path:inset(6% 0 86% 0);--s:8px;animation-delay:0.0s}
+.pt.gx .gxs2{background:linear-gradient(180deg,#0000 0 20%,#ff2a55 20% calc(20% + 3px),#0000 calc(20% + 3px) calc(28% - 3px),#22e6ff calc(28% - 3px) 28%,#0000 28%),var(--im) center top/cover;clip-path:inset(20% 0 72% 0);--s:9px;animation-delay:-0.6s}
+.pt.gx .gxs3{background:linear-gradient(180deg,#0000 0 36%,#ff2a55 36% calc(36% + 3px),#0000 calc(36% + 3px) calc(44% - 3px),#22e6ff calc(44% - 3px) 44%,#0000 44%),var(--im) center top/cover;clip-path:inset(36% 0 56% 0);--s:7px;animation-delay:-1.2s}
+.pt.gx .gxs4{background:linear-gradient(180deg,#0000 0 52%,#ff2a55 52% calc(52% + 3px),#0000 calc(52% + 3px) calc(60% - 3px),#22e6ff calc(60% - 3px) 60%,#0000 60%),var(--im) center top/cover;clip-path:inset(52% 0 40% 0);--s:10px;animation-delay:-1.8s}
+.pt.gx .gxs5{background:linear-gradient(180deg,#0000 0 66%,#ff2a55 66% calc(66% + 3px),#0000 calc(66% + 3px) calc(74% - 3px),#22e6ff calc(74% - 3px) 74%,#0000 74%),var(--im) center top/cover;clip-path:inset(66% 0 26% 0);--s:8px;animation-delay:-2.4s}
+.pt.gx .gxs6{background:linear-gradient(180deg,#0000 0 82%,#ff2a55 82% calc(82% + 3px),#0000 calc(82% + 3px) calc(90% - 3px),#22e6ff calc(90% - 3px) 90%,#0000 90%),var(--im) center top/cover;clip-path:inset(82% 0 10% 0);--s:9px;animation-delay:-3.0s}
+@keyframes gxbd{0%{opacity:1;transform:translateX(var(--s))}16.66%{opacity:1;transform:translateX(calc(var(--s)*-.7))}33.33%{opacity:1;transform:translateX(calc(var(--s)*.8))}50%{opacity:0;transform:none}66.66%{opacity:0;transform:none}83.33%{opacity:0;transform:none}}
+.pt.gx .gxr,.pt.gx .gxc{inset:0;z-index:1;mix-blend-mode:screen;opacity:.3;background:var(--im) center top/cover,#f02;background-blend-mode:multiply,normal;transform:translateX(-4px);animation:gxr 2.4s steps(1) infinite}
+.pt.gx .gxc{background:var(--im) center top/cover,#0ef;background-blend-mode:multiply,normal;transform:translateX(4px);animation-name:gxc2;animation-duration:3.1s}
+@keyframes gxr{0%,100%{transform:translateX(-4px)}25%{transform:translate(-6px,1px)}50%{transform:translateX(-3px)}80%{transform:translate(-8px,-1px);opacity:.42}82%{opacity:.3;transform:translateX(-4px)}}
+@keyframes gxc2{0%,100%{transform:translateX(4px)}30%{transform:translate(6px,-1px)}55%{transform:translateX(3px)}85%{transform:translate(8px,1px);opacity:.42}87%{opacity:.3;transform:translateX(4px)}}
+.pt.gx img{animation:gxi .9s steps(1) infinite}
+@keyframes gxi{0%{transform:scale(1.03)}12%{transform:translate(2px,-1px) scale(1.03)}25%{transform:translate(-2px,1px) scale(1.03)}37%{transform:translate(1px,1px) scale(1.03)}50%{transform:translate(-1px,-2px) scale(1.03)}62%{transform:translate(2px,0) scale(1.03)}75%{transform:translate(-2px,-1px) scale(1.03)}87%{transform:translate(0,2px) scale(1.03)}}
+.pt.gx .gxn{left:0;right:0;top:-12px;bottom:0;z-index:2;background:repeating-linear-gradient(0deg,#0000 0 5px,#c6f22 5px 6px,#0000 6px 11px,#0ff1 11px 12px);opacity:.5;animation:gxn .8s steps(4) infinite}
 @keyframes gxn{to{transform:translateY(12px)}}
-.pt.gx .gxp{inset:0;z-index:2;opacity:0;background:linear-gradient(#fff,#fff) 14% 22%/7% 2.4%,linear-gradient(#f0f,#f0f) 71% 9%/5% 2%,linear-gradient(#0ff,#0ff) 33% 58%/9% 1.6%,linear-gradient(#000,#000) 56% 34%/10% 3%,linear-gradient(#a0f,#a0f) 84% 47%/4% 4%,linear-gradient(#f03,#f03) 8% 76%/6% 1.8%,linear-gradient(#000,#000) 47% 83%/8% 2.6%,linear-gradient(#fff,#fff) 91% 68%/3% 3%;background-repeat:no-repeat;animation:gxp 3.3s steps(1) infinite}
+/* яркие блоки «битых пикселей» 6–14px: всегда видны, прыгают по кадрам */
+.pt.gx .gxp{inset:0;z-index:2;opacity:1;background:linear-gradient(#fff,#fff) 14% 22%/12px 7px,linear-gradient(#f0f,#f0f) 71% 9%/8px 8px,linear-gradient(#0ff,#0ff) 33% 58%/14px 6px,linear-gradient(#ff3d81,#ff3d81) 56% 34%/10px 10px,linear-gradient(#b400ff,#b400ff) 84% 47%/6px 12px,linear-gradient(#f03,#f03) 8% 76%/14px 8px,linear-gradient(#fff,#fff) 47% 83%/9px 6px,linear-gradient(#0ff,#0ff) 91% 68%/7px 7px;background-repeat:no-repeat;animation:gxp 3.3s steps(1) infinite}
 .pt.gx .gxp2{background-position:60% 12%,20% 40%,80% 70%,10% 90%,45% 62%,92% 20%,30% 8%,66% 52%;animation:gxp2 4.3s steps(1) infinite}
-@keyframes gxp{0%,8%,14%,38%,45%,69%,76%,100%{opacity:0}10%{opacity:1}12%{opacity:1;transform:translate(6%,9%)}40%{opacity:1;transform:translate(-8%,4%)}42%{opacity:.8;transform:translate(9%,-6%)}71%{opacity:1;transform:translate(-4%,-11%)}73%{opacity:1;transform:translate(3%,12%)}}
-@keyframes gxp2{0%,17%,22%,52%,58%,88%,100%{opacity:0}18%{opacity:1;transform:scaleX(-1)}20%{opacity:1;transform:translate(-7%,8%)}54%{opacity:1;transform:translate(10%,-9%)}56%{opacity:.85;transform:translate(-3%,5%)}90%{opacity:1;transform:scale(-1,-1)}}
-/* разбросанные неизвестные символы: текст в DOM (<b class="gxg">), видимый глиф меняется через ::before, мерцает по opacity */
-.pt.gx .gxg{z-index:3;font-size:0;line-height:0;color:#e9d5ff;text-shadow:1px 0 #f03,-1px 0 #0ff;font-weight:700;font-family:'Noto Sans Symbols','Noto Sans Symbols 2','Segoe UI Symbol',system-ui,sans-serif;white-space:nowrap;animation:gxgm 3.7s steps(1) infinite}
-.pt.gx .gxg::before{content:'ᚠ';font-size:15px;line-height:1;opacity:0;animation:gxgA 2.7s steps(1) infinite,gxgo 3.9s steps(1) infinite}
-@keyframes gxgA{0%{content:'ᚠ'}25%{content:'⟁'}50%{content:'ᛉ'}75%{content:'⌬'}}
-@keyframes gxgB{0%{content:'ꙮ'}20%{content:'҉'}40%{content:'☍'}60%{content:'⏃'}80%{content:'X͎'}}
-@keyframes gxgC{0%{content:'Ø̷̢'}20%{content:'Ʌ̴͎'}40%{content:'Ǝ̸̡R̷'}60%{content:'▓▒░'}80%{content:'H̷̢̛E̴'}}
-@keyframes gxgD{0%{content:'ERR_UNKNOWN'}20%{content:'██▒▒░░'}40%{content:'0x7F..?'}60%{content:'nu11'}80%{content:'??_??'}}
-@keyframes gxgo{0%,100%{opacity:0}8%{opacity:.95}20%{opacity:.4}24%{opacity:0}42%{opacity:.7}55%{opacity:0}58%{opacity:1}64%{opacity:.25}66%{opacity:0}78%{opacity:.85}90%{opacity:0}}
-@keyframes gxgm{0%,100%{transform:none}30%{transform:translate(2px,-1px)}31%{transform:translate(-3px,1px) scaleX(-1)}64%{transform:translate(1px,3px) skewX(-8deg)}65%{transform:none}}
-.pt.gx .gxg:nth-of-type(1){left:6%;top:9%}
-.pt.gx .gxg:nth-of-type(2){left:80%;top:6%;animation-duration:2.9s}
-.pt.gx .gxg:nth-of-type(3){left:12%;top:38%;animation-duration:4.3s}
-.pt.gx .gxg:nth-of-type(4){left:86%;top:33%;animation-duration:3.1s}
-.pt.gx .gxg:nth-of-type(5){left:44%;top:14%;animation-duration:2.3s}
-.pt.gx .gxg:nth-of-type(6){left:70%;top:58%;animation-duration:4.7s}
-.pt.gx .gxg:nth-of-type(7){left:4%;top:60%;animation-duration:3.3s}
-.pt.gx .gxg:nth-of-type(8){left:52%;top:47%;animation-duration:5.1s}
-.pt.gx .gxg:nth-of-type(9){left:22%;top:24%;animation-duration:2.1s}
-.pt.gx .gxg:nth-of-type(10){left:62%;top:26%;animation-duration:3.9s}
-.pt.gx .gxg:nth-of-type(11){left:30%;top:68%;animation-duration:2.6s}
-.pt.gx .gxg:nth-of-type(12){left:60%;top:70%;animation-duration:3.5s}
-.pt.gx .gxg:nth-of-type(2)::before,.pt.gx .gxg:nth-of-type(6)::before,.pt.gx .gxg:nth-of-type(9)::before{animation-name:gxgB,gxgo;animation-duration:3.1s,4.3s}
-.pt.gx .gxg:nth-of-type(3)::before,.pt.gx .gxg:nth-of-type(7)::before,.pt.gx .gxg:nth-of-type(10)::before{animation-name:gxgC,gxgo;animation-duration:2.3s,3.3s;font-size:17px}
-.pt.gx .gxg:nth-of-type(4)::before,.pt.gx .gxg:nth-of-type(8)::before{animation-name:gxgB,gxgo;animation-duration:3.7s,5.3s;font-size:19px}
-.pt.gx .gxg:nth-of-type(11)::before,.pt.gx .gxg:nth-of-type(12)::before{animation-name:gxgD,gxgo;animation-duration:2.9s,3.6s;font:700 9px/1 monospace;content:'ERR_UNKNOWN';color:#f6f}
-.pt.gx .gxg:nth-of-type(11)::before{animation-delay:-.8s,-1.7s}.pt.gx .gxg:nth-of-type(12)::before{animation-delay:-1.9s,-.4s}
-.pt.gx .gxg:nth-of-type(5)::before{animation-delay:-1.2s,-2.1s}.pt.gx .gxg:nth-of-type(8)::before{animation-delay:-2.2s,-.9s}
-.pt.gx::before{content:'▓ 0x00';position:absolute;left:3px;top:2px;z-index:3;font:700 9px/1 monospace;color:#d8b4ff;text-shadow:1px 0 #f03,-1px 0 #0ff;pointer-events:none;animation:gxc 2.2s steps(1) infinite}
+@keyframes gxp{0%,100%{transform:none}14%{transform:translate(6%,9%)}30%{transform:translate(-8%,4%)}46%{transform:translate(9%,-6%)}60%{transform:translate(-4%,-11%)}78%{transform:translate(3%,12%)}}
+@keyframes gxp2{0%,100%{transform:scaleX(-1)}18%{transform:translate(-7%,8%)}36%{transform:translate(10%,-9%)}54%{transform:translate(-3%,5%)}72%{transform:scale(-1,-1)}88%{transform:translate(6%,-4%)}}
+/* неизвестные символы: <b class=gxg> = слот из 3 вариантов (<u>), один виден всегда; смена шагами через opacity; шрифты с запасом */
+.pt.gx .gxg{z-index:3;font-family:'Noto Sans Symbols','Noto Sans Symbols 2','Segoe UI Symbol','DejaVu Sans Mono',ui-monospace,Menlo,Consolas,monospace,system-ui,sans-serif;font-size:max(14px,calc(var(--fs,20px)*.85));line-height:1;font-weight:700;white-space:nowrap;width:0;height:1em;animation:gxgm 3.7s steps(1) infinite}
+.pt.gx .gxg u{position:absolute;left:0;top:0;opacity:0;text-decoration:none;font-style:normal;text-shadow:0 1px 1px #000,0 0 3px #000,0 0 7px #000,1px 0 #f03,-1px 0 #0ff;animation:gxgv var(--t,3.3s) steps(1) infinite}
+.pt.gx .gxg u:nth-child(1){opacity:1}
+.pt.gx .gxg u:nth-child(2){animation-delay:calc(var(--t,3.3s)/-1.5)}
+.pt.gx .gxg u:nth-child(3){animation-delay:calc(var(--t,3.3s)/-3)}
+.pt.gx .gxg .c0{color:#fff}.pt.gx .gxg .c1{color:#e879f9}.pt.gx .gxg .c2{color:#ff4d6d}
+.pt.gx .gxg.w{left:0!important;right:0;width:auto}.pt.gx .gxg.w u{left:0;right:0;text-align:center}
+@keyframes gxgv{0%{opacity:1}33.4%{opacity:0}100%{opacity:0}}
+@keyframes gxgm{0%,100%{transform:none;opacity:.9}20%{opacity:1}30%{transform:translate(2px,-1px)}31%{transform:translate(-3px,1px) scaleX(-1);opacity:.7}45%{opacity:1}64%{transform:translate(1px,3px) skewX(-8deg)}65%{transform:none}80%{opacity:.75}}
+.pt.gx::before{content:'▓ 0x00';position:absolute;left:3px;top:2px;z-index:3;font:700 10px/1 monospace;color:#e9d5ff;text-shadow:0 0 3px #000,1px 0 #f03,-1px 0 #0ff;pointer-events:none;animation:gxc 2.2s steps(1) infinite}
 @keyframes gxc{0%{content:'▓ 0x00'}14%{content:'Ǝ?#░ ..'}28%{content:'ERR_UNKNOWN'}42%{content:'nu11 ▒'}57%{content:'Ø̷̢ ░▓ ???'}71%{content:'██▒▒░░'}85%{content:'0xFF ▚'}}
 .pt.gx::after{content:'';position:absolute;left:0;right:0;height:9%;top:-10%;z-index:3;background:linear-gradient(#0000,#a0f4,#0000);pointer-events:none;animation:gxbar 5.2s steps(24) infinite}
 @keyframes gxbar{to{top:108%}}
@@ -175,15 +165,26 @@ input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;bac
 /* искажение имени: на отдельных кадрах поверх подставляется zalgo/подмена символов (настоящее имя остаётся в DOM) */
 .nm.gx::after{content:'';position:absolute;inset:0;padding:inherit;background:linear-gradient(#0000,#000 55%);color:#f0abfc;text-shadow:1px 0 #f03,-1px 0 #0ff;opacity:0;pointer-events:none;overflow:hidden;animation:gxnm 3.7s steps(1) infinite}
 @keyframes gxnm{0%,18%,30%,52%,66%,84%,100%{opacity:0;content:''}19%{opacity:1;content:'К̷̢а̸̛с̶у̵г̷а̸ А̴р̶а̸т̷а̵'}22%{opacity:1;content:'Ka5uga Ar4ta ▒▒'}31%{opacity:1;content:'ERR_UNKNOWN'}34%{opacity:1;content:'Ⱪ⟁ᛊ⏃ ᚫᚱ⏃ᛏ⏃'}53%{opacity:1;content:'Касуга ██▒▒░░'}56%{opacity:1;content:'Ǝ̷R̴Ø̷̢R̸ ?̵?̶?̷'}67%{opacity:1;content:'П̵о̷в̸е̷л̴и̶т̸е̷л̵ь̶ Д̷е̸м̷о̴н̵о̷в̸'}70%{opacity:1;content:'nu11 nu11 nu11'}85%{opacity:1;content:'К̸а̷с̴у̶г̵а̸ ▓▒░ Ā̷r̴a̶t̷a̵'}}
-.bs{display:inline-block;color:#000;-webkit-text-stroke:1px #d8b4ff;text-shadow:0 0 4px #a0f,1px 0 #f03,-1px 0 #0ff;font-size:15px;line-height:1;animation:gxt 2.7s steps(1) infinite}
-.r1 .stars{font-size:15px}
+/* чёрная звезда редкости: залитая чёрная звезда на светящемся бело-пурпурном «портале»; сдвинутые копии и «?» мерцают */
+.bs{position:relative;isolation:isolate;display:inline-block;vertical-align:middle;color:#000;font-size:22px;line-height:1;padding:5px 6px;margin:0 2px;font-weight:900;-webkit-text-stroke:1.5px #fff;background:radial-gradient(closest-side,#fdf4ff 0,#e879f9 28%,#a21caf 52%,#4c1d95 74%,#0000 100%);text-shadow:0 0 2px #fff,0 0 6px #d946ef,0 0 11px #7e22ce,2px 1px 0 #f03,-2px -1px 0 #22e6ff}
+.bs::before,.bs::after{content:'★';position:absolute;left:6px;top:5px;z-index:-1;pointer-events:none;color:#000;font-weight:900}
+.bs::before{-webkit-text-stroke:2px #ff2a55;transform:translate(-4px,2px);animation:gxsa 1.9s steps(1) infinite}
+.bs::after{-webkit-text-stroke:2px #22e6ff;transform:translate(4px,-2px);animation:gxsb 2.3s steps(1) infinite}
+.bs u{position:absolute;right:-7px;top:-7px;z-index:2;font:900 12px/1 monospace;color:#fff;-webkit-text-stroke:0;text-shadow:0 0 3px #000,1px 0 #f03,-1px 0 #22e6ff;pointer-events:none;animation:gxq 1.7s steps(1) infinite}
+@keyframes gxsa{0%,100%{opacity:1;transform:translate(-4px,2px)}30%{opacity:.35;transform:translate(-6px,-1px)}31%{opacity:1;transform:translate(-2px,3px)}62%{opacity:.6;transform:translate(-5px,0)}}
+@keyframes gxsb{0%,100%{opacity:1;transform:translate(4px,-2px)}25%{opacity:.4;transform:translate(6px,1px)}26%{opacity:1;transform:translate(2px,-3px)}70%{opacity:.6;transform:translate(5px,0)}}
+@keyframes gxq{0%,100%{opacity:1;transform:none}30%{opacity:0}45%{opacity:1;transform:translate(1px,2px) scaleX(-1)}70%{opacity:.5;transform:translate(-1px,-1px)}}
+.bs{animation:gxst 2.7s steps(1) infinite}
+@keyframes gxst{0%,100%{transform:none;opacity:1}40%{transform:translate(1px,0);opacity:.8}42%{transform:translate(-2px,1px) scaleX(-1);opacity:1}43%{transform:none}75%{opacity:.6}77%{opacity:1;transform:translateY(1px)}}
+.r1 .stars{font-size:22px;line-height:1.5;min-height:34px}
+.f.r1{padding:4px}
 .f .pt.gx::before{font-size:7px}
-.f .pt.gx .gxg:nth-of-type(n+7){display:none}
-.f .pt.gx .gxg::before{font-size:11px}
-.f .pt.gx .gxg:nth-of-type(n+3)::before{font-size:11px}
-.f .pt.gx .gxg:nth-of-type(11)::before,.f .pt.gx .gxg:nth-of-type(12)::before{font-size:7px}
-@media(max-width:260px){.pt.gx .gxg:nth-of-type(n+9){display:none}.pt.gx .gxg::before{font-size:12px!important}}
-@media(prefers-reduced-motion:reduce){.r1,.pt.gx img,.pt.gx .gxh,.pt.gx .gxs,.pt.gx .gxr,.pt.gx .gxc,.pt.gx .gxn,.pt.gx .gxp,.pt.gx .gxg,.pt.gx .gxg::before,.pt.gx::before,.pt.gx::after,.nm.gx,.nm.gx::after,.gxt,.bs{animation:none!important}.pt.gx .gxs,.pt.gx .gxr,.pt.gx .gxc,.pt.gx .gxn,.pt.gx .gxp,.pt.gx .gxg,.nm.gx::after{display:none!important}}
+.f .pt.gx .gxg{font-size:13px!important}
+.f .pt.gx .gxg:nth-of-type(n+5){display:none}
+.f .pt.gx .gxp2{display:none}
+@media(max-width:360px){.pt.gx .gxg{font-size:max(14px,calc(var(--fs,20px)*.72))}.pt.gx .gxg.w{font-size:11px}.f .pt.gx .gxg{font-size:13px!important}}
+@media(max-width:260px){.pt.gx .gxg:nth-of-type(n+6){display:none}.r1 .stars{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.r1,.r1::before,.r1::after,.pt.gx img,.pt.gx .gxh,.pt.gx .gxs,.pt.gx .gxr,.pt.gx .gxc,.pt.gx .gxn,.pt.gx .gxp,.pt.gx .gxp2,.pt.gx .gxg,.pt.gx .gxg u,.pt.gx::before,.pt.gx::after,.nm.gx,.nm.gx::after,.gxt,.bs,.bs::before,.bs::after,.bs u{animation:none!important}.pt.gx .gxn,.pt.gx::after{display:none!important}.pt.gx .gxg u:nth-child(n+2){display:none}.pt.gx .gxg u:nth-child(1){opacity:1}.r1::after{opacity:0}.pt.gx .gxs{transform:translateX(var(--s))}.pt.gx .gxs2,.pt.gx .gxs4,.pt.gx .gxs6{display:none}.pt.gx .gxr{transform:translateX(-4px)}.pt.gx .gxc{transform:translateX(4px)}.pt.gx .gxg{transform:none}}
 @media(prefers-reduced-motion:reduce){.r7,.pt.g7 img,.pt.g7::after,.g7t,.nm.gl,.r7 .stars{animation:none}}
 /* guild */
 .gem{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:12px;font-size:24px;border:2px solid #ffd76a;box-shadow:0 0 10px #ffd76a55}
@@ -584,11 +585,20 @@ function modal(h){$('modal').innerHTML=`<div class="modal" onclick="if(event.tar
 function closeM(){$('modal').innerHTML=''}
 const IMG_V={arata:2};function imgSrc(id){return 'img/'+id+'.jpg'+(IMG_V[id]?'?v='+IMG_V[id]:'')}
 function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} loading="lazy" src="${imgSrc(h.id)}" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
-const GX_G=['ᚠ','⟁','⌬','ᛉ','⏃','☍','ꙮ','҉','Ø̷̢','Ʌ̴͎','ERR_UNKNOWN','██▒▒░░'];
-const GX_LAYERS='<i class="gxh"></i><i class="gxs"></i><i class="gxs gxs2"></i><i class="gxs gxs3"></i><i class="gxr"></i><i class="gxc"></i><i class="gxn"></i><i class="gxp"></i><i class="gxp gxp2"></i>'+GX_G.map(s=>'<b class="gxg" aria-hidden="true">'+s+'</b>').join('');
+// неизвестные символы: 8 слотов по 3 варианта (виден ровно один, смена шагами); [left%, top%, размер px, длительность, класс, [[текст,цвет],...]]
+const GX_SL=[
+ [5,7,24,'3.3s','',[['ᚠ̷̢',0],['⟁',1],['ꙮ',2]]],
+ [74,5,22,'2.9s','',[['⌬',1],['҉',0],['☍̸',2]]],
+ [9,33,22,'3.7s','',[['Ø̷̢',2],['Ʌ̴͎',0],['⍾',1]]],
+ [76,29,22,'3.1s','',[['ᛉ',0],['⏃̴',1],['⌇',2]]],
+ [0,19,14,'2.6s','w',[['ERR_UNKNOWN',2],['0xDEAD',0],['nu11',1]]],
+ [7,56,20,'3.5s','',[['██▒▒░░',1],['▓▒░',0],['⎔',2]]],
+ [68,52,24,'4.1s','',[['Ʌ̴͎̈',0],['ꙮ',2],['Ø̷̢',1]]],
+ [0,69,14,'3.0s','w',[['0xDEAD',1],['██▒▒░░',2],['ERR_UNKNOWN',0]]]];
+const GX_LAYERS='<i class="gxh"></i><i class="gxs gxs1"></i><i class="gxs gxs2"></i><i class="gxs gxs3"></i><i class="gxs gxs4"></i><i class="gxs gxs5"></i><i class="gxs gxs6"></i><i class="gxr"></i><i class="gxc"></i><i class="gxn"></i><i class="gxp"></i><i class="gxp gxp2"></i>'+GX_SL.map(g=>'<b class="gxg'+(g[4]?' '+g[4]:'')+'" aria-hidden="true" style="left:'+g[0]+'%;top:'+g[1]+'%;--fs:'+g[2]+'px;--t:'+g[3]+'">'+g[5].map(v=>'<u class="c'+v[1]+'">'+v[0]+'</u>').join('')+'</b>').join('');
 function portrait(h){const g7=h.r===7,gx=!!h.secret;return `<div class="pt${g7?' g7':gx?' gx':''}"${gx?` style="--im:url(${imgSrc(h.id)})"`:''}>${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}${gx?GX_LAYERS:''}<span class="nm${g7?' gl':gx?' gx':''}">${esc(h.name)}</span></div>`}
 function nmG(h){return h.r===7?`<span class="g7t">${esc(h.name)}</span>`:h.secret?`<span class="gxt">${esc(h.name)}</span>`:esc(h.name)}
-function stars(r){return r===1?'<span class="bs">★</span>':'★'.repeat(r)}
+function stars(r){return r===1?'<span class="bs">★<u>?</u></span>':'★'.repeat(r)}
 
 // ====== АККАУНТЫ ======
 const K_USERS='as_users',K_CUR='as_cur';
@@ -753,7 +763,7 @@ let B=null;
 function vBattle(){
  if(!B){const tm=S.team.map(id=>H(id));return `<div class="panel"><h3>👥 Ваш отряд</h3><div class="grid" style="grid-template-columns:repeat(3,1fr)">${tm.map(h=>`<div class="card r${h.r}">${portrait(h)}</div>`).join('')||'<div class="small">Отряд пуст — получите героев в призыве.</div>'}</div><button class="btn sm" onclick="tab='heroes';render()">Изменить отряд</button></div>`+
   STAGES.map((s,i)=>`<div class="panel row sb" style="opacity:${i>S.cleared?.45:1}"><div style="min-width:0"><b>${s.n}</b><div class="small">${s.en.map(e=>e[1]+' '+e[0]).join(' · ')}<br>Награда: 💎${i>=S.cleared?s.g*10:Math.round(s.g*3)} 🪙${s.g*5}${i>=S.cleared?' (первый раз)':''}</div></div><button class="btn ${s.boss?'gold':''}" ${i>S.cleared||!S.team.length?'disabled':''} onclick="startB(${i})">${i<S.cleared?'Повтор':i>S.cleared?'🔒':'В бой'}</button></div>`).join('')}
- const f=B.team.map((u,i)=>u.blocked?`<div class="f dead">${portrait(u.h)}<div class="small" style="color:#f87;font-weight:700;opacity:1;overflow-wrap:anywhere">🔒 заблокирован</div><div class="small">баффы → Арата</div></div>`:`<div class="f ${u.hp<=0?'dead':''}">${portrait(u.h)}<div class="bar hp"><i style="width:${Math.max(0,u.hp)/u.max*100}%"></i></div><div class="small">❤ ${fmtHp(Math.max(0,u.hp))}</div><div class="bar np"><i style="width:${u.np}%"></i></div><div class="small">NP ${u.np}%${u.buff?' ⚔':''}</div>
+ const f=B.team.map((u,i)=>u.blocked?`<div class="f${u.h.secret?' r1':''} dead">${portrait(u.h)}<div class="small" style="color:#f87;font-weight:700;opacity:1;overflow-wrap:anywhere">🔒 заблокирован</div><div class="small">баффы → Арата</div></div>`:`<div class="f${u.h.secret?' r1':''} ${u.hp<=0?'dead':''}">${portrait(u.h)}<div class="bar hp"><i style="width:${Math.max(0,u.hp)/u.max*100}%"></i></div><div class="small">❤ ${fmtHp(Math.max(0,u.hp))}</div><div class="bar np"><i style="width:${u.np}%"></i></div><div class="small">NP ${u.np}%${u.buff?' ⚔':''}</div>
  <button class="btn sm" ${u.cd||u.hp<=0?'disabled':''} onclick="useSkill(${i})">${u.h.skill.n}${u.cd?' ('+u.cd+')':''}</button>
  <button class="btn sm gold" ${u.np<100||u.hp<=0||B.pick.length>=3||B.pick.some(p=>p.np&&p.u===i)?'disabled':''} onclick="pickNP(${i})">NP</button></div>`).join('');
  const e=B.en.map((x,i)=>`<div class="f ${x.hp<=0?'dead':''}" style="cursor:pointer;${B.tgt===i&&x.hp>0?'border-color:#f43f5e;box-shadow:0 0 10px #f43f5e':''}" onclick="B.tgt=${i};render()"><div class="pt" style="display:flex;align-items:center;justify-content:center;font-size:38px;background:#2a0f1f">${x.e}</div><b>${x.n}</b> <span class="small">${CLS_IC[x.cls]}</span><div class="bar ehp"><i style="width:${Math.max(0,x.hp)/x.max*100}%"></i></div><div class="small">❤ ${fmtHp(Math.max(0,x.hp))}</div></div>`).join('');
@@ -3652,9 +3662,9 @@ function dvSync(force){if(!S||!ME)return Promise.resolve();if(DVSYNC)return DVSY
 setInterval(()=>{try{if(document.hidden||!S||!ME)return;if(tab==='wboss'||Date.now()-WLAST>6e4){WLAST=Date.now();dvSync()}}catch(e){}},15000);
 setTimeout(()=>{try{if(S&&ME)dvSync()}catch(e){}},4000);
 
-// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V2) ======
+// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V3) ======
 // Trinity Seven (Тринити: Семеро магов). Тема Imperium/Impero (Господство): копирует и стирает магию. Чёрный Императорский меч Юдекка — Меч Повелителя Демонов.
-const AR_MARK='ASTRAL_ARATA_V2',AR_ID='arata',AR_PRICE=99999;
+const AR_MARK='ASTRAL_ARATA_V3',AR_ID='arata',AR_PRICE=99999;
 function arBz(s){let o='';for(const ch of String(s)){o+=ch;if(/[А-Яа-яЁёA-Za-z0-9]/.test(ch)&&(o.length*7)%5===0)o+='\u0336'}return o}
 const AR_SD='Юдекка — Меч Повелителя Демонов: мгновенный <s>огромный</s> невероятный урон по всем врагам, отряд исцелён и воскрешён на 100%, NP +100%, неуязвимость 2 хода, 2 хода вне очереди, на врагов ложится «Imperium» (безумный дебафф). Мир-босс: ≈2.5% его макс. HP за применение.';
 const AR_D=[
