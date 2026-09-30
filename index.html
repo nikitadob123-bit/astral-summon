@@ -114,23 +114,76 @@ input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;bac
 .r1{border:3px solid #000!important;background:repeating-linear-gradient(90deg,#0000 0 7px,#a0f1 7px 8px),linear-gradient(#050009,#14000e)!important;box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000;animation:gxb 2.6s steps(1) infinite}
 @keyframes gxb{0%,100%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}18%{box-shadow:-3px 0 0 1px #f03,3px 0 0 1px #0ff,0 0 12px #000,inset 0 0 12px #000}19%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}52%{box-shadow:4px 2px 0 1px #a0f,-4px -1px 0 1px #f03,inset 0 0 18px #000}54%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}81%{box-shadow:0 0 0 1px #fff3,0 0 16px #a0f8,inset 0 0 12px #000}83%{box-shadow:0 0 0 1px #6a2a9a,0 0 10px #000,inset 0 0 12px #000}}
 .pt.gx{background:#000;contain:paint}
-.pt.gx .gxh{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 0 0,#000 0 22%,transparent 23%),radial-gradient(circle at 100% 18%,#000 0 15%,transparent 16%),radial-gradient(circle at 6% 100%,#000 0 19%,transparent 20%),radial-gradient(circle at 100% 100%,#000 0 24%,transparent 25%),linear-gradient(90deg,#000 0 3%,transparent 3% 97%,#000 97%);animation:gxh 3.4s steps(1) infinite}
-@keyframes gxh{0%,100%{transform:none;opacity:1}30%{transform:scale(1.06);opacity:.85}31%{transform:none;opacity:1}62%{transform:translate(2px,-1px) scale(1.1);opacity:.7}64%{transform:scaleX(-1);opacity:1}66%{transform:none}}
-.pt.gx .gxs{position:absolute;inset:0;z-index:1;pointer-events:none;background:var(--im) center/cover;opacity:0;clip-path:inset(30% 0 52% 0);animation:gxs 2.9s steps(1) infinite;filter:hue-rotate(-50deg) saturate(2) contrast(1.3)}
+.pt.gx>i,.pt.gx>b{position:absolute;pointer-events:none;display:block}
+.pt.gx .gxh{inset:0;z-index:2;background:radial-gradient(circle at 0 0,#000 0 15%,transparent 16%),radial-gradient(circle at 100% 22%,#000 0 9%,transparent 10%),radial-gradient(circle at 4% 100%,#000 0 12%,transparent 13%),radial-gradient(circle at 100% 100%,#000 0 15%,transparent 16%),linear-gradient(90deg,#000 0 2%,transparent 2% 98%,#000 98%);animation:gxh 3.4s steps(1) infinite}
+@keyframes gxh{0%,100%{transform:none;opacity:1}30%{transform:scale(1.05);opacity:.85}31%{transform:none;opacity:1}62%{transform:translate(2px,-1px) scale(1.08);opacity:.7}64%{transform:scaleX(-1);opacity:1}66%{transform:none}}
+/* горизонтальные глитч-полосы (копии портрета, clip-path) */
+.pt.gx .gxs{inset:0;z-index:1;background:var(--im) center top/cover,#f0a;background-blend-mode:multiply,normal;opacity:0;clip-path:inset(30% 0 52% 0);animation:gxs 2.9s steps(1) infinite}
 @keyframes gxs{0%,55%,100%{opacity:0;transform:none}56%{opacity:.85;clip-path:inset(14% 0 70% 0);transform:translateX(-7px)}58%{opacity:.85;clip-path:inset(58% 0 22% 0);transform:translateX(9px)}60%{opacity:.6;clip-path:inset(40% 0 40% 0);transform:translateX(-3px) scaleX(-1)}62%{opacity:0}86%{opacity:.7;clip-path:inset(78% 0 6% 0);transform:translateX(6px)}88%{opacity:0}}
+.pt.gx .gxs2{background:var(--im) center top/cover,#0ff;background-blend-mode:multiply,normal;animation:gxs2 3.7s steps(1) infinite}
+@keyframes gxs2{0%,20%,100%{opacity:0;transform:none}21%{opacity:.8;clip-path:inset(6% 0 88% 0);transform:translateX(11px)}22%{opacity:.8;clip-path:inset(22% 0 70% 0);transform:translateX(-9px)}24%{opacity:0}47%{opacity:.75;clip-path:inset(66% 0 26% 0);transform:translateX(-12px)}48%{opacity:.75;clip-path:inset(48% 0 46% 0);transform:translateX(8px)}50%{opacity:0}73%{opacity:.7;clip-path:inset(90% 0 4% 0);transform:translateX(14px)}75%{opacity:0}}
+.pt.gx .gxs3{background:var(--im) center top/cover;animation:gxs3 4.9s steps(1) infinite}
+@keyframes gxs3{0%,33%,100%{opacity:0;transform:none}34%{opacity:.9;clip-path:inset(35% 0 60% 0);transform:translateX(-16px)}35%{opacity:.9;clip-path:inset(52% 0 44% 0);transform:translateX(13px)}36%{opacity:.9;clip-path:inset(12% 0 83% 0);transform:translateX(-6px) scaleX(-1)}37%{opacity:0}81%{opacity:.85;clip-path:inset(72% 0 20% 0);transform:translateX(17px)}82%{opacity:.85;clip-path:inset(28% 0 66% 0);transform:translateX(-14px)}84%{opacity:0}}
+/* лёгкое RGB-расслоение: две смещённые тонированные копии (mix-blend + background-blend, без filter) */
+.pt.gx .gxr,.pt.gx .gxc{inset:0;z-index:1;mix-blend-mode:screen;opacity:.3;background:var(--im) center top/cover,#f02;background-blend-mode:multiply,normal;transform:translateX(-3px);animation:gxr 2.4s steps(1) infinite}
+.pt.gx .gxc{background:var(--im) center top/cover,#0ef;background-blend-mode:multiply,normal;transform:translateX(3px);animation-name:gxc2;animation-duration:3.1s}
+@keyframes gxr{0%,100%{transform:translateX(-3px)}25%{transform:translate(-5px,1px)}50%{transform:translateX(-2px)}80%{transform:translate(-7px,-1px);opacity:.42}82%{opacity:.3;transform:translateX(-3px)}}
+@keyframes gxc2{0%,100%{transform:translateX(3px)}30%{transform:translate(5px,-1px)}55%{transform:translateX(2px)}85%{transform:translate(8px,1px);opacity:.42}87%{opacity:.3;transform:translateX(3px)}}
 .pt.gx img{animation:gxi 4.1s steps(1) infinite}
-@keyframes gxi{0%,70%,100%{transform:none;filter:none}71%{transform:translateX(3px);filter:contrast(1.4) saturate(1.6)}73%{transform:translateX(-4px) skewX(2deg);filter:hue-rotate(40deg)}75%{transform:none;filter:none}92%{filter:invert(.8) contrast(1.3)}93%{filter:none}}
+@keyframes gxi{0%,70%,100%{transform:none}71%{transform:translateX(3px)}73%{transform:translateX(-4px) skewX(2deg)}75%{transform:none}92%{transform:translateX(-2px) scaleY(1.02)}93%{transform:none}}
+/* цифровые помехи и битые пиксели */
+.pt.gx .gxn{left:0;right:0;top:-12px;bottom:0;z-index:2;background:repeating-linear-gradient(0deg,#0000 0 5px,#c6f22 5px 6px,#0000 6px 11px,#0ff1 11px 12px);opacity:.75;animation:gxn .8s steps(4) infinite}
+@keyframes gxn{to{transform:translateY(12px)}}
+.pt.gx .gxp{inset:0;z-index:2;opacity:0;background:linear-gradient(#fff,#fff) 14% 22%/7% 2.4%,linear-gradient(#f0f,#f0f) 71% 9%/5% 2%,linear-gradient(#0ff,#0ff) 33% 58%/9% 1.6%,linear-gradient(#000,#000) 56% 34%/10% 3%,linear-gradient(#a0f,#a0f) 84% 47%/4% 4%,linear-gradient(#f03,#f03) 8% 76%/6% 1.8%,linear-gradient(#000,#000) 47% 83%/8% 2.6%,linear-gradient(#fff,#fff) 91% 68%/3% 3%;background-repeat:no-repeat;animation:gxp 3.3s steps(1) infinite}
+.pt.gx .gxp2{background-position:60% 12%,20% 40%,80% 70%,10% 90%,45% 62%,92% 20%,30% 8%,66% 52%;animation:gxp2 4.3s steps(1) infinite}
+@keyframes gxp{0%,8%,14%,38%,45%,69%,76%,100%{opacity:0}10%{opacity:1}12%{opacity:1;transform:translate(6%,9%)}40%{opacity:1;transform:translate(-8%,4%)}42%{opacity:.8;transform:translate(9%,-6%)}71%{opacity:1;transform:translate(-4%,-11%)}73%{opacity:1;transform:translate(3%,12%)}}
+@keyframes gxp2{0%,17%,22%,52%,58%,88%,100%{opacity:0}18%{opacity:1;transform:scaleX(-1)}20%{opacity:1;transform:translate(-7%,8%)}54%{opacity:1;transform:translate(10%,-9%)}56%{opacity:.85;transform:translate(-3%,5%)}90%{opacity:1;transform:scale(-1,-1)}}
+/* разбросанные неизвестные символы: текст в DOM (<b class="gxg">), видимый глиф меняется через ::before, мерцает по opacity */
+.pt.gx .gxg{z-index:3;font-size:0;line-height:0;color:#e9d5ff;text-shadow:1px 0 #f03,-1px 0 #0ff;font-weight:700;font-family:'Noto Sans Symbols','Noto Sans Symbols 2','Segoe UI Symbol',system-ui,sans-serif;white-space:nowrap;animation:gxgm 3.7s steps(1) infinite}
+.pt.gx .gxg::before{content:'ᚠ';font-size:15px;line-height:1;opacity:0;animation:gxgA 2.7s steps(1) infinite,gxgo 3.9s steps(1) infinite}
+@keyframes gxgA{0%{content:'ᚠ'}25%{content:'⟁'}50%{content:'ᛉ'}75%{content:'⌬'}}
+@keyframes gxgB{0%{content:'ꙮ'}20%{content:'҉'}40%{content:'☍'}60%{content:'⏃'}80%{content:'X͎'}}
+@keyframes gxgC{0%{content:'Ø̷̢'}20%{content:'Ʌ̴͎'}40%{content:'Ǝ̸̡R̷'}60%{content:'▓▒░'}80%{content:'H̷̢̛E̴'}}
+@keyframes gxgD{0%{content:'ERR_UNKNOWN'}20%{content:'██▒▒░░'}40%{content:'0x7F..?'}60%{content:'nu11'}80%{content:'??_??'}}
+@keyframes gxgo{0%,100%{opacity:0}8%{opacity:.95}20%{opacity:.4}24%{opacity:0}42%{opacity:.7}55%{opacity:0}58%{opacity:1}64%{opacity:.25}66%{opacity:0}78%{opacity:.85}90%{opacity:0}}
+@keyframes gxgm{0%,100%{transform:none}30%{transform:translate(2px,-1px)}31%{transform:translate(-3px,1px) scaleX(-1)}64%{transform:translate(1px,3px) skewX(-8deg)}65%{transform:none}}
+.pt.gx .gxg:nth-of-type(1){left:6%;top:9%}
+.pt.gx .gxg:nth-of-type(2){left:80%;top:6%;animation-duration:2.9s}
+.pt.gx .gxg:nth-of-type(3){left:12%;top:38%;animation-duration:4.3s}
+.pt.gx .gxg:nth-of-type(4){left:86%;top:33%;animation-duration:3.1s}
+.pt.gx .gxg:nth-of-type(5){left:44%;top:14%;animation-duration:2.3s}
+.pt.gx .gxg:nth-of-type(6){left:70%;top:58%;animation-duration:4.7s}
+.pt.gx .gxg:nth-of-type(7){left:4%;top:60%;animation-duration:3.3s}
+.pt.gx .gxg:nth-of-type(8){left:52%;top:47%;animation-duration:5.1s}
+.pt.gx .gxg:nth-of-type(9){left:22%;top:24%;animation-duration:2.1s}
+.pt.gx .gxg:nth-of-type(10){left:62%;top:26%;animation-duration:3.9s}
+.pt.gx .gxg:nth-of-type(11){left:30%;top:68%;animation-duration:2.6s}
+.pt.gx .gxg:nth-of-type(12){left:60%;top:70%;animation-duration:3.5s}
+.pt.gx .gxg:nth-of-type(2)::before,.pt.gx .gxg:nth-of-type(6)::before,.pt.gx .gxg:nth-of-type(9)::before{animation-name:gxgB,gxgo;animation-duration:3.1s,4.3s}
+.pt.gx .gxg:nth-of-type(3)::before,.pt.gx .gxg:nth-of-type(7)::before,.pt.gx .gxg:nth-of-type(10)::before{animation-name:gxgC,gxgo;animation-duration:2.3s,3.3s;font-size:17px}
+.pt.gx .gxg:nth-of-type(4)::before,.pt.gx .gxg:nth-of-type(8)::before{animation-name:gxgB,gxgo;animation-duration:3.7s,5.3s;font-size:19px}
+.pt.gx .gxg:nth-of-type(11)::before,.pt.gx .gxg:nth-of-type(12)::before{animation-name:gxgD,gxgo;animation-duration:2.9s,3.6s;font:700 9px/1 monospace;content:'ERR_UNKNOWN';color:#f6f}
+.pt.gx .gxg:nth-of-type(11)::before{animation-delay:-.8s,-1.7s}.pt.gx .gxg:nth-of-type(12)::before{animation-delay:-1.9s,-.4s}
+.pt.gx .gxg:nth-of-type(5)::before{animation-delay:-1.2s,-2.1s}.pt.gx .gxg:nth-of-type(8)::before{animation-delay:-2.2s,-.9s}
 .pt.gx::before{content:'▓ 0x00';position:absolute;left:3px;top:2px;z-index:3;font:700 9px/1 monospace;color:#d8b4ff;text-shadow:1px 0 #f03,-1px 0 #0ff;pointer-events:none;animation:gxc 2.2s steps(1) infinite}
-@keyframes gxc{0%{content:'▓ 0x00'}20%{content:'Ǝ?#░ ..'}40%{content:'nu11 ▒'}60%{content:'░▓ ???'}80%{content:'0xFF ▚'}}
+@keyframes gxc{0%{content:'▓ 0x00'}14%{content:'Ǝ?#░ ..'}28%{content:'ERR_UNKNOWN'}42%{content:'nu11 ▒'}57%{content:'Ø̷̢ ░▓ ???'}71%{content:'██▒▒░░'}85%{content:'0xFF ▚'}}
 .pt.gx::after{content:'';position:absolute;left:0;right:0;height:9%;top:-10%;z-index:3;background:linear-gradient(#0000,#a0f4,#0000);pointer-events:none;animation:gxbar 5.2s steps(24) infinite}
 @keyframes gxbar{to{top:108%}}
 .nm.gx,.gxt{color:#fff;font-weight:800;text-shadow:1px 0 #f03,-1px 0 #a0f;animation:gxt 3.1s steps(1) infinite}
 @keyframes gxt{0%,100%{text-shadow:1px 0 #f03,-1px 0 #a0f;transform:none}40%{text-shadow:-2px 0 #0ff,2px 0 #f03;transform:translateX(1px)}42%{text-shadow:1px 0 #f03,-1px 0 #a0f;transform:none}}
 .nm.gx{z-index:4}
+/* искажение имени: на отдельных кадрах поверх подставляется zalgo/подмена символов (настоящее имя остаётся в DOM) */
+.nm.gx::after{content:'';position:absolute;inset:0;padding:inherit;background:linear-gradient(#0000,#000 55%);color:#f0abfc;text-shadow:1px 0 #f03,-1px 0 #0ff;opacity:0;pointer-events:none;overflow:hidden;animation:gxnm 3.7s steps(1) infinite}
+@keyframes gxnm{0%,18%,30%,52%,66%,84%,100%{opacity:0;content:''}19%{opacity:1;content:'К̷̢а̸̛с̶у̵г̷а̸ А̴р̶а̸т̷а̵'}22%{opacity:1;content:'Ka5uga Ar4ta ▒▒'}31%{opacity:1;content:'ERR_UNKNOWN'}34%{opacity:1;content:'Ⱪ⟁ᛊ⏃ ᚫᚱ⏃ᛏ⏃'}53%{opacity:1;content:'Касуга ██▒▒░░'}56%{opacity:1;content:'Ǝ̷R̴Ø̷̢R̸ ?̵?̶?̷'}67%{opacity:1;content:'П̵о̷в̸е̷л̴и̶т̸е̷л̵ь̶ Д̷е̸м̷о̴н̵о̷в̸'}70%{opacity:1;content:'nu11 nu11 nu11'}85%{opacity:1;content:'К̸а̷с̴у̶г̵а̸ ▓▒░ Ā̷r̴a̶t̷a̵'}}
 .bs{display:inline-block;color:#000;-webkit-text-stroke:1px #d8b4ff;text-shadow:0 0 4px #a0f,1px 0 #f03,-1px 0 #0ff;font-size:15px;line-height:1;animation:gxt 2.7s steps(1) infinite}
 .r1 .stars{font-size:15px}
 .f .pt.gx::before{font-size:7px}
-@media(prefers-reduced-motion:reduce){.r1,.pt.gx img,.pt.gx .gxh,.pt.gx .gxs,.pt.gx::before,.pt.gx::after,.nm.gx,.gxt,.bs{animation:none!important}.pt.gx .gxs{display:none}}
+.f .pt.gx .gxg:nth-of-type(n+7){display:none}
+.f .pt.gx .gxg::before{font-size:11px}
+.f .pt.gx .gxg:nth-of-type(n+3)::before{font-size:11px}
+.f .pt.gx .gxg:nth-of-type(11)::before,.f .pt.gx .gxg:nth-of-type(12)::before{font-size:7px}
+@media(max-width:260px){.pt.gx .gxg:nth-of-type(n+9){display:none}.pt.gx .gxg::before{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){.r1,.pt.gx img,.pt.gx .gxh,.pt.gx .gxs,.pt.gx .gxr,.pt.gx .gxc,.pt.gx .gxn,.pt.gx .gxp,.pt.gx .gxg,.pt.gx .gxg::before,.pt.gx::before,.pt.gx::after,.nm.gx,.nm.gx::after,.gxt,.bs{animation:none!important}.pt.gx .gxs,.pt.gx .gxr,.pt.gx .gxc,.pt.gx .gxn,.pt.gx .gxp,.pt.gx .gxg,.nm.gx::after{display:none!important}}
 @media(prefers-reduced-motion:reduce){.r7,.pt.g7 img,.pt.g7::after,.g7t,.nm.gl,.r7 .stars{animation:none}}
 /* guild */
 .gem{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:12px;font-size:24px;border:2px solid #ffd76a;box-shadow:0 0 10px #ffd76a55}
@@ -529,8 +582,11 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
 function modal(h){$('modal').innerHTML=`<div class="modal" onclick="if(event.target===this)closeM()"><div class="inner">${h}</div></div>`}
 function closeM(){$('modal').innerHTML=''}
-function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} loading="lazy" src="img/${h.id}.jpg" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
-function portrait(h){const g7=h.r===7,gx=!!h.secret;return `<div class="pt${g7?' g7':gx?' gx':''}"${gx?` style="--im:url(img/${h.id}.jpg)"`:''}>${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}${gx?'<i class="gxh"></i><i class="gxs"></i>':''}<span class="nm${g7?' gl':gx?' gx':''}">${esc(h.name)}</span></div>`}
+const IMG_V={arata:2};function imgSrc(id){return 'img/'+id+'.jpg'+(IMG_V[id]?'?v='+IMG_V[id]:'')}
+function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} loading="lazy" src="${imgSrc(h.id)}" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
+const GX_G=['ᚠ','⟁','⌬','ᛉ','⏃','☍','ꙮ','҉','Ø̷̢','Ʌ̴͎','ERR_UNKNOWN','██▒▒░░'];
+const GX_LAYERS='<i class="gxh"></i><i class="gxs"></i><i class="gxs gxs2"></i><i class="gxs gxs3"></i><i class="gxr"></i><i class="gxc"></i><i class="gxn"></i><i class="gxp"></i><i class="gxp gxp2"></i>'+GX_G.map(s=>'<b class="gxg" aria-hidden="true">'+s+'</b>').join('');
+function portrait(h){const g7=h.r===7,gx=!!h.secret;return `<div class="pt${g7?' g7':gx?' gx':''}"${gx?` style="--im:url(${imgSrc(h.id)})"`:''}>${imgTag(h,h.hue%2?'transform:scaleX(-1)':'')}${gx?GX_LAYERS:''}<span class="nm${g7?' gl':gx?' gx':''}">${esc(h.name)}</span></div>`}
 function nmG(h){return h.r===7?`<span class="g7t">${esc(h.name)}</span>`:h.secret?`<span class="gxt">${esc(h.name)}</span>`:esc(h.name)}
 function stars(r){return r===1?'<span class="bs">★</span>':'★'.repeat(r)}
 
@@ -3596,9 +3652,9 @@ function dvSync(force){if(!S||!ME)return Promise.resolve();if(DVSYNC)return DVSY
 setInterval(()=>{try{if(document.hidden||!S||!ME)return;if(tab==='wboss'||Date.now()-WLAST>6e4){WLAST=Date.now();dvSync()}}catch(e){}},15000);
 setTimeout(()=>{try{if(S&&ME)dvSync()}catch(e){}},4000);
 
-// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V1) ======
+// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V2) ======
 // Trinity Seven (Тринити: Семеро магов). Тема Imperium/Impero (Господство): копирует и стирает магию. Чёрный Императорский меч Юдекка — Меч Повелителя Демонов.
-const AR_MARK='ASTRAL_ARATA_V1',AR_ID='arata',AR_PRICE=99999;
+const AR_MARK='ASTRAL_ARATA_V2',AR_ID='arata',AR_PRICE=99999;
 function arBz(s){let o='';for(const ch of String(s)){o+=ch;if(/[А-Яа-яЁёA-Za-z0-9]/.test(ch)&&(o.length*7)%5===0)o+='\u0336'}return o}
 const AR_SD='Юдекка — Меч Повелителя Демонов: мгновенный <s>огромный</s> невероятный урон по всем врагам, отряд исцелён и воскрешён на 100%, NP +100%, неуязвимость 2 хода, 2 хода вне очереди, на врагов ложится «Imperium» (безумный дебафф). Мир-босс: ≈2.5% его макс. HP за применение.';
 const AR_D=[
