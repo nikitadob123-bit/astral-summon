@@ -3409,7 +3409,32 @@ async function wbFlush0(){const p=dvP(),o=p.out;if(!o)return null;
  try{await raidAddDmg(o.n,r.real||0)}catch(e){}
  return r}
 function wbStartGuard(){if(!S.team.length)return toast('Соберите отряд во вкладке «Герои»'),false;if(wbTriesLeft()<=0)return toast('Попытки на сегодня закончились'),false;return true}
-async function wbStart(){if(B||WBUSY||!wbStartGuard())return;WBUSY=1;
+// ---------- музыка мирового босса (ASTRAL_WBMUSIC_V1) ----------
+// HTMLAudioElement, ленивое создание (preload='none'), play() стартует внутри клика по «В бой», любые ошибки гасятся.
+const WBM_MARK='ASTRAL_WBMUSIC_V1',WBM_SRC='audio/worldboss.mp3';
+const WBM=(()=>{let a=null,dead=0,pend=0;
+ const musOn=()=>{try{return !!AUD.on.m}catch(e){return true}};
+ const inB=()=>{try{return !!(B&&B.guild&&B.guild.wb&&tab==='battle')}catch(e){return false}};
+ function mk(){if(a||dead)return a;try{if(typeof Audio!=='function'){dead=1;return null}const e=new Audio();e.preload='none';e.loop=true;try{e.volume=.85}catch(x){}try{e.setAttribute('playsinline','');e.setAttribute('webkit-playsinline','')}catch(x){}e.addEventListener('error',()=>{dead=1;try{pend=0}catch(x){}});e.src=WBM_SRC;a=e}catch(x){a=null}return a}
+ function go(){try{const e=a;if(!e)return;const p=e.play();if(p&&typeof p.catch==='function')p.catch(()=>{})}catch(x){}}
+ function pause(z){try{if(a){a.pause();if(z)a.currentTime=0}}catch(x){}}
+ function synth(){try{if(musOn())AUD.setMode(audMode())}catch(x){}}
+ return{
+  busy:()=>!dead&&(pend||inB()),
+  // внутри обработчика клика: разблокировать и запустить с 0:00
+  begin(){try{pend=1;if(a&&dead)dead=0;if(!musOn())return;if(!mk())return;try{a.currentTime=0}catch(x){}try{AUD.setMode('none')}catch(x){}go()}catch(x){}},
+  // бой создан: песня строго с начала боя
+  commit(){try{if(!musOn())return;if(!mk())return;try{a.currentTime=0}catch(x){}go()}catch(x){}},
+  // старт не удался / конец хода окна: снять «ожидание» и выровнять состояние
+  done(){try{pend=0;this.sync()}catch(x){}},
+  stop(){try{pend=0;pause(1);synth()}catch(x){}},
+  // согласовать музыку с состоянием игры (вызывается из render, переключателя музыки, visibilitychange)
+  sync(){try{const want=!dead&&(pend||inB())&&musOn()&&!(typeof document!=='undefined'&&document.hidden);
+   if(want){if(!mk())return;if(a.paused)go()}else if(a&&!a.paused){pause(!(!dead&&(pend||inB())))}
+   if(dead||!(pend||inB()))synth()}catch(x){}},
+  _t:{reset(){a=null;dead=0;pend=0},get el(){return a}}}})();
+try{document.addEventListener('visibilitychange',()=>WBM.sync());window.addEventListener('pagehide',()=>WBM.stop());setInterval(()=>WBM.sync(),2000)}catch(e){}
+async function wbStart(){if(B||WBUSY||!wbStartGuard())return;WBUSY=1;WBM.begin();
  try{const ok=await wbEnsure();const d=wbCur();if(!ok||!d){toast('Нет связи с сервером — попробуйте позже');return}
   if(wbEnded(d)){toast('Босс уже побеждён — скоро появится следующий');render();return}
   if(dvP().out){await wbFlush0().catch(()=>{})}
@@ -3421,9 +3446,9 @@ async function wbStart(){if(B||WBUSY||!wbStartGuard())return;WBUSY=1;
   const st={n:'Мир-босс: '+def.n,boss:true,en:[[def.n,def.e,def.cls,d.hp,atk]]};
   B={si:-1,guild:{wb:d.n,idx:d.idx,dmg:0,maxT:WB_MAXT,mech:def.mech,mult,raid:ra&&ra.on?{mul:ra.mul}:null},shield:ra&&ra.on?ra.shield:1,st,turn:1,tgt:0,pick:[],
    log:['🌍 '+def.n+' — мировой босс! '+def.d+'. Ходов: '+WB_MAXT+(ra&&ra.on?' · 🤝 рейд-бонус ×'+ra.mul.toFixed(1):'')],team:tm,en:st.en.map(e=>({n:e[0],e:e[1],cls:e[2],hp:e[3],max:d.max,atk:e[4]}))};
-  tab='battle';deal();render();window.scrollTo(0,0)}
- finally{WBUSY=0}}
-function wbEnd(Bx,silent){const g=Bx.guild,dmg=Math.max(0,Math.round(g.dmg)),p=dvP();B=null;
+  WBM.commit();tab='battle';deal();render();window.scrollTo(0,0)}
+ finally{WBUSY=0;WBM.done()}}
+function wbEnd(Bx,silent){const g=Bx.guild,dmg=Math.max(0,Math.round(g.dmg)),p=dvP();B=null;WBM.stop();
  const gp=10,gold=5000,gems=150;S.gems+=gems;S.gold+=gold;S.gp=(S.gp||0)+gp;addXp(gXp(15));S.st.battles++;prog('battle');
  p.out={n:g.wb,dmg,id:Date.now().toString(36)+Math.random().toString(36).slice(2,6)};save();tab='wboss';WV='boss';render();
  const pct=Math.max(0,dmg/(wbDoc(g.wb)?wbDoc(g.wb).max:1)*100);
@@ -3714,19 +3739,19 @@ const AUD=(()=>{
   if(boss&&s===0&&bar%2===0)tone(mf(root+12),t,spb*16,'sawtooth',.05,d,{lp:500,a:.5});
  }
  function tick(){try{tick0()}catch(e){}}
- function tick0(){if(!ctx||!mode)return;const p=P[mode],spb=60/p.bpm/4;while(nextT<ctx.currentTime+.35){sched(mode,step,Math.max(nextT,ctx.currentTime),spb);nextT+=spb;step++}}
+ function tick0(){if(!ctx||!mode||!P[mode])return;const p=P[mode],spb=60/p.bpm/4;while(nextT<ctx.currentTime+.35){sched(mode,step,Math.max(nextT,ctx.currentTime),spb);nextT+=spb;step++}}
  function setMode(m){try{setMode0(m)}catch(e){}}
  function setMode0(m){if(!init())return;if(m===mode)return;mode=m;step=0;nextT=ctx.currentTime+.08;['menu','battle','boss'].forEach(k=>{mg[k].gain.cancelScheduledValues(ctx.currentTime);mg[k].gain.setTargetAtTime(k===m?(k==='menu'?.9:.85):0,ctx.currentTime,k===m?.25:.15)});if(!timer)timer=setInterval(tick,90);tick()}
- function setOn(k,v){on[k]=v;try{localStorage.setItem(k==='m'?'as_mus':'as_sfx',v?'1':'0')}catch(e){}try{if(ctx){const g=k==='m'?mus:sfx;g.gain.setTargetAtTime(v?(k==='m'?1:2.2):0,ctx.currentTime,.05)}}catch(e){}bar(true);if(v)init()}
+ function setOn(k,v){on[k]=v;try{localStorage.setItem(k==='m'?'as_mus':'as_sfx',v?'1':'0')}catch(e){}try{if(ctx){const g=k==='m'?mus:sfx;g.gain.setTargetAtTime(v?(k==='m'?1:2.2):0,ctx.currentTime,.05)}}catch(e){}bar(true);if(v)init();if(k==='m'){try{WBM.sync()}catch(e){}}}
  function bar(force){let b=document.getElementById('audbar');if(b&&!force)return;if(!b){b=document.createElement('div');b.id='audbar';b.style.cssText='position:fixed;right:8px;bottom:78px;z-index:60;display:flex;gap:6px';document.body.appendChild(b)}
   const st='width:38px;height:38px;border-radius:50%;border:1px solid #4b52b0;background:#141a4acc;color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(4px)';
   b.innerHTML=`<button style="${st};opacity:${on.m?1:.45}" onclick="AUD.toggle('m')" title="Музыка">🎵</button><button style="${st};opacity:${on.s?1:.45}" onclick="AUD.toggle('s')" title="Звуки">🔊</button>`}
  return{on,play,seq,setMode,init,bar,toggle:k=>setOn(k,!on[k]),_test:{setup,S_,sched,P,get mg(){return mg},get ctx(){return ctx},tone}};
 })();
 // --- подключение к игре (любой сбой звука не должен ломать игру) ---
-function audMode(){return (typeof B!=='undefined'&&B&&tab==='battle')?((B.st&&B.st.boss)?'boss':'battle'):'menu'}
+function audMode(){return (typeof WBM!=='undefined'&&WBM.busy())?'none':(typeof B!=='undefined'&&B&&tab==='battle')?((B.st&&B.st.boss)?'boss':'battle'):'menu'}
 function audWrap(n,pre,post){try{const o=globalThis[n];if(typeof o!=='function')return;globalThis[n]=function(){const a=arguments;let c;try{c=pre&&pre(a)}catch(e){}const r=o.apply(this,a);try{post&&post(a,c,r)}catch(e){}return r}}catch(e){}}
-audWrap('render',null,()=>{if(AUD.on.m)AUD.setMode(audMode())});
+audWrap('render',null,()=>{try{WBM.sync()}catch(e){}if(AUD.on.m)AUD.setMode(audMode())});
 audWrap('go',()=>AUD.play('tab'));
 audWrap('pickC',()=>AUD.play('card'));
 audWrap('pickNP',()=>AUD.play('np'));
