@@ -14,11 +14,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#
 body::before{content:'';position:fixed;inset:0;background:linear-gradient(#07081acc,#0b0a2bee);z-index:-1}
 input{user-select:text;-webkit-user-select:text}
 #hdr{display:flex;justify-content:space-between;align-items:center;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:#0009;backdrop-filter:blur(8px);border-bottom:1px solid #ffd76a55;position:sticky;top:0;z-index:5}
-.me{display:flex;align-items:center;gap:8px;min-width:0}
+.me{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 0}.me>div{min-width:0}
 .av{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid #ffd76a;flex:none;background:#222}
-.me b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
+.me b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .me small{font-size:11px;opacity:.8}
-.cur{font-weight:700;font-size:14px;text-align:right;white-space:nowrap}
+.cur{font-weight:700;font-size:14px;text-align:right;white-space:normal;overflow-wrap:anywhere;min-width:0;flex:0 1 auto;line-height:1.25}
 #app{padding:12px 12px calc(84px + env(safe-area-inset-bottom));max-width:1000px;margin:auto}
 #nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#0b0a2bf2;backdrop-filter:blur(10px);border-top:1px solid #ffd76a55;padding-bottom:env(safe-area-inset-bottom);z-index:6}
 #nav{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}#nav::-webkit-scrollbar{display:none}
@@ -189,6 +189,84 @@ select.in{appearance:auto}textarea.in{resize:none}
 .gmem:active{background:#ffffff10}
 @media(max-width:260px){.gnav button{min-width:44px;padding:5px 6px}#app{padding-left:6px;padding-right:6px}.panel{padding:9px}}
 @media(min-width:700px){#nav button{font-size:12px}#nav button i{font-size:22px}.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.log{height:150px}.f b{font-size:13px}}
+/* ===== ASTRAL_ASCEND_V1: иконки-рамки вознесения игрока (.pfa). Только transform/opacity/steps/border-color, без filter; слои pointer-events:none ===== */
+.pfa{position:relative;display:inline-block;width:var(--s,38px);height:var(--s,38px);margin:3px;flex:none;vertical-align:middle;border-radius:50%;isolation:isolate}
+.pfa>img.av{position:relative;z-index:1;display:block;width:100%;height:100%;border:2px solid #ffd76a;animation:none}
+.pfa>u{position:absolute;inset:-3px;border-radius:50%;pointer-events:none;text-decoration:none;display:none;will-change:transform}
+.pfa.lk{opacity:.45}
+
+/* ступень 0 — простая статичная обводка */
+.pf0>img.av{border-color:#ffd76a}
+/* ступень 1 — RGB-подсветка обводки (плавно) */
+.pf1>img.av{border-color:#ff004c;animation:pfrgb 6s linear infinite}
+.pf1>u:nth-of-type(1){display:block;inset:-5px;background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 calc(100% - 4px),#0000);opacity:.75;animation:pfspin 5s linear infinite}
+@keyframes pfrgb{0%,100%{border-color:#ff004c}17%{border-color:#ff9a00}33%{border-color:#f6ff00}50%{border-color:#22ff77}67%{border-color:#00cfff}83%{border-color:#ff3df2}}
+@keyframes pfspin{to{transform:rotate(360deg)}}
+@keyframes pfspinr{to{transform:rotate(-360deg)}}
+/* ступень 2 — переливающиеся цветные кружки (прежний эффект иконки: g7b, steps) */
+.pf2>img.av{border-color:#0ff;box-shadow:0 0 6px #0ff,-3px 0 #f0f;animation:g7b .9s steps(1) infinite}
+/* ступень 3 — золотой RGB-кружок */
+.pf3>img.av{border-color:#ffd76a;box-shadow:0 0 6px #ffb800}
+.pf3>u:nth-of-type(1){display:block;inset:-4px;background:conic-gradient(#fff2a8,#ffb800,#a3700c,#ffe27a,#ffb800,#fff2a8);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 4px));animation:pfspin 6s linear infinite}
+.pf3>u:nth-of-type(2){display:block;inset:-6px;background:conic-gradient(#ff004c33,#f6ff00cc,#22ff7733,#00cfffcc,#ff3df233,#ff004ccc,#ff004c33);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 2px));animation:pfspinr 3.5s linear infinite}
+.pf3>u:nth-of-type(3){display:block;inset:-4px;background:radial-gradient(circle at 50% 0,#fff 0 1.5px,#fff0 3px);animation:pfspin 2.4s linear infinite}
+/* ступень 4 — радужное кольцо с искрами */
+.pf4>img.av{border-color:#fff}
+.pf4>u:nth-of-type(1){display:block;inset:-5px;background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 5px));animation:pfspin 3s linear infinite}
+.pf4>u:nth-of-type(2){display:block;inset:-9px;background:radial-gradient(circle at 50% 4%,#fff 0 1.5px,#fff0 3px),radial-gradient(circle at 92% 30%,#ffe27a 0 1.5px,#fff0 3px),radial-gradient(circle at 78% 90%,#9ff 0 1.5px,#fff0 3px),radial-gradient(circle at 20% 88%,#fff 0 1.5px,#fff0 3px),radial-gradient(circle at 6% 36%,#f9f 0 1.5px,#fff0 3px);animation:pfspin 7s linear infinite,pftw 1.2s steps(1) infinite}
+.pf4>u:nth-of-type(3){display:block;inset:-9px;background:radial-gradient(circle at 80% 10%,#fff 0 1px,#fff0 2.5px),radial-gradient(circle at 96% 66%,#9ff 0 1px,#fff0 2.5px),radial-gradient(circle at 36% 98%,#ffe27a 0 1px,#fff0 2.5px),radial-gradient(circle at 4% 60%,#fff 0 1px,#fff0 2.5px);animation:pfspinr 9s linear infinite,pftw 1.6s steps(1) .5s infinite}
+@keyframes pftw{0%{opacity:1}30%{opacity:.25}50%{opacity:1}75%{opacity:.4}}
+/* ступень 5 — звёздное кольцо */
+.pf5>img.av{border-color:#9db8ff;box-shadow:0 0 6px #4a6cff}
+.pf5>u:nth-of-type(1){display:block;inset:-4px;background:conic-gradient(#0b1b5e,#4a6cff,#dfe8ff,#4a6cff,#0b1b5e,#2a1a7a,#8fb0ff,#0b1b5e);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 calc(100% - 3px));animation:pfspin 10s linear infinite}
+.pf5>u:nth-of-type(2){display:block;inset:-9px;background:radial-gradient(circle at 50% 3%,#fff 0 2px,#fff0 3.5px),radial-gradient(circle at 93% 27%,#cfe0ff 0 1.5px,#fff0 3px),radial-gradient(circle at 93% 73%,#fff 0 2px,#fff0 3.5px),radial-gradient(circle at 50% 97%,#cfe0ff 0 1.5px,#fff0 3px),radial-gradient(circle at 7% 73%,#fff 0 2px,#fff0 3.5px),radial-gradient(circle at 7% 27%,#cfe0ff 0 1.5px,#fff0 3px);animation:pfspin 14s linear infinite,pftw 1.8s steps(1) infinite}
+.pf5>u:nth-of-type(3){display:block;inset:-9px;background:radial-gradient(circle at 25% 8%,#ffe27a 0 1px,#fff0 2.5px),radial-gradient(circle at 75% 8%,#fff 0 1px,#fff0 2.5px),radial-gradient(circle at 96% 50%,#ffe27a 0 1px,#fff0 2.5px),radial-gradient(circle at 25% 92%,#fff 0 1px,#fff0 2.5px),radial-gradient(circle at 4% 50%,#ffe27a 0 1px,#fff0 2.5px);animation:pfspinr 18s linear infinite,pftw 2.2s steps(1) .7s infinite}
+/* ступень 6 — эфирное золото-фиолетовое кольцо */
+.pf6>img.av{border-color:#e6c8ff;box-shadow:0 0 7px #a855f7}
+.pf6>u:nth-of-type(1){display:block;inset:-5px;background:conic-gradient(#ffd76a,#a855f7,#5b21b6,#ffe9a0,#c084fc,#ffd76a);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 5px));animation:pfspin 8s linear infinite}
+.pf6>u:nth-of-type(2){display:block;inset:-9px;background:repeating-conic-gradient(#ffd76a 0 8deg,#0000 8deg 20deg);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 2px));animation:pfspinr 12s linear infinite;opacity:.85}
+.pf6>u:nth-of-type(3){display:block;inset:-10px;background:radial-gradient(farthest-side,#0000 calc(100% - 9px),#a855f7aa calc(100% - 4px),#0000);animation:pfpulse 2.6s ease-in-out infinite}
+@keyframes pfpulse{0%,100%{opacity:.35;transform:scale(.96)}50%{opacity:.95;transform:scale(1.04)}}
+/* ступень 7 — астральный нимб */
+.pf7>img.av{border-color:#fff8d6;box-shadow:0 0 8px #ffe27a}
+.pf7>u:nth-of-type(1){display:block;inset:-4px;background:conic-gradient(#fff,#ffe27a,#fff,#ffb800,#fff);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 4px));animation:pfspin 9s linear infinite}
+.pf7>u:nth-of-type(2){display:block;inset:-11px;background:repeating-conic-gradient(#fff5 0 3deg,#0000 3deg 15deg);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 calc(100% - 7px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 calc(100% - 7px),#0000);animation:pfspin 16s linear infinite,pfpulse 3s ease-in-out infinite}
+.pf7>u:nth-of-type(3){display:block;inset:-8px;background:conic-gradient(#ff004c55,#f6ff0055,#22ff7755,#00cfff55,#7a5cff55,#ff3df255,#ff004c55);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 calc(100% - 3px),#0000 calc(100% - 1px));mask:radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 calc(100% - 3px),#0000 calc(100% - 1px));animation:pfspinr 6s linear infinite}
+/* секретная — Пустотный круг */
+.pfv>img.av{border-color:#150024;box-shadow:0 0 6px #7c3aed,-1px 0 #f0f,1px 0 #0ff;animation:pfvg 3.7s steps(1) infinite}
+.pfv>u:nth-of-type(1){display:block;inset:-5px;background:conic-gradient(#000,#3b0764,#000,#1e1b4b,#6d28d9,#000,#0c0a2a,#000);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 5px));animation:pfspin 6s linear infinite,pfvg2 3.7s steps(1) infinite}
+.pfv>u:nth-of-type(2),.pfv>u:nth-of-type(3){display:block;inset:auto;width:34%;height:34%;background:#000;border:2px solid #f0f;box-shadow:-2px 0 #0ff,2px 0 #f0f,0 0 5px #000}
+.pfv>u:nth-of-type(2){right:-14%;top:-12%;animation:pfvb 1.9s steps(1) infinite}
+.pfv>u:nth-of-type(3){left:-14%;bottom:-12%;width:26%;height:26%;animation:pfvb 2.6s steps(1) .8s infinite}
+@keyframes pfvb{0%{opacity:1;border-color:#f0f;transform:none}14%{opacity:0}28%{opacity:1;border-color:#0ff;transform:translate(1px,-1px)}44%{opacity:.15}52%{opacity:1;border-color:#f6ff00;transform:none}70%{opacity:0}84%{opacity:1;border-color:#22ff77;transform:translate(-1px,1px)}}
+@keyframes pfvg{0%,90%,100%{transform:none}91%{transform:translate(-2px,0)}93%{transform:translate(2px,1px)}95%{transform:none}}
+@keyframes pfvg2{0%,90%,100%{opacity:1}91%,94%{opacity:.3}}
+/* мелкие иконки в списках: один слой, без лишней нагрузки */
+.pfa.s{margin:2px}.pfa.s>u:nth-of-type(n+2){display:none!important}.pfa.s>u:nth-of-type(1){inset:-3px}
+.pfa.s.pf7>u:nth-of-type(1),.pfa.s.pf3>u:nth-of-type(1){inset:-3px}
+.pfa.s.pfv>u:nth-of-type(1){inset:-3px}
+@media(max-width:260px){.cur{font-size:11px}#hdr{padding-left:6px;padding-right:6px;gap:4px}.pfg{grid-template-columns:repeat(2,minmax(0,1fr))}.pfc{padding:6px 2px}.modal .inner{padding:10px}}
+.pfh{flex-wrap:nowrap;gap:8px;padding:0 6px}.pfp{padding:2px 4px;overflow:hidden}.pfp .pfc,.pfp .pfh{overflow:hidden}.pfp .pfc-i{padding:9px 0}.pfw .pfw-ic{overflow:hidden}
+/* окно вознесения */
+.pfw{position:relative;text-align:center;overflow:hidden;padding:6px 2px 4px;border-radius:12px}
+.pfw>*{position:relative;z-index:1}
+.pfw>.pfw-rays{position:absolute;z-index:0;left:50%;top:38%;width:170%;aspect-ratio:1;margin:-85% 0 0 -85%;background:repeating-conic-gradient(#ffd76a26 0 6deg,#0000 6deg 20deg);-webkit-mask:radial-gradient(closest-side,#000 25%,#0000);mask:radial-gradient(closest-side,#000 25%,#0000);animation:pfspin 40s linear infinite;pointer-events:none}
+.pfw-t{font-size:26px;margin:6px 0 10px;animation:pop .6s ease both}
+.pfw-ic{display:flex;justify-content:center;padding:14px 0;animation:pop .7s .1s ease both}
+.pfw-n{font-weight:800;color:#ffd76a;margin-bottom:6px}
+.pfw-r{display:inline-block;margin:8px 0;padding:6px 14px;border-radius:20px;border:1px solid #ffd76a;background:#ffd76a22;font-weight:800;font-size:18px;animation:pop .6s .3s ease both}
+.pfw-st{position:absolute!important;left:0;right:0;top:4px;display:flex;justify-content:space-around;color:#ffd76a;pointer-events:none}
+.pfw-st span{animation:pftw 1.5s steps(1) infinite}.pfw-st span:nth-child(2){animation-delay:.5s}.pfw-st span:nth-child(3){animation-delay:.9s}
+/* окно профиля/выбор иконки */
+.pfg{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.pfc{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;padding:8px 3px 6px;border:2px solid #333a80;border-radius:12px;background:#0f1230;cursor:pointer;min-width:0}
+.pfc.sel{border-color:#ffd76a;box-shadow:0 0 10px #ffd76a66}
+.pfc.lock{cursor:default;opacity:.6}
+.pfc b{font-size:11px;overflow-wrap:anywhere;line-height:1.15}
+.pfc small{font-size:10px;opacity:.75;overflow-wrap:anywhere;line-height:1.15}
+.pfc-i{position:relative;display:flex;align-items:center;justify-content:center;padding:6px 0}
+.pfc-i em{position:absolute;right:2px;bottom:2px;font-style:normal;font-size:14px}
+@media(prefers-reduced-motion:reduce){.pfa>img.av,.pfa>u,.pfw>.pfw-rays,.pfw-t,.pfw-ic,.pfw-r,.pfw-st span{animation:none!important}.pf2>img.av{border-color:#0ff}}
 </style>
 </head>
 <body>
@@ -592,7 +670,7 @@ let ME=null,S=null; // ME = ключ пользователя
 function newData(name,av){return{name,av,gems:3000,gold:1000,owned:{},team:[],cleared:0,pity:0,xp:0,created:Date.now(),
  daily:{last:'',streak:0},q:{date:'',prog:{},claimed:{}},st:{summons:0,fives:0,wins:0,battles:0}}}
 function save(){if(!ME)return;const u=users();if(u[ME]){u[ME].data=S;putUsers(u)}hud()}
-function login(key){ME=key;S=users()[key].data;try{dvMig(S)}catch(e){console.error(e)}localStorage.setItem(K_CUR,key);checkQuestDay();start()}
+function login(key){ME=key;S=users()[key].data;try{dvMig(S)}catch(e){console.error(e)}localStorage.setItem(K_CUR,key);checkQuestDay();try{pfSync()}catch(e){console.error(e)}start()}
 let authMode='reg',authAv='av_m1';
 function vAuth(){
  $('game').style.display='none';$('auth').style.display='flex';
@@ -629,7 +707,7 @@ function addXp(n){const b=accLv();S.xp+=n;if(accLv()>b){S.gems+=100;setTimeout((
 
 // ====== ГЛАВНЫЙ ЭКРАН ======
 function start(){$('auth').style.display='none';$('game').style.display='block';tab=S.world?'summon':'story';SV=null;try{gOnLogin()}catch(e){console.error(e)}render()}
-function hud(){if(!S)return;$('hdr').innerHTML=`<div class="me" onclick="tab='profile';render()"><img class="av${typeof dvFr==='function'&&dvFr()?' f7':''}" src="img/${S.av}.jpg"><div><b>${esc(S.name)}</b><small>Ур. ${accLv()}${typeof dvTitle==='function'&&dvTitle()?' · '+esc(dvTitle()):''}</small></div></div><div class="cur">💎 ${S.gems} &nbsp;🪙 ${S.gold}</div>`}
+function hud(){if(!S)return;$('hdr').innerHTML=`<div class="me" onclick="tab='profile';render()">${typeof pfMe==='function'?pfMe(38):`<img class="av" src="img/${S.av}.jpg">`}<div><b>${esc(S.name)}</b><small>Ур. ${accLv()}${typeof dvTitle==='function'&&dvTitle()?' · '+esc(dvTitle()):''}</small></div></div><div class="cur">💎 ${S.gems} &nbsp;🪙 ${S.gold}</div>`}
 let tab='summon';
 const TABS=[['summon','✨','Призыв'],['battle','⚔️','Бой'],['story','📖','Сюжет'],['heroes','📜','Герои'],['guild','🏰','Гильдия'],['wboss','🌍','Мир-босс'],['events','🎉','Ивенты'],['quests','🎯','Задания'],['shop','🛒','Магазин'],['profile','👤','Профиль']];
 function navHtml(){return TABS.map(([k,i,n])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${n}${(k==='guild'&&typeof gDot==='function'&&gDot())||(k==='wboss'&&typeof dvDot==='function'&&dvDot())||(k==='events'&&typeof evDot==='function'&&evDot())?'<u class="dot"></u>':''}</button>`).join('')}
@@ -729,7 +807,8 @@ function buyH(id){const h=H(id),p=HPRICE[h.r];if(!h||h.secret||!p||h.r>=7)return
 
 // ====== ПРОФИЛЬ ======
 function vProfile(){const own=Object.keys(S.owned).length,exp=S.xp%250;
- return `<div class="panel"><div class="row" style="flex-wrap:nowrap"><img class="av${typeof dvFr==='function'&&dvFr()?' f7':''}" style="width:70px;height:70px" src="img/${S.av}.jpg"><div style="flex:1;min-width:0"><h2 style="font-size:20px">${esc(S.name)}</h2><div class="small">Уровень аккаунта ${accLv()}</div><div class="bar xp"><i style="width:${exp/250*100}%"></i></div><div class="small">${exp}/250 опыта</div></div></div>
+ return `<div class="panel"><div class="row" style="flex-wrap:nowrap"><span onclick="pfWin()" style="cursor:pointer;flex:none;padding:0 6px">${typeof pfMe==='function'?pfMe(70):`<img class="av" style="width:70px;height:70px" src="img/${S.av}.jpg">`}</span><div style="flex:1;min-width:0"><h2 style="font-size:20px">${esc(S.name)}</h2><div class="small">Уровень аккаунта ${accLv()}${typeof pfTier==='function'&&pfTier()?' · ✨ Вознесение '+pfTier():''}</div><div class="bar xp"><i style="width:${exp/250*100}%"></i></div><div class="small">${exp}/250 опыта</div></div></div>
+ ${typeof pfWin==='function'?`<button class="btn sm" style="margin-top:10px" onclick="pfWin()">🎭 Иконка и вознесение</button>`:''}
  <div class="small" style="margin-top:12px">Сменить аватар:</div><div class="avs">${AVS.map(a=>`<img src="img/${a}.jpg" class="${a===S.av?'sel':''}" onclick="S.av='${a}';save();render()">`).join('')}</div></div>
  <div class="panel"><h3>📊 Статистика</h3>
  <div class="kv"><span>Героев в коллекции</span><b>${own}/${heroTot()}</b></div><div class="kv"><span>Призывов</span><b>${S.st.summons}</b></div><div class="kv"><span>5★ получено</span><b>${S.st.fives}</b></div><div class="kv"><span>6★ мификов</span><b>${S.st.sixes||0}</b></div><div class="kv"><span>Боёв / побед</span><b>${S.st.battles} / ${S.st.wins}</b></div><div class="kv"><span>Пройдено этапов</span><b>${S.cleared}/${STAGES.length}</b></div><div class="kv"><span>Гарант 5★ через</span><b>${90-S.pity} круток</b></div><div class="kv"><span>Гарант 6★ через</span><b>${300-(S.pity6||0)} круток</b></div><div class="kv"><span>Дата регистрации</span><b>${new Date(S.created).toLocaleDateString('ru-RU')}</b></div></div>
@@ -2760,7 +2839,7 @@ function admHtml(){
  <select id="ad_w" style="${inp}">${wopts}</select><div class="small">Для «До главы N» введите N в поле валюты выше.</div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admWorld('all')">Пройти мир</button><button class="btn sm" onclick="admWorld('to')">До главы N</button><button class="btn sm" onclick="admWorld('reset')">Сбросить мир</button></div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPity()">🎯 Гарант мифика на след. крутку</button></div></div>
- ${typeof admEvPanel==='function'?admEvPanel():''}${typeof dgAdmPanel==='function'?dgAdmPanel():''}
+ ${typeof pfAdmPanel==='function'?pfAdmPanel():''}${typeof admEvPanel==='function'?admEvPanel():''}${typeof dgAdmPanel==='function'?dgAdmPanel():''}
  <div class="panel"><b>⚙ Аккаунт</b><input id="ad_nm" placeholder="Новый ник" maxlength="16" style="${inp}"><button class="btn sm" onclick="admRename()">Сменить ник</button>
  <input id="ad_p" type="password" placeholder="Новый пароль (от 4 символов)" style="${inp}"><button class="btn sm" onclick="admPass()">Сменить пароль</button>
  <div class="row" style="margin-top:8px"><button class="btn sm" onclick="admGuildReset()">🏰 Сбросить гильдию</button><button class="btn sm" style="background:#5b1a2a" onclick="admReset()">Сбросить прогресс</button><button class="btn sm" style="background:#5b1a2a" onclick="admDel()">Удалить аккаунт</button></div></div>
@@ -2903,7 +2982,7 @@ function gNpcSquad(m){const rng=gRng('sq'+m.sd),lv=m.lv,owned={},ids=[];
  return{ids,owned}}
 function gNpcPow(m){const q=gNpcSquad(m);return q.ids.reduce((s,id)=>s+gHPow(q.owned[id],id),0)}
 function gNpcName(rng,used){for(let t=0;t<30;t++){const n=(G_NM_A[Math.floor(rng()*G_NM_A.length)]+G_NM_B[Math.floor(rng()*G_NM_B.length)]).slice(0,14);if(!used.has(n)){used.add(n);return n}}const n='Игрок'+Math.floor(rng()*9999);used.add(n);return n}
-function gFeed(g,txt,t,who){g.feed=g.feed||[];g.feed.unshift({ts:Date.now(),t:t||'ev',who:who||'',txt});if(g.feed.length>70)g.feed.length=70}
+function gFeed(g,txt,t,who,x){g.feed=g.feed||[];g.feed.unshift(Object.assign({ts:Date.now(),t:t||'ev',who:who||'',txt},x||{}));if(g.feed.length>70)g.feed.length=70}
 function gPlace(gs,id){const s=[...gs].sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));return s.findIndex(x=>x.id===id)+1}
 function gRealKeys(g){return Object.keys(g.members).filter(k=>!g.members[k].npc)}
 function gBossHp(g,idx,cyc){const sum=Object.values(g.members).reduce((s,m)=>s+(m.pw||300),0);return Math.max(40000,Math.round(sum*9*G_TRIES*.5))*(1+.4*idx)*(1+.12*cyc)}
@@ -2930,7 +3009,7 @@ function gSimHour(g,hi){const rng=gRng(g.id+':'+hi),t=hi*G_HOUR,day=gDate(t),act
  Object.values(g.members).forEach(m=>{if(!m.npc)return;if(m.dd!==day){m.dd=day;m.dc=0}
   if(m.dc<G_TRIES&&rng()<.085*act){m.dc++;gHit(g,m.k,m.name,Math.round((m.pw||500)*9*(.6+.8*rng())),t)}
   if(rng()<.035*act){const e=Math.round(15+rng()*60);m.con=(m.con||0)+e;m.wcon=(m.wcon||0)+e;gGain(g,e)}});
- if(rng()<.04){const ns=Object.values(g.members).filter(m=>m.npc);if(ns.length){const m=ns[Math.floor(rng()*ns.length)];gFeed(g,G_MSG[Math.floor(rng()*G_MSG.length)],'msg',m.name)}}}
+ if(rng()<.04){const ns=Object.values(g.members).filter(m=>m.npc);if(ns.length){const m=ns[Math.floor(rng()*ns.length)];gFeed(g,G_MSG[Math.floor(rng()*G_MSG.length)],'msg',m.name,{lv:m.lv})}}}
 function gSimRange(d,h0,h1){const from=Math.max(h0,h1-168);for(let h=from+1;h<=h1;h++)Object.values(d.guilds).forEach(g=>gSimHour(g,h))}
 function gFinalize(d,sn,now){const gs=Object.values(d.guilds).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)),top=gs.slice(0,10).map((g,i)=>({id:g.id,name:g.name,emb:g.emb,score:g.score,place:i+1,mem:gRealKeys(g)}));
  d.meta.snaps=d.meta.snaps||{};d.meta.snaps[sn]={s:sn,top,ts:now};Object.keys(d.meta.snaps).sort((a,b)=>b-a).slice(4).forEach(k=>delete d.meta.snaps[k]);
@@ -2952,7 +3031,7 @@ function gTick(force){const now=Date.now();if(!GStore.ready&&GStore.online!==fal
    // заявки
    Object.keys(g.apps||{}).forEach(k=>{const a=g.apps[k];if(now-a.ts>3*G_DAY){delete g.apps[k];dirty=true;return}
     if(g.npc&&now-a.ts>=6000){delete g.apps[k];dirty=true;const inOther=Object.values(d.guilds).some(x=>x.members[k]);const n=Object.keys(g.members).length;
-     if(!inOther&&n<gCap(g.lv)&&a.lv>=g.minLv){g.members[k]={k,name:a.name,lv:a.lv,pw:a.pw||0,rank:0,joined:now,con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:now,av:a.av};gFeed(g,'📥 '+a.name+' принят(а) в гильдию','ev')}}});
+     if(!inOther&&n<gCap(g.lv)&&a.lv>=g.minLv){g.members[k]={k,name:a.name,lv:a.lv,pw:a.pw||0,rank:0,joined:now,con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:now,av:a.av,ic:a.ic};gFeed(g,'📥 '+a.name+' принят(а) в гильдию','ev')}}});
   });
   // пакеты (старые завершённые — помечаем удалёнными)
   Object.values(d.packets).forEach(p=>{if(p.state!=='open'&&now-(p.eAt||p.cAt||p.ts)>14*G_DAY){d.packets[p.id]=undefined;delete d.packets[p.id];dirty=true}});
@@ -2973,8 +3052,8 @@ function gMine(D){D=D||GStore.all();if(!ME)return null;return Object.values(D.gu
 function gRole(g,k){const m=g&&g.members[k||ME];return m?m.rank:-1}
 function gCanKick(g,tk){const r=gRole(g),t=g.members[tk];if(!t||tk===ME)return false;return r===5||(r>=3&&t.rank<=1)}
 function gSyncMe(){if(!S||!ME)return;const g=gMine();if(!g)return;const m=g.members[ME],pw=gTeamPow(S),now=Date.now();
- if(m.name===S.name&&m.lv===accLv()&&Math.abs((m.pw||0)-pw)<1&&m.seen&&now-m.seen<3*6e4&&m.av===S.av)return;
- GStore.tx(d=>{const x=Object.values(d.guilds).find(y=>y.members[ME]);if(!x)return GStore.NC;const q=x.members[ME];q.name=S.name;q.lv=accLv();q.pw=pw;q.seen=now;q.av=S.av;q.cr=S.created;return 1})}
+ if(m.name===S.name&&m.lv===accLv()&&Math.abs((m.pw||0)-pw)<1&&m.seen&&now-m.seen<3*6e4&&m.av===S.av&&(m.ic||'')===pfIc())return;
+ GStore.tx(d=>{const x=Object.values(d.guilds).find(y=>y.members[ME]);if(!x)return GStore.NC;const q=x.members[ME];q.name=S.name;q.lv=accLv();q.pw=pw;q.seen=now;q.av=S.av;q.ic=pfIc();q.cr=S.created;return 1})}
 function gBonMine(){try{const g=gMine();return g?gBon(g.lv):{gold:0,xp:0,st:0}}catch(e){return{gold:0,xp:0,st:0}}}
 function gBf(){const b=gBonMine();return{hp:1+b.st/100,atk:1+b.st/100}}
 function gGold(x){const b=gBonMine();return Math.round(x*(1+b.gold/100))}
@@ -3045,10 +3124,10 @@ function gJoin(gid){
  if(accLv()<g.minLv)return gFail('Нужен уровень '+g.minLv);
  const r=GStore.tx(d=>{const g=d.guilds[gid];if(!g)return{e:'Гильдия не найдена'};if(Object.values(d.guilds).some(x=>x.members[ME]))return{e:'Вы уже в гильдии'};
   if(Object.keys(g.members).length>=gCap(g.lv))return{e:'Гильдия заполнена'};
-  const me={k:ME,name:S.name,lv:accLv(),pw:gTeamPow(S),rank:0,joined:Date.now(),con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:Date.now(),av:S.av,cr:S.created,dr:1000,dwin:0,dlose:0};
+  const me={k:ME,name:S.name,lv:accLv(),pw:gTeamPow(S),rank:0,joined:Date.now(),con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:Date.now(),av:S.av,ic:pfIc(),cr:S.created,dr:1000,dwin:0,dlose:0};
   if(g.open){g.members[ME]=me;gFeed(g,'📥 '+S.name+' вступил(а) в гильдию','ev');return{ok:'in'}}
   if(g.apps[ME])return{e:'Заявка уже подана'};
-  g.apps[ME]={name:S.name,lv:me.lv,pw:me.pw,ts:Date.now(),av:S.av};gFeed(g,'✉️ Заявка от '+S.name,'ev');return{ok:'app'}});
+  g.apps[ME]={name:S.name,lv:me.lv,pw:me.pw,ts:Date.now(),av:S.av,ic:pfIc()};gFeed(g,'✉️ Заявка от '+S.name,'ev');return{ok:'app'}});
  if(r.e)return gFail(r.e);
  gPublish(true);if(r.ok==='in'){S.guildId=gid;save();closeM();GV='hub';toast('Вы вступили в гильдию «'+g.name+'»!')}else{closeM();toast(g.npc?'Заявка подана — рассмотрим через несколько секунд':'Заявка подана. Ждите решения офицеров');if(g.npc)setTimeout(()=>{try{gTick(true);const m=gMine();if(m&&S){S.guildId=m.id;save();toast('✅ Заявка одобрена: вы в гильдии «'+m.name+'»')}if(tab==='guild'&&!B)render()}catch(e){}},6500)}
  render()}
@@ -3073,7 +3152,7 @@ function gCreate(){
  if(S.gems<G_MAKE_GEMS||S.gold<G_MAKE_GOLD)return err('Не хватает ресурсов: нужно 💎'+G_MAKE_GEMS+' и 🪙'+gn(G_MAKE_GOLD));
  gPublish(true);const minLv=Math.max(G_JOIN_LV,Math.min(200,parseInt($('gc_l').value,10)||G_JOIN_LV)),open=$('gc_o').value==='1'?1:0,now=Date.now(),id='g_'+hash(ME+now).slice(0,8);
  const g={id,npc:0,name,emb:G_EMB[GEMB],col:GCOL,desc:$('gc_d').value.trim().slice(0,120)||'Новая гильдия',notice:'Добро пожаловать! Вносите вклад и бейте боссов.',minLv,open,lv:1,exp:0,created:now,gm:ME,
-  members:{[ME]:{k:ME,name:S.name,lv:accLv(),pw:gTeamPow(S),rank:5,joined:now,con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:now,av:S.av,cr:S.created,dr:1000,dwin:0,dlose:0}},apps:{},feed:[],score:0,tot:0,pend:{},act:1,kills:0,acts:{}};
+  members:{[ME]:{k:ME,name:S.name,lv:accLv(),pw:gTeamPow(S),rank:5,joined:now,con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:now,av:S.av,ic:pfIc(),cr:S.created,dr:1000,dwin:0,dlose:0}},apps:{},feed:[],score:0,tot:0,pend:{},act:1,kills:0,acts:{}};
  gFeed(g,'Гильдия «'+name+'» основана! Гильдмастер: '+S.name,'ev');gSpawn(g,0,0);
  S.gems-=G_MAKE_GEMS;S.gold-=G_MAKE_GOLD;
  GStore.tx(d=>{d.guilds[id]=g;return 1});S.guildId=id;save();closeM();GV='hub';toast('🏰 Гильдия «'+name+'» создана!');render()}
@@ -3090,7 +3169,7 @@ function gApp(k,yes){k=dk(k);const g=gMine();if(!g||gRole(g)<3)return gFail('Н�
  const r=GStore.tx(d=>{const x=d.guilds[g.id],a=x.apps[k];if(!a)return{e:'Заявки уже нет'};delete x.apps[k];if(!yes){gFeed(x,'❌ Заявка '+a.name+' отклонена ('+S.name+')','ev');return{ok:1}}
   if(Object.values(d.guilds).some(y=>y.members[k]))return{e:'Игрок уже вступил в другую гильдию'};if(Object.keys(x.members).length>=gCap(x.lv))return{e:'Гильдия заполнена'};
   const ac=GStore.kv('acct:'+k),cr=ac&&ac.cr||0;
-  x.members[k]={k,name:a.name,lv:a.lv,pw:a.pw||0,rank:0,joined:Date.now(),con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:0,av:a.av,cr,dr:1000,dwin:0,dlose:0};gFeed(x,'📥 '+a.name+' принят(а) в гильдию ('+S.name+')','ev');return{ok:1}});
+  x.members[k]={k,name:a.name,lv:a.lv,pw:a.pw||0,rank:0,joined:Date.now(),con:0,dmg:0,wcon:0,wdmg:0,dw:0,seen:0,av:a.av,ic:a.ic,cr,dr:1000,dwin:0,dlose:0};gFeed(x,'📥 '+a.name+' принят(а) в гильдию ('+S.name+')','ev');return{ok:1}});
  if(r.e)toast(r.e);else toast(yes?'Принят':'Отклонено');render()}
 function gRankSet(k,delta){k=dk(k);const g=gMine();if(!g||g.gm!==ME)return gFail('Только гильдмастер меняет звания');
  const r=GStore.tx(d=>{const x=d.guilds[g.id],m=x.members[k];if(!m||k===ME||m.rank>=5)return{e:'Нельзя'};const nr=m.rank+delta;if(nr<0||nr>4)return{e:'Это предел'};
@@ -3107,7 +3186,7 @@ function gTransfer(k){k=dk(k);const g=gMine();if(!g||g.gm!==ME)return gFail('Т�
  closeM();toast('Власть передана');render()}
 function gMemMenu(kk){const k=dk(kk),g=gMine();if(!g||!g.members[k])return closeM();const m=g.members[k],r=gRole(g),now=Date.now();
  const pw=m.npc?gNpcPow(m):m.pw;
- modal(`<h3>${G_RIC[m.rank]} ${esc(m.name)}</h3><div class="small">${G_RANKS[m.rank]} · ур. ${m.lv} · сила ${gn(pw)}</div>
+ modal(`<div class="row" style="flex-wrap:nowrap;gap:10px;padding-left:6px">${pfM(m,44)}<div style="min-width:0;flex:1;padding-left:4px"><h3 style="overflow-wrap:anywhere">${G_RIC[m.rank]} ${esc(m.name)}</h3><div class="small">${G_RANKS[m.rank]} · ур. ${m.lv} · сила ${gn(pw)}</div></div></div>
  <div class="kv"><span>Вклад</span><b>${gn(m.con||0)}</b></div><div class="kv"><span>Урон по боссам</span><b>${gn(m.dmg||0)}</b></div><div class="kv"><span>Дуэли</span><b>${m.dwin||0}–${m.dlose||0} · рейт. ${m.dr||1000}</b></div><div class="kv"><span>В гильдии с</span><b>${new Date(m.joined).toLocaleDateString('ru-RU')}</b></div>
  <div class="row" style="margin-top:10px">${k!==ME?`<button class="btn sm" onclick="closeM();gDuelUi('${kk}')">🥊 Дуэль</button>`:''}
  ${r===5&&k!==ME?`<button class="btn sm" ${m.rank>=4?'disabled':''} onclick="gRankSet('${kk}',1)">⬆️ Повысить</button><button class="btn sm" ${m.rank<=0?'disabled':''} onclick="gRankSet('${kk}',-1)">⬇️ Понизить</button>${m.npc?'':`<button class="btn sm" onclick="gTransfer('${kk}')">👑 Передать власть</button>`}`:''}
@@ -3120,7 +3199,7 @@ function gNoticeUi(){const g=gMine();if(!g||g.gm!==ME)return;
  <div class="row" style="flex-wrap:nowrap"><div style="flex:1"><div class="small">Мин. уровень</div><input class="in" id="gs_l" type="number" min="20" value="${g.minLv}"></div><div style="flex:1"><div class="small">Вступление</div><select class="in" id="gs_o"><option value="1" ${g.open?'selected':''}>Открытое</option><option value="0" ${g.open?'':'selected'}>По заявке</option></select></div></div>
  <div class="row c"><button class="btn gold" onclick="gNoticeSave()">Сохранить</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
 function gNoticeSave(){const g=gMine();if(!g||g.gm!==ME)return;GStore.tx(d=>{const x=d.guilds[g.id];x.notice=$('gs_n').value.trim().slice(0,200);x.desc=$('gs_d').value.trim().slice(0,120);x.minLv=Math.max(G_JOIN_LV,parseInt($('gs_l').value,10)||G_JOIN_LV);x.open=$('gs_o').value==='1'?1:0;gFeed(x,'📢 Гильдмастер обновил объявление','ev');return 1});closeM();toast('Сохранено');render()}
-function gSay(){const el=$('gm_t');if(!el)return;const t=el.value.trim().slice(0,120);if(!t)return;const g=gMine();if(!g)return;GStore.tx(d=>{gFeed(d.guilds[g.id],t,'msg',S.name);return 1});el.value='';render()}
+function gSay(){const el=$('gm_t');if(!el)return;const t=el.value.trim().slice(0,120);if(!t)return;const g=gMine();if(!g)return;GStore.tx(d=>{gFeed(d.guilds[g.id],t,'msg',S.name,{av:S.av,ic:pfIc(),lv:accLv()});return 1});el.value='';render()}
 // вклад
 function gContrib(id){const g=gMine();if(!g)return;const c=G_CT.find(x=>x.id===id),d=gdS();if((d.c[id]||0)>=c.lim)return gFail('Суточный лимит вклада исчерпан');
  if(S[c.cur]<c.cost)return gFail('Не хватает '+(c.cur==='gold'?'🪙':'💎'));
@@ -3174,7 +3253,7 @@ function gDuelSim(A,Bt,rng){const log=[];const al=a=>a.filter(u=>u.hp>0);let rd=
  const ha=A.reduce((s,u)=>s+Math.max(0,u.hp)/u.max,0),hb=Bt.reduce((s,u)=>s+Math.max(0,u.hp)/u.max,0);
  return{win:ha>hb,rounds:rd,ha,hb,log}}
 function gDuelUi(kk){const g=gMine();if(!g)return;const k=dk(kk),m=g.members[k];if(!m)return;const sq=gSquadOf(k,g);if(!sq)return gFail('Нет данных игрока');
- modal(`<h3>🥊 Дуэль: ${esc(m.name)}</h3><div class="small">${G_RANKS[m.rank]} · ур. ${m.lv} · сила ${gn(sq.pw)}${m.npc?' · NPC':' · реальный игрок'}</div>
+ modal(`<h3 style="display:flex;align-items:center;gap:8px;overflow-wrap:anywhere"><span style="padding-left:4px">${pfM(m,30)}</span><span>🥊 Дуэль: ${esc(m.name)}</span></h3><div class="small">${G_RANKS[m.rank]} · ур. ${m.lv} · сила ${gn(sq.pw)}${m.npc?' · NPC':' · реальный игрок'}</div>
  <div class="grid" style="grid-template-columns:repeat(3,1fr);margin:8px 0">${sq.ids.map(id=>`<div class="card r${H(id).r}">${portrait(H(id))}<div class="small">ур.${sq.owned[id].lv}</div></div>`).join('')}</div>
  <div class="small">Ваша сила: ${gn(gTeamPow(S))} · Осталось дуэлей: ${gDuelsLeft()}/${G_DUELS+(gdS().xd||0)}<br>Награда: победа ✦25 🪙1500, поражение ✦5</div>
  <div class="row c" style="margin-top:10px"><button class="btn gold" ${gDuelsLeft()<=0||!S.team.length?'disabled':''} onclick="gDuel('${kk}')">В бой (авто)</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
@@ -3295,7 +3374,7 @@ function gMembers(g){const now=Date.now(),r=gRole(g),arr=Object.values(g.members
  const apps=r>=3?Object.entries(g.apps||{}):[];
  return (apps.length?`<div class="panel" style="border-color:#f9a8d4"><h3>✉️ Заявки (${apps.length})</h3>${apps.map(([k,a])=>`<div class="q"><div style="min-width:0"><b>${esc(a.name)}</b><div class="small">ур. ${a.lv} · сила ${gn(a.pw||0)}</div></div><div class="row" style="flex-wrap:nowrap"><button class="btn sm gold" style="width:auto;margin:0" onclick="gApp('${ek(k)}',1)">✔</button><button class="btn sm" style="width:auto;margin:0" onclick="gApp('${ek(k)}',0)">✖</button></div></div>`).join('')}</div>`:'')+
  `<div class="panel"><h3>👥 Участники ${arr.length}/${gCap(g.lv)}</h3>${arr.map(m=>{const pw=m.npc?(m.pw||gNpcPow(m)):m.pw,on=m.k===ME||(m.seen&&now-m.seen<5*6e4),seen=m.k===ME?'в сети':m.npc?(gRng(m.k+Math.floor(now/G_HOUR))()<.3?'в сети':gAgo(now-Math.round((1+(parseInt(hash(m.k).slice(0,3),36)%40))*36e5),now)):(m.seen?gAgo(m.seen,now):'давно');
-  return `<div class="q gmem" onclick="gMemMenu('${ek(m.k)}')" style="cursor:pointer"><div style="min-width:0;flex:1"><b>${G_RIC[m.rank]} ${esc(m.name)}${m.k===ME?' (вы)':''}</b><div class="small">${G_RANKS[m.rank]} · ур. ${m.lv} · ⚔ ${gn(pw)}</div><div class="small">💰 ${gn(m.con||0)} · 👹 ${gn(m.dmg||0)}</div></div><div class="small" style="text-align:right;color:${seen==='в сети'?'#4ade80':'#aab'}">${seen==='в сети'?'● в сети':seen}</div></div>`}).join('')}<div class="small" style="margin-top:6px">Нажмите на участника: дуэль${r>=3?', исключение':''}${r===5?', звания':''}.</div></div>`}
+  return `<div class="q gmem" onclick="gMemMenu('${ek(m.k)}')" style="cursor:pointer"><span style="padding:0 4px 0 5px;flex:none">${pfM(m,30)}</span><div style="min-width:0;flex:1"><b>${G_RIC[m.rank]} ${esc(m.name)}${m.k===ME?' (вы)':''}</b><div class="small">${G_RANKS[m.rank]} · ур. ${m.lv} · ⚔ ${gn(pw)}</div><div class="small">💰 ${gn(m.con||0)} · 👹 ${gn(m.dmg||0)}</div></div><div class="small" style="text-align:right;color:${seen==='в сети'?'#4ade80':'#aab'}">${seen==='в сети'?'● в сети':seen}</div></div>`}).join('')}<div class="small" style="margin-top:6px">Нажмите на участника: дуэль${r>=3?', исключение':''}${r===5?', звания':''}.</div></div>`}
 function gContribV(g){const d=gdS();
  return `<div class="panel"><h3>💰 Ежедневный вклад</h3><div class="small" style="margin-bottom:6px">Вклад даёт ✦ очки гильдии (для магазина) и опыт гильдии (уровень → бонусы). Лимит — на каждый уровень вклада в сутки. У вас: 🪙${gn(S.gold)} 💎${gn(S.gems)}</div>
  ${G_CT.map(c=>{const u=d.c[c.id]||0,left=c.lim-u;return `<div class="q"><div style="min-width:0;flex:1"><b>${c.cur==='gold'?'🪙':'💎'} ${gn(c.cost)}</b><div class="small">+✦${c.gp} · +${c.exp} опыта гильдии · сегодня ${u}/${c.lim}</div></div><button class="btn sm gold" style="width:auto;margin:0;padding:6px 14px" ${left<=0||S[c.cur]<c.cost?'disabled':''} onclick="gContrib('${c.id}')">${left<=0?'Лимит':'Внести'}</button></div>`}).join('')}</div>
@@ -3312,8 +3391,8 @@ function gBossV(g){const b=g.boss,def=G_BOSS[b.idx],pc=Math.max(0,b.hp/b.max*100
  <div class="panel"><h3>👹 Боссы гильдии</h3><div class="small">${G_BOSS.map((x,i)=>`${i===b.idx?'▶ ':''}${x.e} ${x.n} (${x.el})`).join('<br>')}<br>После победы появляется следующий по кругу, HP растёт.</div></div>`}
 function gDuelV(g){const arr=Object.values(g.members).filter(m=>m.k!==ME).sort((a,b)=>(a.npc-b.npc)||b.lv-a.lv),me=g.members[ME];
  return `<div class="panel"><h3>🥊 Дуэли гильдии</h3><div class="kv"><span>Осталось сегодня</span><b>${gDuelsLeft()}/${G_DUELS+(gdS().xd||0)}</b></div><div class="kv"><span>Ваши победы / поражения</span><b>${me.dwin||0} / ${me.dlose||0}</b></div><div class="kv"><span>Дуэльный рейтинг</span><b>${me.dr||1000}</b></div><div class="small" style="margin-top:6px">Выберите соперника: бой идёт автоматически, ваш отряд против его отряда. Игроки этого устройства бьются своим сохранённым отрядом, NPC — отрядом по силе.</div></div>
- <div class="panel">${arr.map(m=>`<div class="q"><div style="min-width:0;flex:1"><b>${G_RIC[m.rank]} ${esc(m.name)}</b><div class="small">ур. ${m.lv} · ⚔ ${gn(m.npc?(m.pw||gNpcPow(m)):m.pw)} ${m.npc?'':'· 👤 игрок'} · рейт. ${m.dr||1000}</div></div><button class="btn sm" style="width:auto;margin:0;padding:6px 12px" onclick="gDuelUi('${ek(m.k)}')">🥊</button></div>`).join('')||'<div class="small">Нет соперников</div>'}</div>
- <div class="panel"><h3>🏅 Топ дуэлянтов</h3>${Object.values(g.members).sort((a,b)=>(b.dr||1000)-(a.dr||1000)).slice(0,5).map((m,i)=>`<div class="q"><div>${i+1}. ${esc(m.name)}${m.k===ME?' (вы)':''}</div><b>${m.dr||1000}</b></div>`).join('')}</div>`}
+ <div class="panel">${arr.map(m=>`<div class="q"><span style="padding:0 4px 0 5px;flex:none">${pfM(m,28)}</span><div style="min-width:0;flex:1"><b>${G_RIC[m.rank]} ${esc(m.name)}</b><div class="small">ур. ${m.lv} · ⚔ ${gn(m.npc?(m.pw||gNpcPow(m)):m.pw)} ${m.npc?'':'· 👤 игрок'} · рейт. ${m.dr||1000}</div></div><button class="btn sm" style="width:auto;margin:0;padding:6px 12px" onclick="gDuelUi('${ek(m.k)}')">🥊</button></div>`).join('')||'<div class="small">Нет соперников</div>'}</div>
+ <div class="panel"><h3>🏅 Топ дуэлянтов</h3>${Object.values(g.members).sort((a,b)=>(b.dr||1000)-(a.dr||1000)).slice(0,5).map((m,i)=>`<div class="q"><div>${i+1}. ${pfM(m,22)} ${esc(m.name)}${m.k===ME?' (вы)':''}</div><b>${m.dr||1000}</b></div>`).join('')}</div>`}
 function gPacketsV(g,D){const now=Date.now(),r=gRole(g),ps=Object.values(D.packets).filter(p=>p.gid===g.id).sort((a,b)=>b.ts-a.ts).slice(0,25);
  const left=ms=>{const h=Math.max(0,Math.floor(ms/G_HOUR)),m=Math.max(0,Math.floor(ms%G_HOUR/6e4));return h>=48?Math.floor(h/24)+' дн':h+' ч '+m+' мин'};
  const back=Object.values(D.packets).filter(p=>p.from===ME&&p.state==='expired'&&!(S.gcl||{})['r'+p.id]&&(p.kind==='hero'||p.refund>0));
@@ -3337,9 +3416,9 @@ function gRankV(g,D){const gs=Object.values(D.guilds).sort((a,b)=>b.score-a.scor
  `<div class="panel"><h3>🏆 Рейтинг гильдий</h3><div class="small" style="margin-bottom:6px">Сезон — неделя, до конца: ${rd} д ${rh} ч. Очки — за урон боссам, вклады, активность и дуэли. Топ-10 получает награды (💎/🪙/✦ каждому участнику), забирать в этом разделе. Ваше место: <b>#${myp}</b></div>
  ${gs.slice(0,10).map((x,i)=>row(x,i)).join('')}${myp>10?`<div class="small" style="text-align:center">…</div>${row(g,myp-1)}`:''}</div>
  <div class="panel"><h3>👥 Рейтинг участников (сезон)</h3><div class="row" style="margin-bottom:6px"><button class="btn sm ${sortBy==='wcon'?'gold':''}" style="width:auto;flex:1" onclick="GF='con';render()">💰 Вклад</button><button class="btn sm ${sortBy==='wdmg'?'gold':''}" style="width:auto;flex:1" onclick="GF='dmg';render()">👹 Урон</button></div>
- ${ml.map((m,i)=>`<div class="q ${m.k===ME?'gmeRow':''}"><div>${i+1}. ${esc(m.name)}${m.k===ME?' (вы)':''} <span class="small">${G_RANKS[m.rank]}</span></div><b>${gn(m[sortBy]||0)}</b></div>`).join('')}</div>`}
+ ${ml.map((m,i)=>`<div class="q ${m.k===ME?'gmeRow':''}"><div>${i+1}. ${pfM(m,22)} ${esc(m.name)}${m.k===ME?' (вы)':''} <span class="small">${G_RANKS[m.rank]}</span></div><b>${gn(m[sortBy]||0)}</b></div>`).join('')}</div>`}
 function gChatV(g){const now=Date.now();return `<div class="panel"><h3>💬 Лента гильдии</h3><div class="row" style="flex-wrap:nowrap"><input class="in" id="gm_t" maxlength="120" placeholder="Сообщение…" style="margin:0" onkeydown="if(event.key==='Enter')gSay()"><button class="btn" onclick="gSay()">➤</button></div>
- <div class="glog">${(g.feed||[]).slice(0,40).map(f=>`<div class="gf ${f.t}"><span class="small">${new Date(f.ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span> ${f.t==='msg'?`<b>${esc(f.who)}:</b> ${esc(f.txt)}`:esc(f.txt)}</div>`).join('')}</div></div>`}
+ <div class="glog">${(g.feed||[]).slice(0,40).map(f=>`<div class="gf ${f.t}"><span class="small">${new Date(f.ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span> ${f.t==='msg'?`${pfM({av:f.av,ic:f.ic,lv:f.lv,name:f.who},22)} <b>${esc(f.who)}:</b> ${esc(f.txt)}`:esc(f.txt)}</div>`).join('')}</div></div>`}
 function admGuildReset(){if(!isAdmin())return;if(!confirm('Сбросить гильдию этого аккаунта (выйти/удалить, если гильдмастер)?'))return;const u=users(),k=AU;
  GStore.tx(d=>{Object.values(d.guilds).forEach(g=>{if(g.members[k]){delete g.members[k];if(g.gm===k){const nx=gRealKeys(g)[0];if(nx){g.gm=nx;g.members[nx].rank=5}else delete d.guilds[g.id]}}});return 1});
  const t=(AU===ME?S:u[AU].data);t.guildId='';if(AU===ME)save();else putUsers(u);admShow();toast('Гильдия сброшена')}
@@ -3471,7 +3550,7 @@ async function wbSend(n,dmg,id){
  let last=null;for(let t=0;t<5;t++){try{
   const gm=(typeof gMine==='function'&&gMine())||null;
   const r=await GStore.casKV(wbKey(n),cur=>{if(!cur||cur.dead)return{e:'нет босса'};
-   const e=cur.dmgBy[ME]||(cur.dmgBy[ME]={n:S.name,d:0,g:'',gn:'',ids:[]});e.n=S.name;e.g=gm?gm.id:'';e.gn=gm?gm.name:'';
+   const e=cur.dmgBy[ME]||(cur.dmgBy[ME]={n:S.name,d:0,g:'',gn:'',ids:[]});e.n=S.name;e.a=S.av;e.ic=pfIc();e.lv=accLv();e.g=gm?gm.id:'';e.gn=gm?gm.name:'';
    if((e.ids||[]).includes(id))return{val:cur,dup:1,real:0};
    if(cur.hp<=0||Date.now()>=cur.end+6e4)return{e:'Босс уже побеждён или ушёл — урон не засчитан'};
    const real=Math.max(0,Math.min(dmg,cur.hp));cur.hp-=real;e.d+=real;e.ids=(e.ids||[]).concat(id).slice(-4);e.t=Date.now();
@@ -3540,7 +3619,7 @@ function wbEnd(Bx,silent){const g=Bx.guild,dmg=Math.max(0,Math.round(g.dmg)),p=d
   if(tab==='wboss')render()})()}
 async function wbBuyTry(){const d=dvS();if((d.bt||0)>=5)return toast('Лимит покупок на сегодня');if(S.gems<300)return toast('Не хватает 💎');S.gems-=300;d.xt++;d.bt=(d.bt||0)+1;save();toast('+1 попытка');render()}
 // ---------- награды (журнал, ровно один раз) ----------
-function wbSorted(d){return Object.entries(d.dmgBy||{}).map(([k,v])=>({k,n:v.n,d:v.d,g:v.g,gn:v.gn})).sort((a,b)=>b.d-a.d||(a.k<b.k?-1:1))}
+function wbSorted(d){return Object.entries(d.dmgBy||{}).map(([k,v])=>({k,n:v.n,d:v.d,g:v.g,gn:v.gn,av:v.a,ic:v.ic,lv:v.lv})).sort((a,b)=>b.d-a.d||(a.k<b.k?-1:1))}
 function wbGuilds(d){const m={};Object.values(d.dmgBy||{}).forEach(v=>{if(!v.g)return;const x=m[v.g]||(m[v.g]={id:v.g,n:v.gn,d:0,c:0});x.d+=v.d;x.c++;x.n=v.gn||x.n});return Object.values(m).sort((a,b)=>b.d-a.d)}
 function wbRewardsFor(d){const out=[],p=dvP(),me=d&&d.dmgBy&&d.dmgBy[ME];if(!me||!(me.d>0))return out;const cl=p.cl,f=1+.25*d.idx,pc=(d.max-d.hp)/d.max*100;
  WB_MS.forEach(m=>{const k='wb'+d.n+':m'+m;if(pc>=m-1e-9&&!cl[k]){const r=WB_REW[m];out.push({k,t:'Веха '+m+'% · '+WB_BOSSES[d.idx].n,gems:Math.round(r.gems*f),gold:Math.round(r.gold*f),gp:Math.round(r.gp*f),tix:r.tix||0,title:m===100?'Убийца Богов':'',fr:m===100})}});
@@ -3611,7 +3690,7 @@ function wbBossV(d){const info=wbInfo(d.n),def=info.def,pc=(d.max-d.hp)/d.max*10
  <div class="row c" style="margin-top:10px"><button class="btn gold" ${ended||!S.team.length||!wbTriesLeft()?'disabled':''} onclick="wbStart()">⚔ В бой (${wbTriesLeft()})</button><button class="btn" onclick="wbBuyTry()">+1 попытка 💎300</button></div>
  <div class="small" style="margin-top:8px">${seven?'✦ Герой 7★ в отряде: до 1% макс. HP за попытку (потолок).'+(S.owned.arata&&S.team.includes('arata')?' 🕳 Касуга Арата: до 20% макс. HP за бой (потолок, остальных двух героев блокирует).':''):'Обычная отряд наносит ≈ 0.00001% макс. HP за попытку — нужны все игроки, рейд и 7★.'}</div></div>`}
 function wbTopV(d){const s=wbSorted(d),rk=s.findIndex(x=>x.k===ME);
- return `<div class="panel"><h3>🏆 Топ урона · ${WB_BOSSES[d.idx].n}</h3><div class="small" style="margin-bottom:6px">Ваше место: ${rk>=0?'#'+(rk+1):'—'} · участников ${s.length}</div>${s.slice(0,50).map((x,i)=>`<div class="q ${x.k===ME?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${esc(x.n||x.k)}${x.k===ME?' (вы)':''}${x.gn?'<div class="small">🏰 '+esc(x.gn)+'</div>':''}</div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Пока никто не ударил босса</div>'}${rk>=50?`<div class="q gmeRow"><div>${rk+1}. ${esc(S.name)} (вы)</div><b>${fmtHp(s[rk].d)}</b></div>`:''}</div>`}
+ return `<div class="panel"><h3>🏆 Топ урона · ${WB_BOSSES[d.idx].n}</h3><div class="small" style="margin-bottom:6px">Ваше место: ${rk>=0?'#'+(rk+1):'—'} · участников ${s.length}</div>${s.slice(0,50).map((x,i)=>`<div class="q ${x.k===ME?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${pfM(x,24)} ${esc(x.n||x.k)}${x.k===ME?' (вы)':''}${x.gn?'<div class="small">🏰 '+esc(x.gn)+'</div>':''}</div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Пока никто не ударил босса</div>'}${rk>=50?`<div class="q gmeRow"><div>${rk+1}. ${pfMe(24)} ${esc(S.name)} (вы)</div><b>${fmtHp(s[rk].d)}</b></div>`:''}</div>`}
 function wbGuildV(d){const g=wbGuilds(d),my=gMine();
  return `<div class="panel"><h3>🏰 Гильдии · урон по боссу</h3><div class="small" style="margin-bottom:6px">Награда гильдии по месту (топ-3) после конца босса: 💎15K/8K/4K и очки гильдии.</div>${g.slice(0,30).map((x,i)=>`<div class="q ${my&&my.id===x.id?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${esc(x.n||'?')}<div class="small">👥 ${x.c} бойцов</div></div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Гильдии ещё не били босса</div>'}</div>`}
 function wbRewV(d){const all=wbPending(),tot={g:0,go:0,gp:0,tix:0};all.forEach(r=>{tot.g+=r.gems||0;tot.go+=r.gold||0;tot.gp+=r.gp||0;tot.tix+=r.tix||0});
@@ -3873,6 +3952,88 @@ vBattle=function(){if(B)return _vBattle0();return dgNav()+(BV==='dg'?dgView():_v
 function dgAdmAdd(){admMut(d=>{d.dg=d.dg&&typeof d.dg==='object'?d.dg:{t:0,e:0,w:0,l:0,p:0};d.dg.t=(Number(d.dg.t)>0?Math.floor(d.dg.t):0)+5});toast('+5 попыток данжа')}
 function dgAdmReset(){admMut(d=>{d.dg={t:0,e:0,w:0,l:0,p:0}});toast('Данжи сброшены')}
 function dgAdmPanel(){return `<div class="panel"><b>💰 Данжи</b><div class="small">Попыток у выбранного аккаунта: ${(()=>{try{const t=users()[AU];return t&&t.data&&t.data.dg?Math.max(0,t.data.dg.t|0):0}catch(e){return 0}})()}</div><div class="row" style="margin-top:6px"><button class="btn sm" id="admDg5" onclick="dgAdmAdd()">+5 попыток данжа</button><button class="btn sm" onclick="dgAdmReset()">Сбросить данжи</button></div></div>`}
+
+// ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ASCEND_V1) ======
+// Ступень вознесения игрока зависит от уровня аккаунта (таблица PF_LV). Каждая ступень открывает иконку (рамку-эффект) вокруг аватара.
+// Секретная иконка выдаётся только владельцу Касуги Араты. Всё оформление — на CSS (transform/opacity/steps), без filter.
+const PF_MARK='ASTRAL_ASCEND_V1';
+const PF_LV=[1,100,300,600,1200,2000,3200,5000];         // порог уровня аккаунта для ступени 0..7 (уровень не ограничен, 250 опыта на уровень)
+const PF_GEMS=[0,500,1500,3000,5000,8000,12000,20000];    // разовая награда 💎 за ступень (флаг S.pf.rw[N])
+const PF_ICONS=[
+ {id:'p0',t:0,n:'Простая',d:'Статичная обводка'},
+ {id:'p1',t:1,n:'RGB-сияние',d:'Плавно меняющаяся RGB-подсветка'},
+ {id:'p2',t:2,n:'Кружки',d:'Переливающиеся цветные кружки'},
+ {id:'p3',t:3,n:'Золотой RGB',d:'Золотое кольцо с RGB-бликами'},
+ {id:'p4',t:4,n:'Радужные искры',d:'Радужное кольцо с искрами'},
+ {id:'p5',t:5,n:'Звёздное кольцо',d:'Кольцо со мерцающими звёздами'},
+ {id:'p6',t:6,n:'Эфирное золото',d:'Золото и фиолетовый эфир'},
+ {id:'p7',t:7,n:'Астральный нимб',d:'Сияющий нимб с лучами'},
+ {id:'void',t:-1,sec:1,n:'Пустотный круг',d:'Секретная иконка'}];
+const PF_BY={};PF_ICONS.forEach(i=>{PF_BY[i.id]=i});
+function pfTierOf(lv){let t=0;for(let i=1;i<PF_LV.length;i++)if(lv>=PF_LV[i])t=i;return t}
+function pfTier(){try{return S?pfTierOf(accLv()):0}catch(e){return 0}}
+function pfD(){if(!S.pf||typeof S.pf!=='object')S.pf={};const p=S.pf;if(!p.rw||typeof p.rw!=='object')p.rw={};if(!(p.ann>=0))p.ann=0;if(!(p.gp>=0))p.gp=0;return p}
+function pfArId(){return typeof AR_ID!=='undefined'?AR_ID:'arata'}
+function pfVoid(){try{return !!S&&!!(S.owned&&S.owned[pfArId()])}catch(e){return false}}
+function pfOpen(id){const i=PF_BY[id];if(!i||!S)return false;return i.sec?pfVoid():i.t<=pfTier()}
+function pfIc(){try{const p=S&&S.pf;if(p&&p.ic&&pfOpen(p.ic))return p.ic}catch(e){}return 'p'+pfTier()}
+// иконка для чужих записей (сервер/гильдия): неизвестная или недоступная по уровню → ступень по уровню
+function pfIcFor(ic,lv){const t=pfTierOf(+lv||1),i=typeof ic==='string'?PF_BY[ic]:null;return i&&(i.sec||i.t<=t)?i.id:'p'+t}
+function pfSafeAv(a){return typeof a==='string'&&/^[A-Za-z0-9_-]{1,40}$/.test(a)?a:AVS[0]}
+function pfAvIdx(s){try{return parseInt(hash(String(s||'x')).slice(0,3),36)%AVS.length}catch(e){return 0}}
+function pfAv(av,ic,sz,cls){const i=PF_BY[ic]||PF_BY.p0;sz=sz||38;return `<span class="pfa pf${i.sec?'v':i.t}${sz<36?' s':''}${cls?' '+cls:''}" style="--s:${sz}px"><img class="av" src="img/${pfSafeAv(av)}.jpg" alt=""><u></u><u></u><u></u></span>`}
+function pfMe(sz,cls){return pfAv(S.av,pfIc(),sz,cls)}
+function pfM(m,sz){const av=(m&&m.av)||AVS[pfAvIdx(m&&(m.k||m.name))];return pfAv(av,pfIcFor(m&&m.ic,m&&m.lv),sz||28)}
+// ---------- проверка вознесения / секретной иконки ----------
+let PFB=0;
+function pfSync(){
+ if(!S||!ME||PFB)return;PFB=1;
+ try{const p=pfD(),t=pfTier();let ch=0;
+  if(t>0&&p.ann<t&&!(typeof AR_PRICE!=='undefined'&&S.gems===AR_PRICE)){for(let i=1;i<=t;i++)if(!p.rw[i]){p.rw[i]=1;S.gems+=PF_GEMS[i];p.gp+=PF_GEMS[i];ch=1}}
+  if(pfVoid()&&!p.v){p.v=1;ch=1;setTimeout(()=>{try{toast('🕳 Новая иконка: Пустотный круг')}catch(e){}},500)}
+  if(ch)save();
+ }catch(e){console.error(e)}finally{PFB=0}}
+function pfPending(){if(!S)return false;const p=pfD(),t=pfTier();return t>0&&p.ann<t&&!!p.rw[t]}
+function pfIdle(){try{return !document.querySelector('#modal .modal')&&!B&&document.getElementById('game').style.display!=='none'}catch(e){return false}}
+function pfTick(){try{if(!S||!ME)return false;pfSync();if(pfPending()&&pfIdle()){pfAscShow();return true}}catch(e){console.error(e)}return false}
+setInterval(pfTick,1300);
+// ---------- окно «Вознесение N!» ----------
+function pfAscShow(force){
+ const p=pfD(),t=pfTier();
+ if(t<1)return toast('Вознесений пока нет (с ур. '+PF_LV[1]+')');
+ const from=force?Math.max(0,t-1):p.ann,gems=force?0:p.gp;
+ const opened=[];for(let i=from+1;i<=t;i++)opened.push(PF_BY['p'+i].n);
+ if(!force){p.ann=t;p.gp=0;p.ic='p'+t;save()}
+ modal(`<div class="pfw"><div class="pfw-rays"></div><div class="pfw-st"><span>✦</span><span>✧</span><span>✦</span></div><h2 class="rbt pfw-t">Вознесение ${t}!</h2><div class="pfw-ic">${pfAv(S.av,'p'+t,96)}</div><div class="pfw-n">${esc(PF_BY['p'+t].n)}</div><div class="small">Уровень аккаунта ${accLv()}${opened.length>1?'<br>Открыты иконки: '+opened.map(esc).join(', '):'<br>Открыта новая иконка'}</div>${gems?`<div class="pfw-r">+💎${gems}</div>`:''}<div class="small">${force?'':'Новая иконка выбрана автоматически. '}Сменить можно в профиле.</div><div class="row c" style="margin-top:12px"><button class="btn gold" onclick="closeM()">Отлично</button><button class="btn" onclick="pfWin()">🎭 Иконки</button></div></div>`)}
+// ---------- профиль игрока: выбор иконки ----------
+function pfPick(id){
+ if(!S)return false;const i=PF_BY[id];
+ if(!i||!pfOpen(id)){toast('Эта иконка недоступна');if(document.querySelector('#modal .pfg'))pfWin();return false}
+ const prev=pfD().ic;S.pf.ic=id;
+ if(pfIc()!==id){S.pf.ic=prev;return false}      // откат, если не прошла проверка
+ save();try{gSyncMe()}catch(e){}
+ if(tab==='profile')render();pfWin();return true}
+function pfWin(){
+ if(!S)return;const p=pfD(),t=pfTier(),cur=pfIc(),nx=t+1<PF_LV.length?PF_LV[t+1]:0;
+ const vis=PF_ICONS.filter(i=>!i.sec||pfVoid());
+ const cell=i=>{const op=pfOpen(i.id),sel=cur===i.id,hint=i.sec?'Секретная':(op?(i.t?'Вознесение '+i.t:'Ур. 1+'):'Вознесение '+i.t+': ур. '+PF_LV[i.t]);
+  return `<div class="pfc${op?'':' lock'}${sel?' sel':''}" ${op?`onclick="pfPick('${i.id}')"`:`title="${esc(hint)}"`}><div class="pfc-i">${op?pfAv(S.av,i.id,44):pfAv(S.av,'p0',44,'lk')}${op?'':'<em>🔒</em>'}</div><b>${esc(i.n)}</b><small>${sel?'✓ Выбрана':esc(hint)}</small></div>`};
+ const s=document.querySelector('#modal .inner'),st=s?s.scrollTop:0;
+ modal(`<div class="pfp"><div class="row pfh">${pfMe(64)}<div style="flex:1;min-width:0"><h3 style="overflow-wrap:anywhere">${esc(S.name)}</h3><div class="small">Уровень аккаунта ${accLv()}</div><div class="small">${t?'✨ Вознесение '+t:'Вознесения пока нет'}</div></div></div>
+ <div class="small" style="margin:10px 0 4px">${nx?'Следующее вознесение '+(t+1)+': ур. '+nx+' (осталось '+Math.max(0,nx-accLv())+')':'Достигнута высшая ступень вознесения'}</div>
+ <div class="small" style="margin-bottom:6px">Выберите иконку — она видна в шапке, гильдии, рейтингах и мир-боссе.</div>
+ <div class="pfg">${vis.map(cell).join('')}</div>
+ <div class="row c" style="margin-top:12px"><button class="btn gold" onclick="closeM()">Закрыть</button></div></div>`);
+ const n=document.querySelector('#modal .inner');if(n)n.scrollTop=st}
+// ---------- админ ----------
+function pfAdmPanel(){return `<div class="panel"><b>✨ Вознесение игрока</b><div class="small" style="margin:4px 0">Ступень (у вас): ${pfTier()} · иконка: ${esc(PF_BY[pfIc()].n)}</div>
+ <div class="row"><button class="btn sm" onclick="admLevelTo(100)">Уровень = 100</button><button class="btn sm" onclick="admLevelTo(300)">Уровень = 300</button><button class="btn sm" onclick="admLevelTo(600)">Уровень = 600</button></div>
+ <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPfShow()">Показать окно вознесения</button><button class="btn sm" style="background:#5b1a2a" onclick="admPfReset()">Сбросить иконки/вознесение</button></div></div>`}
+function admLevelTo(n){admMut(d=>{d.xp=Math.max(0,(n-1)*250)});toast('Уровень аккаунта = '+n)}
+function admPfShow(){if(!isAdmin())return;if(AU!==ME)return toast('Только для своего аккаунта');pfAscShow(true)}
+function admPfReset(){if(!isAdmin())return;admMut(d=>{const p=d.pf&&typeof d.pf==='object'?d.pf:(d.pf={});p.ic='';p.ann=0;p.gp=0;p.v=0;if(!p.rw)p.rw={}});toast('Иконки и вознесение сброшены (награды повторно не выдаются)')}
+// покупка/получение Араты → секретная иконка открывается сразу
+(function(){const g0=giveHero;giveHero=function(h){const r=g0.apply(this,arguments);try{if(h&&h.id===pfArId())setTimeout(pfSync,0)}catch(e){}return r}})();
 
 // ====== ЗВУК И МУЗЫКА (WebAudio, всё синтезируется в игре) ======
 const AUD=(()=>{
