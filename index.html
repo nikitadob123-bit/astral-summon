@@ -189,7 +189,7 @@ select.in{appearance:auto}textarea.in{resize:none}
 .gmem:active{background:#ffffff10}
 @media(max-width:260px){.gnav button{min-width:44px;padding:5px 6px}#app{padding-left:6px;padding-right:6px}.panel{padding:9px}}
 @media(min-width:700px){#nav button{font-size:12px}#nav button i{font-size:22px}.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.log{height:150px}.f b{font-size:13px}}
-/* ===== ASTRAL_ASCEND_V1: иконки-рамки вознесения игрока (.pfa). Только transform/opacity/steps/border-color, без filter; слои pointer-events:none ===== */
+/* ===== ASTRAL_ASCEND_V2: иконки-рамки вознесения игрока (.pfa). Только transform/opacity/steps/border-color, без filter; слои pointer-events:none ===== */
 .pfa{position:relative;display:inline-block;width:var(--s,38px);height:var(--s,38px);margin:3px;flex:none;vertical-align:middle;border-radius:50%;isolation:isolate}
 .pfa>img.av{position:relative;z-index:1;display:block;width:100%;height:100%;border:2px solid #ffd76a;animation:none}
 .pfa>u{position:absolute;inset:-3px;border-radius:50%;pointer-events:none;text-decoration:none;display:none;will-change:transform}
@@ -204,7 +204,23 @@ select.in{appearance:auto}textarea.in{resize:none}
 @keyframes pfspin{to{transform:rotate(360deg)}}
 @keyframes pfspinr{to{transform:rotate(-360deg)}}
 /* ступень 2 — переливающиеся цветные кружки (прежний эффект иконки: g7b, steps) */
-.pf2>img.av{border-color:#0ff;box-shadow:0 0 6px #0ff,-3px 0 #f0f;animation:g7b .9s steps(1) infinite}
+.pf2>img.av{border-color:#b9c6ff;box-shadow:0 0 7px #8fa8ffaa,0 0 13px #b15cff55}
+.pf2>u{display:block}
+.pf2>u::before{content:'';position:absolute;inset:0;border-radius:50%}
+/* орбита 1 (против часовой, 10с): голубой хвост+планета; ::before — пурпурно-розовая копия, плавный кроссфейд (8с) = перелив цвета */
+.pf2>u:nth-of-type(1){inset:-6px;-webkit-mask:radial-gradient(circle at 50% 2px,#000 0 3px,#0000 3.7px),radial-gradient(farthest-side,#0000 calc(100% - 3.5px),#000 calc(100% - 2.5px),#000 calc(100% - .5px),#0000 100%);mask:radial-gradient(circle at 50% 2px,#000 0 3px,#0000 3.7px),radial-gradient(farthest-side,#0000 calc(100% - 3.5px),#000 calc(100% - 2.5px),#000 calc(100% - .5px),#0000 100%);background:radial-gradient(circle at 50% 2px,#fff 0 1.3px,#7ff 2.2px,#0000 3.4px),conic-gradient(#fff 0,#9ff 18deg,#00cfff88 80deg,#0000 150deg,#0000 360deg);animation:pf2in 1.4s ease-out both,pf2or 10s linear infinite}
+.pf2>u:nth-of-type(1)::before{background:radial-gradient(circle at 50% 2px,#fff 0 1.3px,#ffc2f4 2.2px,#0000 3.4px),conic-gradient(#fff 0,#ff9ae8 18deg,#b15cff88 80deg,#0000 150deg,#0000 360deg);opacity:0;animation:pf2x 8s ease-in-out infinite}
+/* орбита 2 (по часовой, 15с, шире): пурпурно-розово-белый хвост; ::before «дышит» масштабом/прозрачностью */
+.pf2>u:nth-of-type(2){inset:-10px;-webkit-mask:radial-gradient(circle at 50% 2px,#000 0 3px,#0000 3.7px),radial-gradient(farthest-side,#0000 calc(100% - 3.5px),#000 calc(100% - 2.5px),#000 calc(100% - .5px),#0000 100%);mask:radial-gradient(circle at 50% 2px,#000 0 3px,#0000 3.7px),radial-gradient(farthest-side,#0000 calc(100% - 3.5px),#000 calc(100% - 2.5px),#000 calc(100% - .5px),#0000 100%);animation:pf2o 15s linear infinite}
+.pf2>u:nth-of-type(2)::before{background:radial-gradient(circle at 50% 2px,#fff 0 1.3px,#ff9ae8 2.2px,#0000 3.4px),conic-gradient(#0000 0,#0000 170deg,#b15cff66 240deg,#ff9ae8bb 320deg,#fff 360deg);animation:pf2b 6s ease-in-out infinite}
+/* орбита 3 (по часовой, 7с, ближе к аватару): мягкое радиальное свечение, перелив голубой→пурпурный→розовый→белый */
+.pf2>u:nth-of-type(3){inset:-8px;background:radial-gradient(circle at 50% 4px,#fff 0 1.2px,#fff9 2.2px,#0000 3px),conic-gradient(#00cfff,#7a5cff,#ff5fd8,#fff,#ff5fd8,#7a5cff,#00cfff);-webkit-mask:radial-gradient(circle at 50% 4px,#000 0 2.6px,#0000 3.2px),radial-gradient(closest-side,#0000 66%,#000 86%,#0000 100%);mask:radial-gradient(circle at 50% 4px,#000 0 2.6px,#0000 3.2px),radial-gradient(closest-side,#0000 66%,#000 86%,#0000 100%);animation:pf2o 7s linear infinite,pf2g 4.5s ease-in-out infinite}
+@keyframes pf2o{to{transform:rotate(360deg)}}
+@keyframes pf2or{to{transform:rotate(-360deg)}}
+@keyframes pf2in{from{opacity:0}to{opacity:1}}
+@keyframes pf2x{0%,100%{opacity:0}45%,55%{opacity:1}}
+@keyframes pf2b{0%,100%{opacity:.6;transform:scale(.97)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes pf2g{0%,100%{opacity:.45}50%{opacity:.95}}
 /* ступень 3 — золотой RGB-кружок */
 .pf3>img.av{border-color:#ffd76a;box-shadow:0 0 6px #ffb800}
 .pf3>u:nth-of-type(1){display:block;inset:-4px;background:conic-gradient(#fff2a8,#ffb800,#a3700c,#ffe27a,#ffb800,#fff2a8);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 4px));animation:pfspin 6s linear infinite}
@@ -245,6 +261,8 @@ select.in{appearance:auto}textarea.in{resize:none}
 .pfa.s{margin:2px}.pfa.s>u:nth-of-type(n+2){display:none!important}.pfa.s>u:nth-of-type(1){inset:-3px}
 .pfa.s.pf7>u:nth-of-type(1),.pfa.s.pf3>u:nth-of-type(1){inset:-3px}
 .pfa.s.pfv>u:nth-of-type(1){inset:-3px}
+.pfa.s.pf2>u:nth-of-type(1){inset:-3px;background:radial-gradient(circle at 50% 2px,#fff 0 1.3px,#9ff 2.2px,#0000 3.4px),conic-gradient(#fff 0,#ff9ae8 30deg,#b15cff99 90deg,#00cfff66 150deg,#0000 220deg,#0000 360deg);animation:pf2or 8s linear infinite}
+.pfa.s.pf2>u:nth-of-type(1)::before{display:none}
 @media(max-width:260px){.cur{font-size:11px}#hdr{padding-left:6px;padding-right:6px;gap:4px}.pfg{grid-template-columns:repeat(2,minmax(0,1fr))}.pfc{padding:6px 2px}.modal .inner{padding:10px}}
 .pfh{flex-wrap:nowrap;gap:8px;padding:0 6px}.pfp{padding:2px 4px;overflow:hidden}.pfp .pfc,.pfp .pfh{overflow:hidden}.pfp .pfc-i{padding:9px 0}.pfw .pfw-ic{overflow:hidden}
 /* окно вознесения */
@@ -266,7 +284,7 @@ select.in{appearance:auto}textarea.in{resize:none}
 .pfc small{font-size:10px;opacity:.75;overflow-wrap:anywhere;line-height:1.15}
 .pfc-i{position:relative;display:flex;align-items:center;justify-content:center;padding:6px 0}
 .pfc-i em{position:absolute;right:2px;bottom:2px;font-style:normal;font-size:14px}
-@media(prefers-reduced-motion:reduce){.pfa>img.av,.pfa>u,.pfw>.pfw-rays,.pfw-t,.pfw-ic,.pfw-r,.pfw-st span{animation:none!important}.pf2>img.av{border-color:#0ff}}
+@media(prefers-reduced-motion:reduce){.pfa>img.av,.pfa>u,.pfw>.pfw-rays,.pfw-t,.pfw-ic,.pfw-r,.pfw-st span{animation:none!important}.pfa>u::before{animation:none!important}.pf2>u:nth-of-type(1)::before{opacity:.55}.pf2>u:nth-of-type(1){transform:rotate(-40deg);opacity:1}.pf2>u:nth-of-type(2){transform:rotate(130deg)}.pf2>u:nth-of-type(2)::before{opacity:.85;transform:none}.pf2>u:nth-of-type(3){transform:rotate(235deg);opacity:.7}.pfa.s.pf2>u:nth-of-type(1){transform:rotate(-40deg)}}
 </style>
 </head>
 <body>
@@ -3953,10 +3971,10 @@ function dgAdmAdd(){admMut(d=>{d.dg=d.dg&&typeof d.dg==='object'?d.dg:{t:0,e:0,w
 function dgAdmReset(){admMut(d=>{d.dg={t:0,e:0,w:0,l:0,p:0}});toast('Данжи сброшены')}
 function dgAdmPanel(){return `<div class="panel"><b>💰 Данжи</b><div class="small">Попыток у выбранного аккаунта: ${(()=>{try{const t=users()[AU];return t&&t.data&&t.data.dg?Math.max(0,t.data.dg.t|0):0}catch(e){return 0}})()}</div><div class="row" style="margin-top:6px"><button class="btn sm" id="admDg5" onclick="dgAdmAdd()">+5 попыток данжа</button><button class="btn sm" onclick="dgAdmReset()">Сбросить данжи</button></div></div>`}
 
-// ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ASCEND_V1) ======
+// ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ASCEND_V2) ======
 // Ступень вознесения игрока зависит от уровня аккаунта (таблица PF_LV). Каждая ступень открывает иконку (рамку-эффект) вокруг аватара.
 // Секретная иконка выдаётся только владельцу Касуги Араты. Всё оформление — на CSS (transform/opacity/steps), без filter.
-const PF_MARK='ASTRAL_ASCEND_V1';
+const PF_MARK='ASTRAL_ASCEND_V2';
 const PF_LV=[1,100,300,600,1200,2000,3200,5000];         // порог уровня аккаунта для ступени 0..7 (уровень не ограничен, 250 опыта на уровень)
 const PF_GEMS=[0,500,1500,3000,5000,8000,12000,20000];    // разовая награда 💎 за ступень (флаг S.pf.rw[N])
 const PF_ICONS=[
