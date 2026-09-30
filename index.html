@@ -560,12 +560,12 @@ function addXp(n){const b=accLv();S.xp+=n;if(accLv()>b){S.gems+=100;setTimeout((
 function start(){$('auth').style.display='none';$('game').style.display='block';tab=S.world?'summon':'story';SV=null;try{gOnLogin()}catch(e){console.error(e)}render()}
 function hud(){if(!S)return;$('hdr').innerHTML=`<div class="me" onclick="tab='profile';render()"><img class="av${typeof dvFr==='function'&&dvFr()?' f7':''}" src="img/${S.av}.jpg"><div><b>${esc(S.name)}</b><small>Ур. ${accLv()}${typeof dvTitle==='function'&&dvTitle()?' · '+esc(dvTitle()):''}</small></div></div><div class="cur">💎 ${S.gems} &nbsp;🪙 ${S.gold}</div>`}
 let tab='summon';
-const TABS=[['summon','✨','Призыв'],['battle','⚔️','Бой'],['story','📖','Сюжет'],['heroes','📜','Герои'],['guild','🏰','Гильдия'],['wboss','🌍','Мир-босс'],['quests','🎯','Задания'],['shop','🛒','Магазин'],['profile','👤','Профиль']];
-function navHtml(){return TABS.map(([k,i,n])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${n}${(k==='guild'&&typeof gDot==='function'&&gDot())||(k==='wboss'&&typeof dvDot==='function'&&dvDot())?'<u class="dot"></u>':''}</button>`).join('')}
+const TABS=[['summon','✨','Призыв'],['battle','⚔️','Бой'],['story','📖','Сюжет'],['heroes','📜','Герои'],['guild','🏰','Гильдия'],['wboss','🌍','Мир-босс'],['events','🎉','Ивенты'],['quests','🎯','Задания'],['shop','🛒','Магазин'],['profile','👤','Профиль']];
+function navHtml(){return TABS.map(([k,i,n])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${n}${(k==='guild'&&typeof gDot==='function'&&gDot())||(k==='wboss'&&typeof dvDot==='function'&&dvDot())||(k==='events'&&typeof evDot==='function'&&evDot())?'<u class="dot"></u>':''}</button>`).join('')}
 function navFit(){try{const n=$('nav'),a=n.querySelector('.on');if(a)n.scrollLeft=Math.max(0,a.offsetLeft-(n.clientWidth-a.offsetWidth)/2)}catch(e){}}
 function render(){
  $('nav').innerHTML=navHtml();navFit();
- $('app').innerHTML=({summon:vSummon,battle:vBattle,story:vStory,heroes:vHeroes,guild:vGuild,wboss:vWboss,quests:vQuests,shop:vShop,profile:vProfile})[tab]();hud();
+ $('app').innerHTML=({summon:vSummon,battle:vBattle,story:vStory,heroes:vHeroes,guild:vGuild,wboss:vWboss,events:vEvents,quests:vQuests,shop:vShop,profile:vProfile})[tab]();hud();
 }
 function go(k){if(B&&k!=='battle'&&!confirm('Выйти из боя? Прогресс боя будет потерян.'))return;if(k!=='battle'){if(B&&B.guild)gBossEnd(B,1);B=null}tab=k;render();window.scrollTo(0,0)}
 
@@ -2685,6 +2685,7 @@ function admHtml(){
  <select id="ad_w" style="${inp}">${wopts}</select><div class="small">Для «До главы N» введите N в поле валюты выше.</div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admWorld('all')">Пройти мир</button><button class="btn sm" onclick="admWorld('to')">До главы N</button><button class="btn sm" onclick="admWorld('reset')">Сбросить мир</button></div>
  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="admPity()">🎯 Гарант мифика на след. крутку</button></div></div>
+ ${typeof admEvPanel==='function'?admEvPanel():''}
  <div class="panel"><b>⚙ Аккаунт</b><input id="ad_nm" placeholder="Новый ник" maxlength="16" style="${inp}"><button class="btn sm" onclick="admRename()">Сменить ник</button>
  <input id="ad_p" type="password" placeholder="Новый пароль (от 4 символов)" style="${inp}"><button class="btn sm" onclick="admPass()">Сменить пароль</button>
  <div class="row" style="margin-top:8px"><button class="btn sm" onclick="admGuildReset()">🏰 Сбросить гильдию</button><button class="btn sm" style="background:#5b1a2a" onclick="admReset()">Сбросить прогресс</button><button class="btn sm" style="background:#5b1a2a" onclick="admDel()">Удалить аккаунт</button></div></div>
@@ -3404,7 +3405,7 @@ async function wbSend(n,dmg,id){
 async function wbRetryOut(){const p=dvP();if(!p.out||WBUSY)return;WBUSY=1;try{await wbFlush0()}catch(e){}finally{WBUSY=0}}
 async function wbFlush0(){const p=dvP(),o=p.out;if(!o)return null;
  const r=await wbSend(o.n,o.dmg,o.id);if(r&&r.e){p.out=null;save();toast(r.e);return r}
- p.out=null;p.wbn=p.wbn||[];if(!p.wbn.includes(o.n))p.wbn.push(o.n);save();
+ p.out=null;p.wbn=p.wbn||[];if(!p.wbn.includes(o.n))p.wbn.push(o.n);save();try{evAdd('wdmg',r.real||0)}catch(e){}
  try{await raidAddDmg(o.n,r.real||0)}catch(e){}
  return r}
 function wbStartGuard(){if(!S.team.length)return toast('Соберите отряд во вкладке «Герои»'),false;if(wbTriesLeft()<=0)return toast('Попытки на сегодня закончились'),false;return true}
@@ -3540,6 +3541,94 @@ function dvSync(force){if(!S||!ME)return Promise.resolve();if(DVSYNC)return DVSY
  }catch(e){}finally{DVSYNC=null}})();return DVSYNC}
 setInterval(()=>{try{if(document.hidden||!S||!ME)return;if(tab==='wboss'||Date.now()-WLAST>6e4){WLAST=Date.now();dvSync()}}catch(e){}},15000);
 setTimeout(()=>{try{if(S&&ME)dvSync()}catch(e){}},4000);
+
+// ====== ИВЕНТЫ: «Путь Новичка» (ур. <30) и «Испытание Легенд» (ур. 50+) ======
+const EV_MARK='ASTRAL_EVENTS_V1';
+const EV_DEF={
+ novice:{n:'Путь Новичка',ic:'🌱',total:20000,d:'Для игроков ниже 30 уровня. Выполняйте этапы — каждый даёт алмазы. Прогресс считается с момента начала ивента.',
+  st:[
+   {t:'Первые шаги',d:'Проведите боёв: 3',k:'battles',n:3,g:1000},
+   {t:'Призыватель',d:'Сделайте призывов: 5',k:'summons',n:5,g:1200},
+   {t:'Победитель',d:'Победите в боях: 8',k:'wins',n:8,g:1400},
+   {t:'Читатель',d:'Пройдите глав сюжета: 5',k:'chapters',n:5,g:1600},
+   {t:'Тренировка',d:'Повысьте уровень героев: 10 раз',k:'lvls',n:10,g:1600},
+   {t:'Мастер навыков',d:'Улучшите навыки или NP: 3 раза',k:'skl',n:3,g:1500},
+   {t:'Охотник на боссов',d:'Победите боссов (кампания/сюжет): 2',k:'bosswins',n:2,g:1800},
+   {t:'Коллекционер',d:'Соберите героев в коллекции: 8',k:'own',n:8,g:1800},
+   {t:'Рост',d:'Поднимите уровень аккаунта на 5',k:'lvgain',n:5,g:2000},
+   {t:'Сильный отряд',d:'Повысьте уровень героев: 40 раз',k:'lvls',n:40,g:2000},
+   {t:'Сюжетный марафон',d:'Пройдите глав сюжета: 25',k:'chapters',n:25,g:2400},
+   {t:'Финал пути',d:'Заберите награды за все этапы',k:'all',n:1,g:1700}]},
+ legend:{n:'Испытание Легенд',ic:'👑',total:100000,d:'Для игроков 50+ уровня. Этапы в разы сложнее: боссы, дуэли, мир-босс, вознесения и горы сюжета. Прогресс считается с момента начала ивента.',
+  st:[
+   {t:'Закалка',d:'Проведите боёв: 60',k:'battles',n:60,g:5000},
+   {t:'Мастер призыва',d:'Сделайте призывов: 100',k:'summons',n:100,g:6000},
+   {t:'Победный марш',d:'Победите в боях: 50',k:'wins',n:50,g:6000},
+   {t:'Вершины сюжета',d:'Пройдите глав сюжета: 40',k:'chapters',n:40,g:7000},
+   {t:'Убийца боссов',d:'Победите боссов (кампания/сюжет): 15',k:'bosswins',n:15,g:7000},
+   {t:'Гроза гильдейского босса',d:'Проведите боёв с гильдейским боссом: 10',k:'gboss',n:10,g:7000},
+   {t:'Дуэлянт',d:'Проведите дуэлей гильдии: 15',k:'duels',n:15,g:6000},
+   {t:'Мировая угроза',d:'Проведите боёв с мировым боссом: 5',k:'wbt',n:5,g:8000},
+   {t:'Удар по миру',d:'Нанесите мировому боссу суммарно 500 000 урона',k:'wdmg',n:5e5,g:8000},
+   {t:'Вознесение',d:'Вознесите героев: 5 раз',k:'asc',n:5,g:8000},
+   {t:'Вершина героев',d:'Повысьте уровень героев: 300 раз',k:'lvls',n:300,g:9000},
+   {t:'Легион',d:'Соберите 5★+ героев: 12',k:'own5',n:12,g:8000},
+   {t:'Марафон сюжета',d:'Пройдите глав сюжета: 100',k:'chapters',n:100,g:9000},
+   {t:'Легенда',d:'Заберите награды за все этапы',k:'all',n:1,g:6000}]}};
+function evInit(d){if(!d.ev)d.ev={};const e=d.ev;e.a=e.a||{};e.cl=e.cl||{};return e}
+function evS(){return evInit(S)}
+const evLv=()=>accLv();
+function evVisible(id){const e=evS(),lv=evLv(),st=!!e.a[id];
+ if(id==='novice')return lv<30||(st&&lv<50);
+ return lv>=50||st}
+function evCan(id){return evVisible(id)}
+function evStart(id){if(!evCan(id))return toast('Ивент недоступен для вашего ранга');const e=evS();if(e.a[id])return;
+ e.a[id]={t:Date.now(),lv0:evLv(),c:{}};save();toast('Ивент «'+EV_DEF[id].n+'» начат!');render()}
+function evAdd(k,n,only){try{if(!S||!ME)return;const e=evS();let ch=0;Object.keys(e.a).forEach(id=>{if(only&&only!==id)return;const c=e.a[id].c;c[k]=(c[k]||0)+n;ch=1});if(ch)save0()}catch(x){}}
+function save0(){if(!ME)return;const u=users();if(u[ME]){u[ME].data=S;putUsers(u)}}
+function evCur(id,s,d){d=d||S;const e=evInit(d),a=e.a[id];if(!a)return 0;const c=a.c||{};
+ switch(s.k){
+  case'own':return Object.keys(d.owned||{}).filter(x=>H(x)).length;
+  case'own5':return Object.keys(d.owned||{}).filter(x=>H(x)&&H(x).r>=5).length;
+  case'maxlv':return Math.max(0,...Object.values(d.owned||{}).map(o=>o.lv||0));
+  case'lvgain':return Math.max(0,(d===S?evLv():1+Math.floor((d.xp||0)/250))-a.lv0);
+  case'all':return EV_DEF[id].st.every((x,i)=>x.k==='all'||e.cl[id+':'+i])?1:0;
+  default:return c[s.k]||0}}
+function evDone(id,i){return evCur(id,EV_DEF[id].st[i])>=EV_DEF[id].st[i].n}
+function evClaim(id,i){if(!evCan(id))return toast('Ивент недоступен для вашего ранга');const e=evS(),def=EV_DEF[id],s=def.st[i],key=id+':'+i;
+ if(!e.a[id]||!s)return;if(e.cl[key])return toast('Уже получено');if(!evDone(id,i))return toast('Этап ещё не выполнен');
+ e.cl[key]=1;S.gems+=s.g;save();toast('🎉 Этап «'+s.t+'»: +💎'+s.g);render()}
+function evPend(){let n=0;try{if(!S)return 0;const e=evS();Object.keys(EV_DEF).forEach(id=>{if(!e.a[id]||!evCan(id))return;EV_DEF[id].st.forEach((s,i)=>{if(!e.cl[id+':'+i]&&evDone(id,i))n++})})}catch(x){}return n}
+function evDot(){return evPend()>0}
+function evGot(id){const e=evS();return EV_DEF[id].st.reduce((a,s,i)=>a+(e.cl[id+':'+i]?s.g:0),0)}
+function evCard(id){const def=EV_DEF[id],e=evS(),a=e.a[id],got=evGot(id),fmt=x=>x>=1e4?fmtHp(x):Math.round(x).toLocaleString('ru-RU');
+ let h=`<div class="panel" style="${id==='legend'?'border-color:#ffd76a':'border-color:#4ade80'}"><h3 style="overflow-wrap:anywhere">${def.ic} ${def.n} · 💎${def.total.toLocaleString('ru-RU')}</h3><div class="small" style="margin-bottom:6px">${def.d}</div>
+ <div class="bar xp"><i style="width:${got/def.total*100}%"></i></div><div class="small" style="margin:4px 0 8px">Получено: 💎<b>${got.toLocaleString('ru-RU')}</b> / ${def.total.toLocaleString('ru-RU')} · этапов ${def.st.filter((s,i)=>e.cl[id+':'+i]).length}/${def.st.length}</div>`;
+ if(!a)return h+`<button class="btn gold" onclick="evStart('${id}')">▶ Начать ивент</button></div>`;
+ h+=def.st.map((s,i)=>{const cur=evCur(id,s),ok=cur>=s.n,cl=e.cl[id+':'+i],p=Math.min(1,cur/s.n);
+  return `<div class="q" style="align-items:flex-start;gap:6px"><div style="min-width:0;flex:1;overflow-wrap:anywhere"><b>${i+1}. ${s.t}</b><div class="small">${s.d}</div><div class="bar xp" style="margin-top:3px"><i style="width:${p*100}%"></i></div><div class="small">${fmt(Math.min(cur,s.n))} / ${fmt(s.n)} · 💎${s.g.toLocaleString('ru-RU')}</div></div>
+   <button class="btn sm ${ok&&!cl?'gold':''}" style="width:auto;flex:none;min-width:64px" ${ok&&!cl?'':'disabled'} onclick="evClaim('${id}',${i})">${cl?'✅':ok?'Забрать':'🔒'}</button></div>`}).join('');
+ return h+'</div>'}
+function vEvents(){const lv=evLv(),vis=Object.keys(EV_DEF).filter(evVisible);
+ let h=`<div class="panel small" style="padding:8px">🎉 <b>Ивенты</b> — ваш ранг (уровень аккаунта): <b>${lv}</b></div>`;
+ if(!vis.length){
+  h+=`<div class="panel" style="text-align:center"><div style="font-size:44px">🎉</div><h3>Ивенты недоступны для вашего ранга</h3><p class="small" style="margin-top:8px">«Путь Новичка» — для рангов ниже 30 (💎20 000).<br>«Испытание Легенд» — для рангов 50+ (💎100 000).</p><p style="margin-top:8px"><b>До 50 ранга осталось уровней: ${Math.max(0,50-lv)}</b></p><div class="bar xp" style="margin-top:6px"><i style="width:${Math.min(100,lv/50*100)}%"></i></div></div>`;
+  return h}
+ if(lv>=30&&lv<50)h+=`<div class="panel small" style="border-color:#f59e0b">Новые участники «Пути Новичка» — только ниже 30 ранга; вы можете закончить начатый ивент. «Испытание Легенд» откроется через ${50-lv} ур.</div>`;
+ if(lv<30)h+=`<div class="panel small">«Испытание Легенд» откроется с 50 ранга (осталось ${50-lv} ур.).</div>`;
+ return h+vis.map(evCard).join('')}
+// ---- подключение к событиям игры ----
+(function(){const W=(n,f)=>{try{const o=globalThis[n];if(typeof o!=='function')return;globalThis[n]=function(){const a=arguments;let c;try{c=f.pre&&f.pre(a)}catch(e){}const r=o.apply(this,a);try{f.post&&f.post(a,c,r)}catch(e){}return r}}catch(e){}};
+ W('prog',{pre:a=>{const id=a[0],n=a[1]===undefined?1:a[1];
+   if(id==='battle')evAdd('battles',1);else if(id==='summon')evAdd('summons',n);else if(id==='lvl')evAdd('lvls',n);else if(id==='skl')evAdd('skl',n);
+   else if(id==='win'&&typeof B!=='undefined'&&B){evAdd('wins',1);if(B.story&&B.story.ci>=((S.sp||{})[B.story.w]||0))evAdd('chapters',1);if(B.st&&B.st.boss&&!B.guild)evAdd('bosswins',1)}}});
+ W('gDuel',{pre:a=>{try{return gdS().duels}catch(e){return 0}},post:(a,c)=>{try{if(gdS().duels>c)evAdd('duels',1)}catch(e){}}});
+ W('gBossEnd',{pre:a=>{const x=a[0];return x&&!x.done&&x.guild?(x.guild.wb?'w':'g'):''},post:(a,c)=>{if(c==='w')evAdd('wbt',1);else if(c==='g')evAdd('gboss',1)}});
+ W('ascend',{pre:a=>{const o=S.owned[a[0]];return o?o.asc||0:0},post:(a,c)=>{const o=S.owned[a[0]];if(o&&(o.asc||0)>c)evAdd('asc',1)}})})();
+// ---- админ ----
+function admEvDone(id){admMut(d=>{const e=evInit(d);if(!e.a[id])e.a[id]={t:Date.now(),lv0:1+Math.floor((d.xp||0)/250),c:{}};EV_DEF[id].st.forEach(s=>{if(s.k!=='all'&&s.k!=='own'&&s.k!=='own5'&&s.k!=='maxlv'&&s.k!=='lvgain')e.a[id].c[s.k]=s.n})});toast('Счётчики ивента выполнены')}
+function admEvReset(){admMut(d=>{d.ev={a:{},cl:{}}});toast('Ивенты сброшены')}
+function admEvPanel(){return `<div class="panel"><b>🎉 Ивенты</b><div class="small">Уровень: кнопки «Уровень +N» выше. Прогресс:</div><div class="row" style="margin-top:6px"><button class="btn sm" onclick="admEvDone('novice')">Новичок: отметить</button><button class="btn sm" onclick="admEvDone('legend')">Легенды: отметить</button><button class="btn sm" style="background:#5b1a2a" onclick="admEvReset()">Сбросить ивенты</button></div></div>`}
 
 // ====== ЗВУК И МУЗЫКА (WebAudio, всё синтезируется в игре) ======
 const AUD=(()=>{
