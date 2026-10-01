@@ -13,6 +13,7 @@
 <!-- ASTRAL_PLAYER_V1 -->
 <!-- ASTRAL_PLAYER_V2 -->
 <!-- ASTRAL_ARATA_V5 -->
+<!-- ASTRAL_PLAYER_V3 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -6467,7 +6468,7 @@ function plItemHtml(it,o){o=o||{};const t=PL_TPL[it.t],eq=plEquipped(it.u),low=p
  return `<div class="pl-it r${t.r}" style="--rc:${plRc(t.r)}" ${o.click?`onclick="${o.click}"`:''}><div class="pl-ic">${t.ic}</div><div class="pl-tx"><b>${esc(t.n)}${it.up?` <em>+${it.up}</em>`:''}</b><div class="pl-m"><span style="color:${plRc(t.r)}">${PL_RAR[t.r].n}</span> · ${t.ty} · ${low?'<u class="bad">ур. '+t.req+'</u>':'ур. '+t.req}${eq?' · <span class="on">надето</span>':''}</div><div class="pl-s">${plStatLine(it)}</div>${Object.keys(t.fx).length?`<div class="pl-f">✦ ${plFxText(t.fx)}</div>`:''}${set?`<div class="pl-set">${set.ic} ${esc(set.n)}</div>`:''}${t.fl==='art'?'<div class="pl-art">🏺 Артефакт</div>':''}${o.desc?`<div class="small">${esc(t.d)}</div>`:''}</div></div>`}
 function vHero(){const p=plS(),s=plStats(p),pl=plPtsLeft(p),sp=plSpLeft(p),need=plNeed(p.lv),mx=p.lv>=PL_MAX;
  const tabs=[['ov','🧙 Обзор'],['inv','🎒 Вещи'],['sk','📘 Навыки'],['shop','🛒 Лавка'],['ar','⚔ Арена']];
- const head=`<!-- ${PL_MARK} --><!-- ${PL_V2} --><div class="panel pl-head"><div class="pl-port">${plLook(100)}</div><div class="pl-hi"><h2>${esc(S.name)}</h2><div class="small">Призыватель · ур. <b>${p.lv}</b>/${PL_MAX}</div><div class="bar xp"><i style="width:${mx?100:Math.round(p.xp/need*100)}%"></i></div><div class="small">${mx?'Максимальный уровень':fmtHp(p.xp)+' / '+fmtHp(need)+' опыта'}</div><div class="small">⚡ Сила: <b>${fmtHp(plPower(s))}</b></div></div></div>
+ const head=`<!-- ${PL_MARK} --><!-- ${PL_V2} --><!-- ${PL_V3} --><div class="panel pl-head"><div class="pl-port">${plLook(100)}</div><div class="pl-hi"><h2>${esc(S.name)}</h2><div class="small">Призыватель · ур. <b>${p.lv}</b>/${PL_MAX}</div><div class="bar xp"><i style="width:${mx?100:Math.round(p.xp/need*100)}%"></i></div><div class="small">${mx?'Максимальный уровень':fmtHp(p.xp)+' / '+fmtHp(need)+' опыта'}</div><div class="small">⚡ Сила: <b>${fmtHp(plPower(s))}</b></div></div></div>
  <div class="pl-tabs">${tabs.map(t=>`<button class="btn ${PLV.t===t[0]?'gold':''}" onclick="PLV.t='${t[0]}';render()">${t[1]}${t[0]==='ov'&&pl>0||t[0]==='sk'&&sp>0&&PL_SK.some(x=>plCanLearn(x.id)===true)?'<u class="dot"></u>':''}</button>`).join('')}</div>`;
  return head+({ov:plOv,inv:plInv,sk:plSk,shop:plShop,ar:plArena})[PLV.t](p,s)}
 // ---------- обзор ----------
@@ -6617,12 +6618,12 @@ body.inpd{overflow:hidden}
 @media(max-width:340px){.pd-face{width:56px;height:56px}.pd-emo{font-size:34px}.pl-tabs .btn{font-size:11px}.sk-b{width:74px}}
 `;const s=document.createElement('style');s.id='plcss';s.textContent=css;document.head.appendChild(s)})();
 
-// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: внешность в полный рост и свои картинки (ASTRAL_PLAYER_V2) ======
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: внешность в полный рост и свои картинки (ASTRAL_PLAYER_V2; ASTRAL_PLAYER_V3: образ по иконке профиля) ======
 // Процедурный (SVG + CSS-слои) Призыватель в полный рост. Цвета плаща/ауры/орбит берутся из выбранной иконки (ступень вознесения 0–7 или «Пустотный круг»),
 // экипировка видна: оружие в руках, щит/фолиант/ключ/ножны, шлем/капюшон/корона/нимб, цвета брони, кулон, кольца, свечение редкости.
 // Свои картинки: S.pf.cim (иконка, JPEG 256×256) и S.pl.look.img (внешность, WebP/PNG/JPEG ≤512×768). Хранятся ТОЛЬКО локально (localStorage), в онлайн-данные (гильдии/Supabase) не уходят.
 // Анимации: только opacity/transform на слоях без box-shadow (WebKit); класс html.noanim их отключает.
-const PL_V2='ASTRAL_PLAYER_V2';
+const PL_V2='ASTRAL_PLAYER_V2',PL_V3='ASTRAL_PLAYER_V3';
 const PLK_PAL={
  p0:{a:'#ffd76a',au:'#7c8cff',cl:['#2f3f9a','#141a50'],hair:'#dfe6ff',eye:'#6fb0ff',tr:'#ffd76a'},
  p1:{a:'#ff4d7d',au:'#ff4d7d',cl:['#5a2a9e','#251050'],hair:'#ffd1e6',eye:'#ff6aa8',tr:'#ff9a00',rb:1},
@@ -6681,15 +6682,16 @@ function plkHead(it,c,P){ // накладка на голову поверх в�
   case 'halo':return `<ellipse cx="128" cy="19" rx="27" ry="7" fill="none" stroke="${c}" stroke-width="4"/><ellipse cx="128" cy="19" rx="27" ry="7" fill="none" stroke="#fff" stroke-width="1.4" opacity=".8"/>`;
   case 'crown':return `<path d="M104 40L108 18L118 32L128 12L138 32L148 18L152 40Z" fill="${c}" stroke="#fff" stroke-width="1.2"/><circle cx="128" cy="26" r="3" fill="#fff"/><circle cx="110" cy="30" r="2" fill="#fff"/><circle cx="146" cy="30" r="2" fill="#fff"/>`;
   default:return `<path d="M104 46Q128 36 152 46" fill="none" stroke="${P.a}" stroke-width="3"/><path d="M128 36L133 44L128 52L123 44Z" fill="${P.eye}" stroke="#fff" stroke-width="1"/>`}}
-function plkSvg(key,eq){const P=PLK_PAL[key]||PLK_PAL.p0,id='plk'+(++plkN);
- const sk='#f7d9c4',skd='#e3b698',a=P.a,tier=key==='pv'?-1:+key.slice(1);
+function plkSvg(key,eq,A){const P=PLK_PAL[key]||PLK_PAL.p0,id='plk'+(++plkN);A=A||plkSpec();const pv=key==='pv';
+ const sk=A.sk,skd=plkMix(sk,'#7a3a2a',.16),a=P.a,tier=pv?-1:+key.slice(1),HR=pv?plkMix(A.hair,'#05000d',.3):A.hair,EY=pv?P.eye:A.eye,
+  CL0=plkMix(pv?plkMix(A.c1,'#05000d',.55):A.c1,P.cl[0],pv?.2:.4),CL1=plkMix(pv?plkMix(A.c2,'#05000d',.55):A.c2,P.cl[1],pv?.2:.45),O=plkOutfit(A,P,id,eq,CL0,CL1);
  const ch=eq.chest?plkCol(eq.chest):null,lg=eq.legs?plkCol(eq.legs):null;
- const tun=ch?plkMix(ch,'#0b0d2c',.35):plkMix(P.cl[0],'#000000',.15),tun2=ch?plkMix(ch,'#0b0d2c',.7):P.cl[1];
+ const tun=ch?plkMix(ch,'#0b0d2c',.35):plkMix(CL0,'#000000',.15),tun2=ch?plkMix(ch,'#0b0d2c',.7):CL1;
  const plate=eq.chest&&['c_armor','c_chain','c_teigu','c_astral','c_frost'].includes(eq.chest.t),coat=eq.chest&&['c_cloak','c_coat','c_shadow','c_kimono'].includes(eq.chest.t);
  const top=Math.max(-1,...[eq.head,eq.chest,eq.legs,eq.neck,eq.rh,eq.lh].filter(Boolean).map(i=>PL_TPL[i.t].r));
  const rc=top>=0?PL_RAR[top].col:a;
  let s=`<svg class="plk-svg" viewBox="0 0 256 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false"><defs>
-  <linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.cl[0]}"/><stop offset="1" stop-color="${P.cl[1]}"/></linearGradient>
+  <linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${CL0}"/><stop offset="1" stop-color="${CL1}"/></linearGradient>
   <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${tun}"/><stop offset="1" stop-color="${tun2}"/></linearGradient>
   <linearGradient id="${id}x" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffe27a"/></linearGradient>
   <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${a}"/></linearGradient>
@@ -6706,36 +6708,41 @@ function plkSvg(key,eq){const P=PLK_PAL[key]||PLK_PAL.p0,id='plk'+(++plkN);
  if(tier===5)s+=[[84,170],[172,200],[96,240],[160,250],[110,190]].map(q=>`<path d="M${q[0]} ${q[1]-4}L${q[0]+1.4} ${q[1]-1}L${q[0]+4.4} ${q[1]}L${q[0]+1.4} ${q[1]+1}L${q[0]} ${q[1]+4}L${q[0]-1.4} ${q[1]+1}L${q[0]-4.4} ${q[1]}L${q[0]-1.4} ${q[1]-1}Z" fill="#fff" opacity=".85"/>`).join('');
  if(tier===6)s+=`<path d="M82 200L94 188L106 200M150 200L162 188L174 200M96 250L108 238L120 250M136 250L148 238L160 250" fill="none" stroke="${a}" stroke-width="1.8" opacity=".7"/>`;
  if(tier===2)s+=[[84,190],[170,215],[100,250],[158,262],[120,205]].map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="${3+i%2}" fill="${['#ffc2f4','#9ff','#ffe27a','#b15cff','#fff'][i]}" opacity=".75"/>`).join('');
+ s+=plkHairBack(A,HR);
  // ноги
- const pants=plkMix(P.cl[1],'#1a2050',.35),boot=lg||'#4a3a3a',bootd=plkMix(boot,'#0b0d2c',.5);
+ const pants=plkMix(CL1,'#1a2050',.35),boot=lg||'#4a3a3a',bootd=plkMix(boot,'#0b0d2c',.5);
  s+=`<path d="M107 192L127 192L126 280L106 280Z" fill="${pants}"/><path d="M129 192L149 192L150 280L130 280Z" fill="${pants}"/>
   <path d="M101 272H128V290Q128 296 120 296H96Q96 280 101 272Z" fill="${boot}" stroke="${bootd}" stroke-width="1.6"/><path d="M128 272H155Q160 280 160 296H136Q128 296 128 290Z" fill="${boot}" stroke="${bootd}" stroke-width="1.6"/><path d="M101 276H128M128 276H155" stroke="${a}" stroke-width="2" opacity=".8"/>`;
  // торс
  s+=`<path d="M98 104Q128 92 158 104L154 200Q128 208 102 200Z" fill="url(#${id}b)" stroke="${ch||P.tr}" stroke-width="1.8"/>`;
  if(coat)s+=`<path d="M102 196L96 250Q128 262 160 250L154 196Z" fill="${tun}" stroke="${ch}" stroke-width="1.6" opacity=".95"/>`;
- else s+=`<path d="M114 196H142L138 246Q128 252 118 246Z" fill="${P.cl[0]}" stroke="${P.tr}" stroke-width="1.6"/>`;
+ else s+=`<path d="M114 196H142L138 246Q128 252 118 246Z" fill="${CL0}" stroke="${P.tr}" stroke-width="1.6"/>`;
  s+=`<rect x="102" y="186" width="52" height="9" rx="3" fill="#2a1a22" stroke="${P.tr}" stroke-width="1.4"/><rect x="121" y="184" width="14" height="13" rx="3" fill="${P.tr}" stroke="#fff" stroke-width="1"/>`;
  s+=`<path d="M128 124L133 134L144 135L136 142L139 153L128 147L117 153L120 142L112 135L123 134Z" fill="url(#${id}g)" opacity=".92"/>`;
+ s+=O.over;
  if(plate)s+=`<ellipse cx="97" cy="108" rx="15" ry="10" fill="${ch}" stroke="#fff" stroke-width="1.2" opacity=".95"/><ellipse cx="159" cy="108" rx="15" ry="10" fill="${ch}" stroke="#fff" stroke-width="1.2" opacity=".95"/><path d="M106 156H150M108 170H148" stroke="${plkMix(ch,'#ffffff',.4)}" stroke-width="1.8" opacity=".6"/>`;
  // левая рука (зритель слева)
- s+=`<path d="M99 106Q80 134 84 178L98 180Q100 148 112 122Z" fill="${coat||plate?tun:P.cl[0]}" stroke="${P.tr}" stroke-width="1.4"/>`;
+ s+=`<path d="M99 106Q80 134 84 178L98 180Q100 148 112 122Z" fill="${coat||plate?tun:CL0}" stroke="${P.tr}" stroke-width="1.4"/>`;
  if(eq.lh)s+=`<g transform="translate(91 183)">${plkLeft(eq.lh,id)}</g>`;
  s+=`<circle cx="91" cy="184" r="8" fill="${sk}" stroke="${skd}" stroke-width="1.2"/>`;
  // шея, голова
  s+=`<path d="M121 86H135V104Q128 110 121 104Z" fill="${skd}"/><path d="M110 100Q128 110 146 100L142 112Q128 120 114 112Z" fill="${P.tr}" opacity=".9"/>`;
- s+=`<path d="M98 66Q92 28 128 26Q164 28 158 66Q162 92 148 102L108 102Q94 92 98 66Z" fill="${plkMix(P.hair,'#000000',.35)}"/>`;
+ s+=O.collar;
+ s+=`<path d="M98 66Q92 28 128 26Q164 28 158 66Q162 92 148 102L108 102Q94 92 98 66Z" fill="${plkMix(HR,'#000000',.35)}"/>`;
  s+=`<path d="M105 60Q105 94 128 96Q151 94 151 60Q151 38 128 38Q105 38 105 60Z" fill="${sk}" stroke="${skd}" stroke-width="1.2"/>`;
- s+=`<path d="M103 60Q103 34 128 32Q153 34 153 60L147 48L140 62L132 44L126 62L118 44L112 60L108 50Z" fill="${P.hair}" stroke="${plkMix(P.hair,'#000000',.35)}" stroke-width="1.2"/><path d="M126 33Q122 16 138 12Q132 24 134 34Z" fill="${P.hair}"/><path d="M104 58L98 92L108 80Z" fill="${P.hair}"/><path d="M152 58L158 92L148 80Z" fill="${P.hair}"/>`;
- [118,138].forEach((x,i)=>{s+=`<ellipse cx="${x}" cy="70" rx="6.2" ry="7.6" fill="#fff"/><ellipse cx="${x}" cy="71" rx="4.6" ry="6.4" fill="${P.eye}"/><ellipse cx="${x}" cy="72" rx="2.2" ry="3.6" fill="#101028"/><circle cx="${x-1.8}" cy="67.6" r="1.7" fill="#fff"/><path d="M${x-7} ${i?64:63}Q${x} 60 ${x+7} ${i?63:64}" fill="none" stroke="#2a2040" stroke-width="2"/>`});
+ s+=plkHairFront(A,HR);
+ [118,138].forEach((x,i)=>{s+=`<ellipse cx="${x}" cy="70" rx="6.2" ry="7.6" fill="#fff"/><ellipse cx="${x}" cy="71" rx="4.6" ry="6.4" fill="${EY}"/><ellipse cx="${x}" cy="72" rx="2.2" ry="3.6" fill="#101028"/><circle cx="${x-1.8}" cy="67.6" r="1.7" fill="#fff"/><path d="M${x-7} ${i?64:63}Q${x} 60 ${x+7} ${i?63:64}" fill="none" stroke="#2a2040" stroke-width="2"/>`});
  s+=`<path d="M124 84Q128 87 132 84" fill="none" stroke="#b5655a" stroke-width="1.6" stroke-linecap="round"/>`;
+ s+=plkFace(A);
  s+=plkHead(eq.head,eq.head?plkCol(eq.head):a,P);
+ if(!eq.head&&A.ex.indexOf('hat')>=0)s+=`<ellipse cx="128" cy="44" rx="46" ry="9" fill="#3a2f86" stroke="${a}" stroke-width="1.4"/><path d="M103 43Q106 24 122 17Q131 12 140 3Q136 17 153 43Z" fill="#4a3da8" stroke="${a}" stroke-width="1.4"/><path d="M104 38H152" stroke="${a}" stroke-width="3"/><circle cx="128" cy="37" r="3.4" fill="${EY}" stroke="#fff"/>`;
  if(tier===7)s+=`<ellipse cx="128" cy="17" rx="27" ry="7" fill="none" stroke="#ffe27a" stroke-width="4"/><ellipse cx="128" cy="17" rx="27" ry="7" fill="none" stroke="#fff" stroke-width="1.4"/>`;
  else if(tier===6)s+=`<path d="M104 30L110 16L118 28L128 10L138 28L146 16L152 30" fill="none" stroke="#ffd76a" stroke-width="2.4"/>`;
  // ожерелье и кольца
  if(eq.neck){const nc=plkCol(eq.neck);s+=`<path d="M114 104Q128 128 142 104" fill="none" stroke="${nc}" stroke-width="1.6"/><circle cx="128" cy="121" r="5.4" fill="${nc}" stroke="#fff" stroke-width="1.2"/><circle cx="126.4" cy="119.4" r="1.6" fill="#fff"/>`}
  eq.rings.slice(0,3).forEach((it,i)=>{const rcx=[88,95,168][i],rcy=[190,190,176][i];s+=`<circle cx="${rcx}" cy="${rcy}" r="3.4" fill="none" stroke="${plkCol(it)}" stroke-width="2.2"/><circle cx="${rcx}" cy="${rcy-3.6}" r="1.8" fill="#fff"/>`});
  // правая рука с оружием (зритель справа)
- s+=`<path d="M157 106Q178 128 182 170L168 174Q166 144 148 122Z" fill="${coat||plate?tun:P.cl[0]}" stroke="${P.tr}" stroke-width="1.4"/>`;
+ s+=`<path d="M157 106Q178 128 182 170L168 174Q166 144 148 122Z" fill="${coat||plate?tun:CL0}" stroke="${P.tr}" stroke-width="1.4"/>`;
  if(eq.rh)s+=`<g transform="translate(174 176) rotate(7)">${plkWeapon(eq.rh,id)}</g>`;
  s+=`<circle cx="174" cy="177" r="8" fill="${sk}" stroke="${skd}" stroke-width="1.2"/>`;
  // декор: искры/звёзды/кубы
@@ -6743,14 +6750,95 @@ function plkSvg(key,eq){const P=PLK_PAL[key]||PLK_PAL.p0,id='plk'+(++plkN);
  if(tier===5)s+=[[56,70],[204,60],[216,170],[44,170],[196,250]].map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="${i%2?1.6:2.4}" fill="${i%2?'#ffe27a':'#fff'}"/>`).join('');
  if(key==='pv')s+=[[56,80,12],[204,60,10],[212,210,14],[46,220,9]].map((q,i)=>`<rect x="${q[0]}" y="${q[1]}" width="${q[2]}" height="${q[2]}" fill="#000" stroke="${i%2?'#0ff':'#f0f'}" stroke-width="2"/>`).join('');
  return s+'</svg>'}
+// ---------- образы с иконок профиля (12 аватаров AVS): внешность/одежда/цвета; ступень вознесения добавляет кольцо, акценты, крылья, нимб ----------
+const PLK_AV={
+ av_m1:{sk:'#e4b38f',hair:'#1d2130',hs:'messy',eye:'#3da0ff',c1:'#222a3c',c2:'#0d1018',acc:'#6fb0ff',o:'jacket',ex:[]},
+ av_m2:{sk:'#e6d6d7',hair:'#c9c5d4',hs:'spiky',eye:'#e0102e',c1:'#2a2230',c2:'#120a14',acc:'#c0142f',o:'collar',ex:[]},
+ av_m3:{sk:'#efcdac',hair:'#e8741a',hs:'spiky',eye:'#2fbf5a',c1:'#efe2c0',c2:'#cfa94a',acc:'#f2b81c',o:'tunic',ex:[]},
+ av_m4:{sk:'#d9bfc0',hair:'#46345f',hs:'long',eye:'#f2c230',c1:'#3d2c5a',c2:'#1c1230',acc:'#b36bff',o:'robe',ex:[]},
+ av_m5:{sk:'#bc926b',hair:'#4d6032',hs:'short',eye:'#3f9a4a',c1:'#1f3024',c2:'#0e1612',acc:'#9aa6a0',o:'tact',ex:['scar']},
+ av_m6:{sk:'#e8b287',hair:'#5a4030',hs:'short',eye:'#6b4a30',c1:'#2c3752',c2:'#151c2e',acc:'#c8d2e0',o:'hoodie',ex:['glasses']},
+ av_f1:{sk:'#f6dcd2',hair:'#f6b3c8',hs:'long',eye:'#f07aa8',c1:'#f7eef2',c2:'#e3bccd',acc:'#ff7fae',o:'dress',ex:['flower']},
+ av_f2:{sk:'#e8ccba',hair:'#23222a',hs:'bob',eye:'#d0203c',c1:'#34323c',c2:'#121216',acc:'#d6283f',o:'blazer',ex:[]},
+ av_f3:{sk:'#eec0ae',hair:'#f6d870',hs:'twin',eye:'#3f8ff0',c1:'#f6ecc8',c2:'#4aa0e8',acc:'#4aa0e8',o:'sport',ex:[]},
+ av_f4:{sk:'#d9c6cf',hair:'#eef0ff',hs:'long',eye:'#9b6bff',c1:'#2c3678',c2:'#14183f',acc:'#9b6bff',o:'cloak',ex:['hat']},
+ av_f5:{sk:'#f8d4b8',hair:'#b02a22',hs:'pony',eye:'#f2a030',c1:'#b9bfcc',c2:'#6d7484',acc:'#c8302a',o:'armor',ex:[]},
+ av_f6:{sk:'#fbeadd',hair:'#bfe4c8',hs:'long',eye:'#3fbf7a',c1:'#9cc7ae',c2:'#5d8f77',acc:'#e8f6ec',o:'kimono',ex:['flower']}};
+const PLK_CIM={u:'',p:null,busy:''};
+function plkCimDo(u){return new Promise(res=>{const im=new Image();im.onload=()=>{try{
+ const N=32,cv=document.createElement('canvas');cv.width=cv.height=N;const x=cv.getContext('2d');x.drawImage(im,0,0,N,N);const d=x.getImageData(0,0,N,N).data;
+ const rg=(x0,y0,x1,y1)=>{let r=0,g=0,b=0,n=0;for(let yy=Math.floor(y0*N);yy<Math.ceil(y1*N);yy++)for(let xx=Math.floor(x0*N);xx<Math.ceil(x1*N);xx++){const k=(yy*N+xx)*4;r+=d[k];g+=d[k+1];b+=d[k+2];n++}n=Math.max(1,n);return[r/n,g/n,b/n]};
+ const hx=c=>'#'+c.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+ const dist=(p,q)=>Math.abs(p[0]-q[0])+Math.abs(p[1]-q[1])+Math.abs(p[2]-q[2]);
+ const bg=[rg(0,0,.12,.12),rg(.88,0,1,.12)].reduce((p,c)=>[p[0]+c[0]/2,p[1]+c[1]/2,p[2]+c[2]/2],[0,0,0]);
+ let hair=rg(.38,.03,.62,.14);if(dist(hair,bg)<60)hair=rg(.3,.14,.7,.26);
+ const skin=rg(.42,.42,.58,.56),cloth=rg(.3,.86,.7,.99);
+ let best=null,bs=-1;for(let yy=Math.floor(.3*N);yy<Math.ceil(.62*N);yy++)for(let xx=Math.floor(.25*N);xx<Math.ceil(.75*N);xx++){const k=(yy*N+xx)*4,r=d[k],g=d[k+1],b=d[k+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),sat=(mx-mn)*(mx>60?1:.3);if(sat>bs){bs=sat;best=[r,g,b]}}
+ res({hair:hx(hair),sk:hx(skin),c1:hx(cloth),eye:hx(best||[111,176,255]),bg:hx(bg)})}catch(e){res(null)}};im.onerror=()=>res(null);im.src=u})}
+function plkCimPalP(){const u=pfCim();if(!u)return Promise.resolve(null);if(PLK_CIM.u===u&&PLK_CIM.p)return Promise.resolve(PLK_CIM.p);
+ return plkCimDo(u).then(p=>{if(p&&pfCim()===u){PLK_CIM.u=u;PLK_CIM.p=p}return p})}
+function plkCimPal(){const u=pfCim();if(!u)return null;if(PLK_CIM.u===u&&PLK_CIM.p)return PLK_CIM.p;
+ if(PLK_CIM.busy!==u){PLK_CIM.busy=u;plkCimPalP().then(p=>{PLK_CIM.busy='';if(p){try{if(tab==='hero')plRender();else if(tab==='profile')render()}catch(e){}}})}return null}
+// образ = аватар профиля (S.av) + цвета из своей иконки (S.pf.cim), если она есть
+function plkSkinLike(c){const r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);return r>=g&&g>=b*.9&&r>120&&r-b<150&&r-b>8}
+function plkSpec(av,useCim){let k;try{k=av||S.av}catch(e){}const b=PLK_AV[k]||PLK_AV.av_m1;const A=Object.assign({},b,{ex:b.ex.slice()});
+ let pal=null;if(useCim!==false){try{pal=plkCimPal()}catch(e){}}
+ if(pal){A.hair=pal.hair;if(plkSkinLike(pal.sk))A.sk=pal.sk;A.c1=pal.c1;A.c2=plkMix(pal.c1,'#000000',.55);A.eye=pal.eye;A.acc=pal.eye;A.cim=1}
+ return A}
+function plkHairBack(A,H){const d=plkMix(H,'#000000',.3);
+ switch(A.hs){
+  case 'long':return `<path d="M97 62Q80 120 88 202Q104 214 128 206Q152 214 168 202Q176 120 159 62Z" fill="${d}"/><path d="M92 150Q96 176 90 200M164 150Q160 176 166 200" fill="none" stroke="${H}" stroke-width="2" opacity=".5"/>`;
+  case 'twin':return `<path d="M100 54Q66 66 70 122Q72 172 82 198Q96 172 92 130Q94 92 104 70Z" fill="${d}"/><path d="M156 54Q190 66 186 122Q184 172 174 198Q160 172 164 130Q162 92 152 70Z" fill="${d}"/>`;
+  case 'pony':return `<path d="M154 50Q202 44 196 112Q192 164 172 196Q180 142 166 110Q160 84 152 72Z" fill="${d}"/><path d="M178 70Q186 110 176 150" fill="none" stroke="${H}" stroke-width="2" opacity=".5"/>`;
+  case 'bob':return `<path d="M96 62Q90 110 106 116L150 116Q166 110 160 62Z" fill="${d}"/>`;
+  default:return ''}}
+function plkHairFront(A,H){const d=plkMix(H,'#000000',.35),st=`fill="${H}" stroke="${d}" stroke-width="1.2"`;
+ switch(A.hs){
+  case 'spiky':return `<path d="M102 62Q99 32 108 16L117 36L121 8L129 32L137 6L141 34L150 14L153 40Q158 48 154 62L148 46L141 58L132 42L125 58L118 42L111 58Z" ${st}/><path d="M103 58L97 90L108 78Z M153 58L159 90L148 78Z" fill="${H}"/>`;
+  case 'short':return `<path d="M102 62Q100 32 128 29Q156 32 154 62L149 46Q128 38 107 46Z" ${st}/><path d="M102 60L99 78L108 68Z M154 60L157 78L148 68Z" fill="${H}"/>`;
+  case 'long':return `<path d="M102 66Q100 32 128 29Q156 32 154 66L148 46Q138 40 128 46Q118 40 108 46Z" ${st}/><path d="M103 56L96 130L110 100Z M153 56L160 130L146 100Z" fill="${H}" stroke="${d}" stroke-width="1"/>`;
+  case 'bob':return `<path d="M101 70Q98 32 128 29Q158 32 155 70L150 48Q128 38 106 48Z" ${st}/><path d="M102 60L98 104L110 96Z M154 60L158 104L146 96Z" fill="${H}" stroke="${d}" stroke-width="1"/>`;
+  case 'twin':return `<path d="M102 62Q100 32 128 29Q156 32 154 62L148 46L140 56L132 42L124 56L116 42L108 56Z" ${st}/><rect x="97" y="52" width="9" height="6" rx="2" fill="${A.acc}"/><rect x="150" y="52" width="9" height="6" rx="2" fill="${A.acc}"/>`;
+  case 'pony':return `<path d="M102 62Q100 32 128 29Q156 32 154 62L149 46L138 52L128 40L118 52L107 46Z" ${st}/><rect x="150" y="46" width="10" height="7" rx="2" fill="${A.acc}"/>`;
+  default:return `<path d="M103 60Q103 34 128 32Q153 34 153 60L147 48L140 62L132 44L126 62L118 44L112 60L108 50Z" ${st}/><path d="M126 33Q122 16 138 12Q132 24 134 34Z" fill="${H}"/><path d="M104 58L98 92L108 80Z" fill="${H}"/><path d="M152 58L158 92L148 80Z" fill="${H}"/>`}}
+function plkFace(A){let s='';
+ if(A.ex.indexOf('glasses')>=0)s+=`<circle cx="118" cy="71" r="9" fill="#ffffff22" stroke="#232334" stroke-width="2"/><circle cx="138" cy="71" r="9" fill="#ffffff22" stroke="#232334" stroke-width="2"/><path d="M127 70h2M109 69L104 67M147 69L152 67" stroke="#232334" stroke-width="2"/>`;
+ if(A.ex.indexOf('scar')>=0)s+=`<path d="M109 64L116 82" stroke="#a8504a" stroke-width="1.8" stroke-linecap="round"/><path d="M108 70L113 67M110 76L115 73" stroke="#a8504a" stroke-width="1.2"/>`;
+ if(A.ex.indexOf('flower')>=0)s+=`<g transform="translate(108 44)">${[0,72,144,216,288].map(r=>`<ellipse cx="0" cy="-4.4" rx="2.8" ry="4" fill="${A.fl||'#ffffff'}" stroke="#d98aa8" stroke-width=".6" transform="rotate(${r})"/>`).join('')}<circle r="2.2" fill="#ffd76a"/></g>`;
+ return s}
+function plkOutfit(A,P,id,eq,c0,c1){const o={over:'',collar:''};if(eq.chest)return o;const ac=A.acc,hi=plkMix(c0,'#ffffff',.38),dk=plkMix(c0,'#000000',.4),noL=!eq.legs;
+ switch(A.o){
+  case 'jacket':o.over=`<path d="M115 104L128 152L141 104L145 108L134 200H122L111 108Z" fill="${plkMix(c1,'#ffffff',.22)}"/><path d="M113 104L123 168M143 104L133 168" stroke="${hi}" stroke-width="1.6" fill="none"/>`;break;
+  case 'collar':o.collar=`<path d="M107 100L110 76L123 92L128 88L133 92L146 76L149 100Q128 114 107 100Z" fill="${c0}" stroke="${ac}" stroke-width="1.8"/>`;o.over=`<path d="M111 108L119 198M145 108L137 198" stroke="${ac}" stroke-width="2.4" fill="none"/>`;break;
+  case 'tunic':o.collar=`<path d="M110 100Q128 118 146 100L144 112Q128 128 112 112Z" fill="${ac}"/><path d="M134 114L146 142L138 144L130 122Z" fill="${ac}"/>`;o.over=`<rect x="102" y="170" width="52" height="5" fill="${ac}"/><path d="M128 124V170" stroke="${plkMix(c1,'#000000',.2)}" stroke-width="1.4" opacity=".5"/>`;break;
+  case 'robe':o.collar=`<path d="M128 106L134 113L128 122L122 113Z" fill="${ac}" stroke="#fff" stroke-width="1"/>`;
+   o.over=noL?`<path d="M100 192L92 290Q128 300 164 290L156 192Z" fill="url(#${id}b)" stroke="${P.tr}" stroke-width="1.6"/><path d="M128 194V294" stroke="${P.tr}" stroke-width="2"/><path d="M104 214Q128 224 152 214" fill="none" stroke="${P.tr}" stroke-width="1.2" opacity=".6"/>`:'';break;
+  case 'tact':o.over=`<path d="M104 106L146 192M152 106L110 192" stroke="${plkMix(c1,'#000000',.1)}" stroke-width="5"/><rect x="108" y="150" width="12" height="16" rx="2" fill="${dk}" stroke="${ac}"/><rect x="136" y="150" width="12" height="16" rx="2" fill="${dk}" stroke="${ac}"/><ellipse cx="98" cy="108" rx="17" ry="11" fill="#c8ccd6" stroke="#6b7280" stroke-width="1.6"/><path d="M84 108H112" stroke="#6b7280" stroke-width="1.2"/>`;break;
+  case 'hoodie':o.collar=`<path d="M106 100Q128 128 150 100Q146 90 128 94Q110 90 106 100Z" fill="${c0}" stroke="${hi}" stroke-width="1.4"/><path d="M110 100Q128 124 146 100" fill="none" stroke="${ac}" stroke-width="3.4"/><rect x="104" y="98" width="8" height="13" rx="3.4" fill="${ac}"/><rect x="144" y="98" width="8" height="13" rx="3.4" fill="${ac}"/>`;o.over=`<path d="M112 166H144L140 186H116Z" fill="${dk}" stroke="${hi}" stroke-width="1.2"/><path d="M124 108V136M132 108V136" stroke="${hi}" stroke-width="1.6"/>`;break;
+  case 'dress':o.collar=`<path d="M128 118L116 110V126ZM128 118L140 110V126Z" fill="${ac}"/><circle cx="128" cy="118" r="3" fill="#fff"/>`;
+   o.over=noL?`<path d="M102 188L82 254Q128 272 174 254L154 188Z" fill="${c0}" stroke="${c1}" stroke-width="1.6"/><path d="M82 254Q93 266 104 256Q116 270 128 258Q140 270 152 256Q163 266 174 254" fill="none" stroke="${ac}" stroke-width="2.4"/>`:'';break;
+  case 'sport':o.over=`<path d="M102 132H154M102 142H154" stroke="${ac}" stroke-width="3.2"/>`+(noL?`<path d="M104 192L94 228Q128 240 162 228L152 192Z" fill="${ac}" stroke="#fff" stroke-width="1.4"/>`:'');break;
+  case 'kimono':o.collar=`<path d="M111 100L128 144L145 100L149 105L128 152L107 105Z" fill="${hi}"/>`;
+   o.over=`<rect x="99" y="154" width="58" height="26" rx="3" fill="${ac}" stroke="${P.tr}" stroke-width="1.4"/><path d="M128 154V180" stroke="${c1}" stroke-width="1.6"/>`+(noL?`<path d="M100 180L90 290Q128 300 166 290L156 180Z" fill="${c0}" stroke="${hi}" stroke-width="1.4"/>`+[[106,220],[148,244],[122,266],[140,206],[110,252]].map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="3.4" fill="#fff" opacity=".9"/>`).join(''):'');break;
+  case 'blazer':o.collar=`<path d="M109 100L128 128L147 100L140 97L128 112L116 97Z" fill="#f4f4f8" stroke="#9aa" stroke-width="1"/><path d="M128 118L117 111V126ZM128 118L139 111V126Z" fill="${ac}"/>`;
+   o.over=`<path d="M112 108V198M144 108V198" stroke="${plkMix(c0,'#ffffff',.2)}" stroke-width="1.2"/>`+(noL?`<path d="M102 190L88 240Q128 250 168 240L154 190Z" fill="#2c2b36" stroke="${ac}" stroke-width="1.2"/><path d="M110 192L102 244M122 192L118 246M134 192L138 246M146 192L154 244" stroke="#000" stroke-width="1" opacity=".4"/>`:'');break;
+  case 'cloak':o.collar=`<path d="M105 100Q128 130 151 100L153 113Q128 140 103 113Z" fill="${hi}" stroke="${ac}" stroke-width="1.2"/><circle cx="128" cy="120" r="4" fill="${ac}" stroke="#fff"/>`;
+   o.over=[[108,150],[146,160],[118,178],[138,138],[126,166]].map(q=>`<path d="M${q[0]} ${q[1]-3}L${q[0]+1} ${q[1]-1}L${q[0]+3} ${q[1]}L${q[0]+1} ${q[1]+1}L${q[0]} ${q[1]+3}L${q[0]-1} ${q[1]+1}L${q[0]-3} ${q[1]}L${q[0]-1} ${q[1]-1}Z" fill="#fff"/>`).join('');break;
+  case 'armor':o.over=`<path d="M104 106Q128 98 152 106L148 168Q128 180 108 168Z" fill="#cfd4de" stroke="#6d7484" stroke-width="1.6"/><path d="M128 104V172" stroke="#6d7484" stroke-width="1.2"/><ellipse cx="97" cy="108" rx="16" ry="11" fill="#cfd4de" stroke="#6d7484" stroke-width="1.6"/><ellipse cx="159" cy="108" rx="16" ry="11" fill="#cfd4de" stroke="#6d7484" stroke-width="1.6"/>`+(noL?`<path d="M104 190L90 244L166 244L152 190Z" fill="${ac}" stroke="#6d7484" stroke-width="1.2"/><path d="M118 192L112 244M128 192V246M138 192L144 244" stroke="#00000033" stroke-width="1.2"/>`:'');break}
+ return o}
+
 // ---------- сборка: аура + орбиты + фигура / своя картинка ----------
 function plkSafeImg(u,max){return typeof u==='string'&&u.length<=(max||900000)&&/^data:image\/(jpeg|webp|png);base64,[A-Za-z0-9+\/=]+$/.test(u)?u:''}
 function plLookCfg(){const p=plS();if(!p.look||typeof p.look!=='object')p.look={img:'',z:100,y:0};const l=p.look;if(!(l.z>=40))l.z=100;if(typeof l.y!=='number')l.y=0;return l}
 function plLook(h,o){o=o||{};const p=plS(),ic=o.ic||(typeof pfIc==='function'?pfIc():'p0'),key=plkIcKey(ic),P=PLK_PAL[key]||PLK_PAL.p0,l=plLookCfg(),img=o.noimg?'':plkSafeImg(l.img);
- const w=Math.round(h*.8),st=`--h:${h}px;--w:${w}px;--pa:${P.au};--pb:${P.a}`;
- const lay=`<i class="plk-au"></i><u class="plk-o1"><i></i></u><u class="plk-o2"><i></i></u><u class="plk-o3"><i></i></u>`;
- const body=img?`<div class="plk-cf"><img src="${img}" alt="" style="transform:translateY(${l.y}%) scale(${l.z/100})"></div>`:`<div class="plk-fig">${plkSvg(key,plkEq(p))}</div>`;
- return `<div class="plk plk-${key}${img?' cust':''}${P.rb?' rb':''}" style="${st}" data-ic="${esc(ic)}">${lay}${body}</div>`}
+ const w=Math.round(h*.8),st=`--h:${h}px;--w:${w}px;--pa:${P.au};--pb:${P.a}`,A=plkSpec(o.av,o.cim),D=Math.round(w*.86),K=(D/100).toFixed(4);
+ // кольцо/орбиты — настоящая иконка профиля (.pfa pfN, те же keyframes pf*), масштабированная; вместо аватара — прозрачный пиксель
+ const ring=`<div class="plk-rg" style="transform:translate(-50%,-50%) scale(${K})">${plkRing(ic)}</div>`;
+ const body=img?`<div class="plk-cf"><img src="${img}" alt="" style="transform:translateY(${l.y}%) scale(${l.z/100})"></div>`:`<div class="plk-fig">${plkSvg(key,plkEq(p),A)}</div>`;
+ return `<div class="plk plk-${key}${img?' cust':''}${P.rb?' rb':''}" style="${st}" data-ic="${esc(ic)}" data-av="${esc(o.av||(S&&S.av)||'')}"><i class="plk-au"></i>${ring}${body}</div>`}
+function plkRing(ic){const i=PF_BY[ic]||PF_BY.p0;return `<span class="pfa pf${i.sec?'v':i.t}" style="--s:100px"><img class="av" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""><u><i></i></u><u><i></i></u><u><i></i></u></span>`}
+// одна фаза анимаций: все pf*-анимации страницы стартуют от нуля шкалы документа (иконка профиля, шапка, кольцо Героя)
+function plkSync(){try{if(!document.getAnimations)return 0;let n=0;document.getAnimations().forEach(a=>{const nm=a.animationName;if(nm&&/^pf/.test(nm)){try{a.startTime=0;n++}catch(e){}}});return n}catch(e){return 0}}
 // ---------- Загрузка своих картинок ----------
 const PLK_MAXFILE=12*1024*1024, PLK_ICON_MAX=140000, PLK_BODY_MAX=520000, PLK_ICON_PX=256, PLK_BODY_W=512, PLK_BODY_H=768;
 function plkErr(m){try{toast(m)}catch(e){}return false}
@@ -6817,6 +6905,8 @@ function pfCimPanel(){const has=!!pfCim();return `<div class="pfcim"><div class=
 .plk>u>i{position:absolute;left:0;top:0;right:0;bottom:0;border-radius:50%;display:block}
 .plk-fig,.plk-cf{position:absolute;left:0;right:0;top:0;bottom:0}
 .plk-svg{display:block;width:100%;height:100%}
+.plk-rg{position:absolute;left:50%;top:47%;width:100px;height:100px;transform-origin:50% 50%}
+.plk-rg .pfa{margin:0}.plk-rg .pfa>img.av{background:transparent;object-fit:fill}
 .plk-fig{animation:plkbob 4.2s ease-in-out infinite}
 .plk-cf{left:9%;right:9%;top:3%;bottom:3%;border-radius:16px;overflow:hidden;border:2px solid var(--pb);background:linear-gradient(#0b0d2c88,#1a1f5766);box-shadow:inset 0 0 14px #0009}
 .plk-cf img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 50%}
@@ -6825,25 +6915,7 @@ function pfCimPanel(){const has=!!pfCim();return `<div class="pfcim"><div class=
 @keyframes plkspin{to{transform:rotate(360deg)}}@keyframes plkspinr{to{transform:rotate(-360deg)}}
 @keyframes plkbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2%)}}
 @keyframes plkgl{0%,88%,100%{opacity:1}90%,94%{opacity:.25}}
-.plk-p0>.plk-o1{display:block}.plk-p0>.plk-o1>i{border:1.5px solid #ffd76a88}
-.plk-p1>.plk-o1{display:block;animation:plkspin 6s linear infinite}.plk-p1>.plk-o1>i{background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000)}
-.plk-p2>.plk-o1{display:block;animation:plkspin 12s linear infinite}.plk-p2>.plk-o1>i{background:radial-gradient(circle at 50% 2%,#fff 0 4px,#ffc2f4 5px,#0000 8px),radial-gradient(circle at 96% 62%,#9ff 0 3px,#0000 6px),radial-gradient(circle at 12% 80%,#ffe27a 0 3px,#0000 6px),radial-gradient(circle at 5% 30%,#b15cff 0 4px,#0000 7px)}
-.plk-p2>.plk-o2{display:block;animation:plkspinr 19s linear infinite;width:calc(var(--w)*.8);height:calc(var(--w)*.8);margin:calc(var(--w)*-.4) 0 0 calc(var(--w)*-.4)}.plk-p2>.plk-o2>i{background:radial-gradient(circle at 50% 3%,#ff9ae8 0 3px,#0000 5px),radial-gradient(circle at 94% 70%,#fff 0 3px,#0000 5px),radial-gradient(circle at 20% 90%,#00cfff 0 3px,#0000 5px)}
-.plk-p3>.plk-o1{display:block;animation:plkspin 7s linear infinite}.plk-p3>.plk-o1>i{background:conic-gradient(#fff2a8,#ffb800,#a3700c,#ffe27a,#ffb800,#fff2a8);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
-.plk-p3>.plk-o2{display:block;animation:plkspinr 4s linear infinite;width:calc(var(--w)*.9);height:calc(var(--w)*.9);margin:calc(var(--w)*-.45) 0 0 calc(var(--w)*-.45)}.plk-p3>.plk-o2>i{background:conic-gradient(#ff004c55,#f6ff00cc,#22ff7755,#00cfffcc,#ff3df255,#ff004ccc,#ff004c55);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000)}
-.plk-p4>.plk-o1{display:block;animation:plkspin 4s linear infinite}.plk-p4>.plk-o1>i{background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
-.plk-p4>.plk-o2{display:block;animation:plkspinr 9s linear infinite;width:calc(var(--w)*1.02);height:calc(var(--w)*1.02);margin:calc(var(--w)*-.51) 0 0 calc(var(--w)*-.51)}.plk-p4>.plk-o2>i{background:radial-gradient(circle at 50% 2%,#fff 0 2px,#0000 4px),radial-gradient(circle at 92% 28%,#ffe27a 0 2px,#0000 4px),radial-gradient(circle at 80% 90%,#9ff 0 2px,#0000 4px),radial-gradient(circle at 18% 86%,#fff 0 2px,#0000 4px),radial-gradient(circle at 4% 38%,#ffe27a 0 2px,#0000 4px)}
-.plk-p5>.plk-o1{display:block;animation:plkspin 14s linear infinite}.plk-p5>.plk-o1>i{background:conic-gradient(#0b1b5e,#4a6cff,#dfe8ff,#4a6cff,#0b1b5e,#2a1a7a,#8fb0ff,#0b1b5e);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000)}
-.plk-p5>.plk-o2{display:block;animation:plkspinr 20s linear infinite;width:calc(var(--w)*1.02);height:calc(var(--w)*1.02);margin:calc(var(--w)*-.51) 0 0 calc(var(--w)*-.51)}.plk-p5>.plk-o2>i{background:radial-gradient(circle at 50% 2%,#fff 0 3px,#0000 5px),radial-gradient(circle at 93% 27%,#cfe0ff 0 2px,#0000 4px),radial-gradient(circle at 93% 73%,#fff 0 3px,#0000 5px),radial-gradient(circle at 50% 98%,#cfe0ff 0 2px,#0000 4px),radial-gradient(circle at 7% 73%,#fff 0 3px,#0000 5px),radial-gradient(circle at 7% 27%,#cfe0ff 0 2px,#0000 4px)}
-.plk-p6>.plk-o1{display:block;animation:plkspin 9s linear infinite}.plk-p6>.plk-o1>i{background:conic-gradient(#ffd76a,#a855f7,#5b21b6,#ffe9a0,#c084fc,#ffd76a);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
-.plk-p6>.plk-o2{display:block;animation:plkspinr 14s linear infinite;width:calc(var(--w)*1.04);height:calc(var(--w)*1.04);margin:calc(var(--w)*-.52) 0 0 calc(var(--w)*-.52);opacity:.85}.plk-p6>.plk-o2>i{background:repeating-conic-gradient(#ffd76a 0 8deg,#0000 8deg 20deg);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000)}
-.plk-p7>.plk-o1{display:block;animation:plkspin 10s linear infinite}.plk-p7>.plk-o1>i{background:conic-gradient(#fff,#ffe27a,#fff,#ffb800,#fff);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
-.plk-p7>.plk-o2{display:block;animation:plkspin 18s linear infinite;width:calc(var(--w)*1.12);height:calc(var(--w)*1.12);margin:calc(var(--w)*-.56) 0 0 calc(var(--w)*-.56)}.plk-p7>.plk-o2>i{background:repeating-conic-gradient(#fff6 0 3deg,#0000 3deg 15deg);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 12px),#000 calc(100% - 8px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 12px),#000 calc(100% - 8px),#0000)}
-.plk-p7>.plk-o3{display:block;animation:plkspinr 7s linear infinite;width:calc(var(--w)*.94);height:calc(var(--w)*.94);margin:calc(var(--w)*-.47) 0 0 calc(var(--w)*-.47)}.plk-p7>.plk-o3>i{background:conic-gradient(#ff004c55,#f6ff0055,#22ff7755,#00cfff55,#7a5cff55,#ff3df255,#ff004c55);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000)}
-.plk-pv>.plk-o1{display:block;animation:plkspin 7s linear infinite,plkgl 3.7s steps(1) infinite}.plk-pv>.plk-o1>i{background:conic-gradient(#000,#3b0764,#000,#1e1b4b,#6d28d9,#000,#0c0a2a,#000);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 7px),#000 calc(100% - 5px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 7px),#000 calc(100% - 5px),#0000)}
-.plk-pv>.plk-o2{display:block;animation:plkspinr 11s linear infinite;width:calc(var(--w)*.98);height:calc(var(--w)*.98);margin:calc(var(--w)*-.49) 0 0 calc(var(--w)*-.49)}.plk-pv>.plk-o2>i{background:linear-gradient(#000,#000) 50% 2%/9% 9% no-repeat,linear-gradient(#000,#000) 90% 62%/7% 7% no-repeat,linear-gradient(#000,#000) 8% 74%/8% 8% no-repeat;border:1px dashed #f0f8}
 .plk-pv .plk-au{background:radial-gradient(ellipse at 50% 52%,#7c3aed 0,#3b0764aa 28%,#0000 68%);animation:plkpulse 2.1s steps(2) infinite}
-.plk-pv>.plk-o2>i:after{content:'';position:absolute;left:12%;top:12%;right:12%;bottom:12%;border:1px solid #0ff6;border-radius:50%}
 .plk-pv .plk-cf{border-color:#f0f}
 html.noanim .plk-au,html.noanim .plk>u,html.noanim .plk-fig{animation:none!important}
 .pl-head .pl-port{width:84px;height:104px;overflow:hidden;background:none}
@@ -6864,6 +6936,10 @@ html.noanim .plk-au,html.noanim .plk>u,html.noanim .plk-fig{animation:none!impor
 .pd-vsrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0}.pd-vsrow .vs{font-weight:900;color:#ffd76a;font-size:18px}.pd-vsrow .pl-fc{width:80px;height:80px;border-radius:14px;overflow:hidden;border:2px solid #fff3;background:#20124a;display:flex;align-items:center;justify-content:center;font-size:44px}.pd-vsrow .pl-fc img{width:100%;height:100%;object-fit:cover;object-position:top}
 @media(max-width:340px){.pl-head .pl-port{width:70px}.pd-face.me{width:64px;height:80px}.pl-lb .btn{min-width:80px}}
 `;const s=document.createElement('style');s.id='plkcss';s.textContent=css;document.head.appendChild(s)})();
+
+// ASTRAL_PLAYER_V3: синхронизация фаз после отрисовки
+(function(){const r0=render;render=function(){const x=r0.apply(this,arguments);try{plkSync()}catch(e){}return x};
+ if(typeof hud==='function'){const h0=hud;hud=function(){const x=h0.apply(this,arguments);try{plkSync()}catch(e){}return x}}})();
 
 // ====== ДУЭЛИ В РОМАНТИКЕ: поле duel у глав (ASTRAL_PLAYER_V1) ======
 // duel:{foe (ключ PL_FOES), rec (рек. ур. Призывателя), min (мин. ур. для допуска), at (после скольки узлов главы; по умолчанию — в конце),
