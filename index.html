@@ -14,6 +14,7 @@
 <!-- ASTRAL_PLAYER_V2 -->
 <!-- ASTRAL_ARATA_V5 -->
 <!-- ASTRAL_PLAYER_V3 -->
+<!-- ASTRAL_WAR_V1 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -3299,8 +3300,8 @@ function gShopBuy(id){const it=G_SH.find(x=>x.id===id),d=gdS();if((d.shop[id]||0
 // получение наград
 async function gClaimRew(){const g=gMine();if(!g||GBUSY.rew)return;GBUSY.rew=1;let list;
  try{list=await GStore.txa(['guild:'+g.id],d=>{const x=d.guilds[g.id];if(!x)return{e:'Гильдии нет'};const a=x.pend[ME]||[];if(!a.length)return{e:'Наград нет'};delete x.pend[ME];return{list:a}},{net:true})}catch(e){GBUSY.rew=0;return toast('Нет связи с сервером — попробуйте позже')}
- GBUSY.rew=0;if(list.e)return toast(list.e);list=list.list;let gp=0,gold=0,gems=0;list.forEach(r=>{gp+=r.gp||0;gold+=r.gold||0;gems+=r.gems||0});
- S.gp=gpS()+gp;S.gold+=gold;S.gems+=gems;save();toast(`Награды за боссов: ✦${gp} 🪙${gn(gold)} 💎${gems}`);render()}
+ GBUSY.rew=0;if(list.e)return toast(list.e);list=list.list;let gp=0,gold=0,gems=0,its=[];list.forEach(r=>{gp+=r.gp||0;gold+=r.gold||0;gems+=r.gems||0;if(r.item&&typeof plDrop==='function')for(let i=0;i<r.item;i++){try{const it=plDrop('wboss');if(it)its.push(PL_TPL[it.t].n)}catch(e){}}});
+ S.gp=gpS()+gp;S.gold+=gold;S.gems+=gems;save();toast(`Награды: ✦${gp} 🪙${gn(gold)} 💎${gems}${its.length?' · 🎁 '+its.join(', '):''}`);render()}
 function gSeasonRew(sn){sn=String(sn);if((S.gsc||{})[sn])return gFail('Уже получено');const D=GStore.all(),x=(D.meta.snaps||{})[sn];if(!x)return;const t=x.top.find(y=>y.mem.includes(ME));if(!t)return gFail('Вы не состояли в топ-гильдии');
  S.gsc=S.gsc||{};S.gsc[sn]=1;const r=G_SEASON_REW[t.place-1],gems=r[0],gold=gems*20,gp=Math.round(gems/2);S.gems+=gems;S.gold+=gold;S.gp=gpS()+gp;save();toast(`🏆 Награда сезона: 💎${gems} 🪙${gn(gold)} ✦${gp}`);render()}
 // бой с боссом
@@ -3434,14 +3435,14 @@ function vGBrowse(D){
  <select class="in" onchange="GL.sort=this.value;render()"><option value="score" ${GL.sort==='score'?'selected':''}>Сортировка: по рейтингу</option><option value="lv" ${GL.sort==='lv'?'selected':''}>по уровню гильдии</option><option value="mem" ${GL.sort==='mem'?'selected':''}>по числу участников</option><option value="open" ${GL.sort==='open'?'selected':''}>сначала открытые</option></select></div>
  <div id="gl_list">${list.map(g=>gGuildRow(g,D)).join('')||'<div class="panel small">Ничего не найдено</div>'}</div>`}
 function gListRef(){const D=GStore.all();let list=Object.values(D.guilds);const q=GL.q.trim().toLowerCase();if(q)list=list.filter(g=>g.name.toLowerCase().includes(q));list.sort((a,b)=>b.score-a.score);const el=$('gl_list');if(el)el.innerHTML=list.map(g=>gGuildRow(g,D)).join('')||'<div class="panel small">Ничего не найдено</div>'}
-const G_VIEWS=[['hub','🏠','Хаб'],['members','👥','Состав'],['contrib','💰','Вклад'],['boss','👹','Босс'],['duel','🥊','Дуэли'],['packets','🧧','Пакеты'],['shop','🛒','Магазин'],['rank','🏆','Рейтинг'],['chat','💬','Лента']];
+const G_VIEWS=[['hub','🏠','Хаб'],['members','👥','Состав'],['contrib','💰','Вклад'],['boss','👹','Босс'],['duel','🥊','Дуэли'],['war','⚔️','Война'],['packets','🧧','Пакеты'],['shop','🛒','Магазин'],['rank','🏆','Рейтинг'],['chat','💬','Лента']];
 function vGHub(g,D){
- const p=gPend(D),badge={packets:p.packets+p.back,boss:p.rewards,rank:p.season,members:p.apps},n=Object.keys(g.members).length;
+ const p=gPend(D),badge={packets:p.packets+p.back,boss:p.rewards,rank:p.season,members:p.apps,war:(typeof warBadge==='function'?warBadge(g):0)},n=Object.keys(g.members).length;
  const nav=`<div class="gnav">${G_VIEWS.map(([k,i,t])=>`<button class="${GV===k?'on':''}" onclick="gGo('${k}')"><i>${i}</i>${t}${badge[k]?'<u class="dot"></u>':''}</button>`).join('')}</div>`;
  const bon=gBon(g.lv),nxt=g.lv<10?G_EXP[g.lv-1]:g.exp,prev=g.lv>1?G_EXP[g.lv-2]:0,pc=g.lv>=10?100:Math.min(100,(g.exp-prev)/(nxt-prev)*100);
  const head=`<div class="panel gcard gme"><div class="row" style="flex-wrap:nowrap">${gEmbH(g,54)}<div style="flex:1;min-width:0"><h2 style="font-size:18px;overflow:hidden;text-overflow:ellipsis">${esc(g.name)}</h2><div class="small">Ур. ${g.lv} · 👥 ${n}/${gCap(g.lv)} · ${G_RIC[gRole(g)]} ${G_RANKS[gRole(g)]}</div><div class="bar xp"><i style="width:${pc}%"></i></div><div class="small">Опыт гильдии: ${gn(g.exp)}${g.lv<10?' / '+gn(nxt):' (макс.)'}</div></div></div><div class="small" style="margin-top:6px">✦ Ваши очки гильдии: <b>${gn(gpS())}</b></div></div>`;
  let body='';
- if(GV==='hub')body=gHubBody(g,D,bon);else if(GV==='members')body=gMembers(g);else if(GV==='contrib')body=gContribV(g);else if(GV==='boss')body=gBossV(g);else if(GV==='duel')body=gDuelV(g);else if(GV==='packets')body=gPacketsV(g,D);else if(GV==='shop')body=gShopV();else if(GV==='rank')body=gRankV(g,D);else body=gChatV(g);
+ if(GV==='hub')body=gHubBody(g,D,bon);else if(GV==='members')body=gMembers(g);else if(GV==='contrib')body=gContribV(g);else if(GV==='boss')body=gBossV(g);else if(GV==='duel')body=gDuelV(g);else if(GV==='war')body=typeof warV==='function'?warV(g,D):'';else if(GV==='packets')body=gPacketsV(g,D);else if(GV==='shop')body=gShopV();else if(GV==='rank')body=gRankV(g,D);else body=gChatV(g);
  return head+nav+body}
 function gHubBody(g,D,bon){const me=g.members[ME],r=gRole(g),p=gPend(D);
  const lvl=G_EXP.map((e,i)=>`Ур.${i+2}: ${gn(e)}`).join(' · ');
@@ -3467,7 +3468,7 @@ function gBossV(g){const b=g.boss,def=G_BOSS[b.idx],pc=Math.max(0,b.hp/b.max*100
  <div class="bar ehp" style="height:14px;margin:8px 0"><i style="width:${pc}%"></i></div><div class="small">❤ ${gn(Math.max(0,b.hp))} / ${gn(b.max)} (${pc.toFixed(1)}%) · общий урон гильдии</div>
  <button class="btn gold" style="width:100%;margin-top:10px" ${tries<=0||!S.team.length?'disabled':''} onclick="gBossStart()">⚔ В бой · попыток ${tries}/${G_TRIES+(gdS().xt||0)}</button>
  <div class="small" style="margin-top:6px">8 ходов на бой. Урон идёт в общий пул. Убийство — награды всем по вкладу урона. Попытки обновляются каждый день.</div></div>
- ${rew.length?`<div class="panel" style="border-color:#ffd76a"><h3>🎁 Награды за босса</h3><div>✦${gn(rs.gp)} · 🪙${gn(rs.gold)} · 💎${gn(rs.gems)}</div><button class="btn sm gold" onclick="gClaimRew()">Забрать награды (${rew.length})</button></div>`:''}
+ ${rew.length?`<div class="panel" style="border-color:#ffd76a"><h3>🎁 Награды гильдии (босс / война)</h3><div>✦${gn(rs.gp)} · 🪙${gn(rs.gold)} · 💎${gn(rs.gems)}</div><button class="btn sm gold" onclick="gClaimRew()">Забрать награды (${rew.length})</button></div>`:''}
  <div class="panel"><h3>🏅 Урон по боссу</h3>${rk.map(([k,e],i)=>`<div class="q"><div>${i+1}. ${k===ME?'<b>'+esc(e.n)+' (вы)</b>':esc(e.n)}</div><div class="small">${gn(e.d)} (${(e.d/(tot||1)*100).toFixed(0)}%)</div></div>`).join('')||'<div class="small">Пока никто не бил босса</div>'}</div>
  <div class="panel"><h3>👹 Боссы гильдии</h3><div class="small">${G_BOSS.map((x,i)=>`${i===b.idx?'▶ ':''}${x.e} ${x.n} (${x.el})`).join('<br>')}<br>После победы появляется следующий по кругу, HP растёт.</div></div>`}
 function gDuelV(g){const arr=Object.values(g.members).filter(m=>m.k!==ME).sort((a,b)=>(a.npc-b.npc)||b.lv-a.lv),me=g.members[ME];
@@ -3503,6 +3504,192 @@ function gChatV(g){const now=Date.now();return `<div class="panel"><h3>💬 Ле
 function admGuildReset(){if(!isAdmin())return;if(!confirm('Сбросить гильдию этого аккаунта (выйти/удалить, если гильдмастер)?'))return;const u=users(),k=AU;
  GStore.tx(d=>{Object.values(d.guilds).forEach(g=>{if(g.members[k]){delete g.members[k];if(g.gm===k){const nx=gRealKeys(g)[0];if(nx){g.gm=nx;g.members[nx].rank=5}else delete d.guilds[g.id]}}});return 1});
  const t=(AU===ME?S:u[AU].data);t.guildId='';if(AU===ME)save();else putUsers(u);admShow();toast('Гильдия сброшена')}
+// ====== ВОЙНА ГИЛЬДИЙ (ASTRAL_WAR_V1) ======
+// Поверх гильдий и серверного слоя GStore (gstore, CAS). Новых видов ключей нет: война живёт внутри guild:<id> (g.war, g.wr, g.whist),
+// очередь и сезонные снимки — в meta (wq, ws, wsn). Старые гильдии без этих полей работают как прежде.
+// ЧЕСТНО об ограничениях: серверной проверки боёв нет — бой считается на устройстве игрока. Защищено: лимит атак (запись «резерв атаки» — атомарная CAS-запись ДО боя,
+// бой детерминирован по сиду и снимку отряда, поэтому перезагрузкой не переигрывается), лимит на цель, засчёт лучшей атаки на цель, потолок очков за атаку,
+// вступление после старта войны не даёт атак, скрытые герои и 7★ в войне ограничены. Модифицированный клиент может записать любые числа — это не исключено.
+const WAR_MARK='ASTRAL_WAR_V1',W_ATT=3,W_PERT=2,W_GRACE=15*6e4,W_INV=24*G_HOUR,W_QWAIT=3*6e4,W_MAXP=150;
+const W_REW={win:{gems:300,gold:60000,gp:150,item:2},draw:{gems:120,gold:25000,gp:60,item:1},lose:{gems:60,gold:12000,gp:30,item:0}};
+const W_RP={win:25,draw:8,lose:3};
+const W_SEASON_REW=[[900],[700],[550],[400],[320],[260],[210],[170],[140],[110]];
+function warSeasonIdx(ms){return Math.floor(gWeekIdx(ms||Date.now())/4)}
+function warSeasonEnd(s){return gWeekStart((s+1)*4)}
+function warS(){if(!S.war)S.war={};const w=S.war;if(!Array.isArray(w.def))w.def=[];if(!w.done)w.done={};if(!w.st)w.st={att:0,win:0,pts:0};return w}
+const warLeft=ms=>{ms=Math.max(0,ms);const h=Math.floor(ms/G_HOUR),m=Math.floor(ms%G_HOUR/6e4);return h>=48?Math.floor(h/24)+' д '+(h%24)+' ч':h+' ч '+m+' мин'};
+// ---------- отряды ----------
+function warOkH(id){const h=H(id);return !!h&&!h.secret}
+function warMyIds(){const w=warS(),ow=S.owned||{};let ids=(w.def||[]).filter(id=>ow[id]&&warOkH(id));if(!ids.length)ids=gTeamOf(S).filter(id=>ow[id]&&warOkH(id));return ids.slice(0,3)}
+function warPack(){const ids=warMyIds(),o={};ids.forEach(id=>{const x=S.owned[id];o[id]={lv:x.lv,dup:x.dup||0,asc:x.asc||0,sk:x.sk||1,npl:x.npl||1}});return{ids,o,pw:ids.reduce((s,id)=>s+gHPow(S.owned[id],id),0)}}
+function warPackOk(p){try{return !!p&&Array.isArray(p.ids)&&p.ids.length>=1&&p.ids.length<=3&&p.o&&p.ids.every(id=>warOkH(id)&&p.o[id]&&p.o[id].lv>=1&&p.o[id].lv<=110)}catch(e){return false}}
+function warSq(p,name){const o={};p.ids.forEach(id=>{const x=p.o[id];o[id]={lv:Math.min(110,Math.max(1,x.lv|0)),dup:Math.min(5,Math.max(0,x.dup|0)),asc:Math.min(5,Math.max(0,x.asc|0)),sk:Math.min(5,Math.max(1,x.sk|0||1)),npl:Math.min(5,Math.max(1,x.npl|0||1))}});
+ return{name:name||'Игрок',ids:p.ids.slice(),owned:o,pw:p.ids.reduce((s,id)=>s+gHPow(o[id],id),0)}}
+function warUnits(sq,b){return gUnits(sq,b).map(u=>{const h=H(u.id);if(h&&h.r===7){u.hp=Math.min(u.hp,2e6);u.max=u.hp;u.atk=Math.min(u.atk,4e5)}return u})}
+function warAcctPack(k){if(k===ME)return warPack();const ac=GStore.kv('acct:'+k);if(!ac||ac.dead||!ac.team)return null;const ids=ac.team.map(x=>x.id).filter(id=>warOkH(id)).slice(0,3),o={};ac.team.forEach(x=>{if(ids.includes(x.id)&&x.o)o[x.id]=x.o});
+ const p={ids:ids.filter(id=>o[id]),o,pw:ac.pw||0};return warPackOk(p)?p:null}
+function warDfs(g){const out={};Object.values(g.members).forEach(m=>{if(m.npc)return;const p=(m.wd&&warPackOk(m.wd))?m.wd:warAcctPack(m.k);if(p)out[m.k]={ids:p.ids,o:p.o,pw:p.pw,name:m.name,lv:m.lv}});return out}
+function warPublish(force){try{if(!S||!ME)return;const g=gMine();if(!g||!g.members[ME])return;const p=warPack();if(!p.ids.length)return;const sig=JSON.stringify(p);if(!force&&g.members[ME].wd&&JSON.stringify(g.members[ME].wd)===sig)return;
+ GStore.tx(d=>{const x=Object.values(d.guilds).find(y=>y.members[ME]);if(!x)return GStore.NC;x.members[ME].wd=p;return 1})}catch(e){}}
+// ---------- очки ----------
+function warScoreOf(w,upTo){if(!w)return 0;let s=0;const lim=upTo==null?w.end:upTo;for(const t in (w.hits||{})){const h=w.hits[t];if(h&&h.ts<=lim)s+=Math.min(h.pts||0,W_MAXP)}return s}
+function warNpcEntries(g,w){if(!w||!w.npc)return[];const rng=gRng('wl'+w.id),span=w.end-w.start,N=12,ws=[];let sw=0;for(let i=0;i<N;i++){const x=.4+rng();ws.push(x);sw+=x}
+ const mine=Object.values(g.members).filter(m=>!m.npc),opp=GStore.get('guilds',w.opp),on=opp?Object.values(opp.members).filter(m=>m.npc):[],out=[];
+ for(let i=0;i<N;i++){const pts=Math.round(w.nt*ws[i]/sw),a=on.length?on[Math.floor(rng()*on.length)]:null,b=mine.length?mine[Math.floor(rng()*mine.length)]:null;out.push({ts:w.start+Math.round(span*(i+1)/N*.98),k:'npc',nm:a?a.name:'NPC',tn:b?b.name:'—',pts,win:pts>=90})}
+ return out}
+function warNpcScore(g,w,now){return warNpcEntries(g,w).filter(e=>e.ts<=now).reduce((s,e)=>s+e.pts,0)}
+function warThemScore(D,g,w,now){if(w.npc)return warNpcScore(g,w,Math.min(now,w.end));const o=D.guilds[w.opp],ow=o&&o.war&&o.war.id===w.id?o.war:null;return ow?warScoreOf(ow):0}
+// ---------- создание / принятие ----------
+function warNewRec(id,opp,on,oe,dur,state,now,npc){return{id,opp,oppName:on,oppEmb:oe,dur,state,ts:now,att:{},hits:{},log:[],dfs:{},pend:{},npc:npc?1:0}}
+function warFree(g){return !g.war||g.war.state==='ended'}
+function warNpcTarget(g,opp){const mine=Object.values(g.members).filter(m=>!m.npc),on=Object.values(opp.members).filter(m=>m.npc),am=mine.reduce((s,m)=>s+(m.pw||1),0)/Math.max(1,mine.length),an=on.reduce((s,m)=>s+(m.pw||1),0)/Math.max(1,on.length),
+ r=Math.max(.6,Math.min(1.4,an/Math.max(1,am))),rng=gRng('wt'+g.id+opp.id);return Math.max(150,Math.min(mine.length*W_ATT*140,Math.round(mine.length*W_ATT*90*r*(.8+.4*rng()))))}
+function warStartNpc(d,g,opp,dur,now){const id='w_'+hash(g.id+opp.id+now).slice(0,8),w=warNewRec(id,opp.id,opp.name,opp.emb,dur,'active',now,1);w.start=now;w.end=now+dur*G_HOUR;w.nt=warNpcTarget(g,opp);w.dfs=warDfs(g);g.war=w;
+ gFeed(g,'⚔ Война с «'+opp.name+'» началась на '+dur+' ч! Каждый участник — '+W_ATT+' атаки.','ev')}
+function warStartReal(d,a,b,dur,now){const inv=a.war&&/^invite/.test(a.war.state)&&b.war&&b.war.id===a.war.id,id=inv?a.war.id:'w_'+hash(a.id+b.id+now).slice(0,8);[a,b].forEach(g=>{const o=g===a?b:a,w=warNewRec(id,o.id,o.name,o.emb,dur,'active',now,0);w.start=now;w.end=now+dur*G_HOUR;w.dfs=warDfs(g);g.war=w;
+  gFeed(g,'⚔ Война с «'+o.name+'» началась на '+dur+' ч! Каждый участник — '+W_ATT+' атаки.','ev')});
+ if(d.meta.wq){delete d.meta.wq[a.id];delete d.meta.wq[b.id]}}
+async function warPreload(g,extra){try{const ks=gRealKeys(g).map(k=>'acct:'+k);(extra||[]).forEach(x=>gRealKeys(x).forEach(k=>ks.push('acct:'+k)));await GStore.fetchKV(ks.slice(0,80))}catch(e){}}
+async function warDeclare(oppId,dur){const g=gMine();if(!g||GBUSY.wdecl)return;if(gRole(g)<3)return gFail('Войну объявляют офицеры и выше');if(!warFree(g))return gFail('У гильдии уже есть война или приглашение');
+ dur=dur===48?48:24;const D=GStore.all(),opp=D.guilds[oppId];if(!opp||opp.id===g.id||opp.dead)return gFail('Гильдия не найдена');if(!opp.npc&&!warFree(opp))return gFail('У этой гильдии уже есть война');if(gRealKeys(g).length<1)return gFail('Нет участников');
+ GBUSY.wdecl=1;await warPreload(g,opp.npc?[]:[opp]);const keys=opp.npc?['guild:'+g.id]:['guild:'+g.id,'guild:'+opp.id];let r;
+ try{r=await GStore.txa(keys,d=>{const a=d.guilds[g.id],b=d.guilds[oppId];if(!a||!b)return{e:'Гильдия не найдена'};if(!warFree(a))return{e:'У гильдии уже есть война'};if(!b.npc&&!warFree(b))return{e:'У этой гильдии уже есть война'};const now=Date.now();
+   if(a.members[ME]&&a.members[ME].rank<3)return{e:'Нужно звание офицера'};
+   if(b.npc){warStartNpc(d,a,b,dur,now);if(d.meta.wq)delete d.meta.wq[a.id];return{ok:'npc'}}
+   const id='w_'+hash(a.id+b.id+now).slice(0,8);a.war=warNewRec(id,b.id,b.name,b.emb,dur,'invite_out',now,0);b.war=warNewRec(id,a.id,a.name,a.emb,dur,'invite_in',now,0);
+   gFeed(a,'⚔ Вызов на войну отправлен гильдии «'+b.name+'» ('+dur+' ч)','ev');gFeed(b,'⚔ Гильдия «'+a.name+'» объявила войну ('+dur+' ч). Офицеры могут принять вызов во вкладке «Война».','ev');return{ok:'inv'}},{net:true})}
+ catch(e){GBUSY.wdecl=0;return gFail('Нет связи с сервером — война не объявлена')}
+ GBUSY.wdecl=0;if(r.e)return gFail(r.e);closeM();GV='war';toast(r.ok==='npc'?'⚔ Война началась!':'⚔ Вызов отправлен');render()}
+async function warAnswer(yes){const g=gMine();if(!g||GBUSY.wans)return;if(gRole(g)<3)return gFail('Только офицеры и выше');const w=g.war;if(!w||!/^invite/.test(w.state))return;const out=w.state==='invite_out',opp=GStore.get('guilds',w.opp);
+ if(out&&yes)return;GBUSY.wans=1;if(yes&&opp)await warPreload(g,[opp]);let r;
+ try{r=await GStore.txa(['guild:'+g.id].concat(opp?['guild:'+opp.id]:[]),d=>{const a=d.guilds[g.id],b=d.guilds[w.opp];if(!a||!a.war||a.war.id!==w.id||!/^invite/.test(a.war.state))return{e:'Приглашение уже не действует'};
+   const now=Date.now();if(yes){if(!b||!b.war||b.war.id!==w.id||b.war.state!=='invite_out')return{e:'Вызов отозван'};warStartReal(d,b,a,w.dur,now);return{ok:1}}
+   delete a.war;if(b&&b.war&&b.war.id===w.id)delete b.war;gFeed(a,out?'⚔ Вызов на войну отозван':'⚔ Вызов на войну отклонён','ev');return{ok:0}},{net:true})}
+ catch(e){GBUSY.wans=0;return gFail('Нет связи с сервером')}
+ GBUSY.wans=0;if(r.e)return gFail(r.e);toast(yes?'⚔ Война началась!':'Готово');render()}
+async function warQueue(dur,leave){const g=gMine();if(!g||GBUSY.wq)return;if(gRole(g)<3)return gFail('Только офицеры и выше');if(!leave&&!warFree(g))return gFail('У гильдии уже есть война');GBUSY.wq=1;let r;
+ try{r=await GStore.txa(['meta','guild:'+g.id],d=>{const a=d.guilds[g.id];if(!a)return{e:'Гильдия не найдена'};d.meta.wq=d.meta.wq||{};if(leave){delete d.meta.wq[g.id];return{ok:1}}if(!warFree(a))return{e:'У гильдии уже есть война'};
+   d.meta.wq[g.id]={ts:Date.now(),dur:dur===48?48:24,pw:Object.values(a.members).reduce((s,m)=>s+(m.npc?0:(m.pw||0)),0)};return{ok:1}},{net:true})}
+ catch(e){GBUSY.wq=0;return gFail('Нет связи с сервером')}
+ GBUSY.wq=0;if(r.e)return gFail(r.e);toast(leave?'Вы вышли из очереди':'🕑 Гильдия встала в очередь на войну');warTick(true);render()}
+// ---------- тик: очередь, приглашения, итоги, сезон ----------
+function warResolve(d,g,now){const w=g.war;if(!w||w.state!=='active'||now<w.end+W_GRACE)return false;const o=w.npc?null:d.guilds[w.opp],ow=o&&o.war&&o.war.id===w.id?o.war:null;
+ const hh=o&&(o.whist||[]).find(h=>h.id===w.id),my=warScoreOf(w),th=w.npc?warNpcScore(g,w,w.end):(ow?warScoreOf(ow):(hh?hh.sc[0]:0)),res=my>th?'win':my<th?'lose':'draw';w.state='ended';w.res=res;w.sc=[my,th];w.endAt=now;
+ const R=W_REW[res],mul=w.dur>=48?1.5:1;
+ Object.keys(w.att||{}).forEach(k=>{const m=g.members[k];if(!m||m.npc||(w.att[k]||0)<1)return;(g.pend[k]=g.pend[k]||[]).push({t:'war',n:'Война с «'+w.oppName+'»',gp:Math.round(R.gp*mul),gold:Math.round(R.gold*mul),gems:Math.round(R.gems*mul),item:R.item,ts:now})});
+ const s=warSeasonIdx(now);if(!g.wr||g.wr.s!==s)g.wr={s,pts:0,w:0,l:0,d:0};const wr=g.wr;wr.pts+=W_RP[res]+(res==='win'?Math.min(15,Math.round((my-th)/40)):0);if(res==='win')wr.w++;else if(res==='lose')wr.l++;else wr.d++;
+ g.whist=g.whist||[];g.whist.unshift({id:w.id,opp:w.opp,oppName:w.oppName,oppEmb:w.oppEmb,res,sc:[my,th],ts:now,dur:w.dur});if(g.whist.length>8)g.whist.length=8;g.score+=res==='win'?300:res==='draw'?100:40;
+ gFeed(g,(res==='win'?'🏆 Победа':res==='lose'?'💀 Поражение':'🤝 Ничья')+' в войне с «'+w.oppName+'» — '+my+' : '+th+'. Награды — во вкладке «Босс».','ev');return true}
+let warLastTick=0;
+function warTick(force){try{if(!S||!ME)return;if(!GStore.ready&&GStore.online!==false)return;const now=Date.now();if(!force&&now-warLastTick<4000)return;warLastTick=now;
+ GStore.tx(d=>{let dirty=false;const meta=d.meta,cur=warSeasonIdx(now);
+  if(meta.ws==null){meta.ws=cur;dirty=true}
+  else if(meta.ws<cur){const top=Object.values(d.guilds).filter(g=>g.wr&&g.wr.s===meta.ws&&g.wr.pts>0).sort((a,b)=>b.wr.pts-a.wr.pts||a.id.localeCompare(b.id)).slice(0,10).map((g,i)=>({id:g.id,name:g.name,emb:g.emb,pts:g.wr.pts,place:i+1,mem:gRealKeys(g)}));
+   meta.wsn=meta.wsn||{};meta.wsn[meta.ws]={s:meta.ws,top,ts:now};Object.keys(meta.wsn).sort((a,b)=>b-a).slice(4).forEach(k=>delete meta.wsn[k]);meta.ws=cur;dirty=true}
+  Object.values(d.guilds).forEach(g=>{if(g.dead||!g.war)return;const w=g.war;
+   if(/^invite/.test(w.state)&&now-w.ts>W_INV){const o=d.guilds[w.opp];delete g.war;if(o&&o.war&&o.war.id===w.id)delete o.war;dirty=true;return}
+   if(w.state==='active'&&warResolve(d,g,now))dirty=true});
+  const q=meta.wq;
+  if(q){const ids=Object.keys(q).filter(id=>{const g=d.guilds[id];if(!g||g.dead||!warFree(g)){delete q[id];dirty=true;return false}return true}).sort((a,b)=>q[a].ts-q[b].ts);
+   const used=new Set();ids.forEach(a=>{if(used.has(a))return;let best=null;ids.forEach(b=>{if(b===a||used.has(b))return;const df=Math.abs((q[a].pw||0)-(q[b].pw||0));if(!best||df<best.df)best={b,df}});
+    if(best){used.add(a);used.add(best.b);warStartReal(d,d.guilds[a],d.guilds[best.b],q[a].dur===48?48:24,now);dirty=true}
+    else if(now-q[a].ts>=W_QWAIT){const mine=d.guilds[a],npcs=Object.values(d.guilds).filter(x=>x.npc&&!x.dead);
+     if(npcs.length){const mp=(q[a].pw||0)/Math.max(1,gRealKeys(mine).length);npcs.sort((x,y)=>Math.abs(gNpcPow(Object.values(x.members).find(m=>m.npc)||{lv:20,sd:x.id})-mp)-Math.abs(gNpcPow(Object.values(y.members).find(m=>m.npc)||{lv:20,sd:y.id})-mp)||x.id.localeCompare(y.id));
+      warStartNpc(d,mine,npcs[0],q[a].dur===48?48:24,now);delete q[a];used.add(a);dirty=true}}})}
+  return dirty?d:GStore.NC});try{warAutoResume(gMine())}catch(e){}}catch(e){console.error(e)}}
+// ---------- цели и атака ----------
+function warEnemyList(D,g,w){if(!w)return[];const hits=w.hits||{};let arr=[];
+ if(w.npc){const o=D.guilds[w.opp];if(o)arr=Object.values(o.members).filter(m=>m.npc).sort((a,b)=>(b.pw||0)-(a.pw||0)).map(m=>{const q=gNpcSquad(m);return{k:m.k,name:m.name,lv:m.lv,pw:m.pw||gNpcPow(m),sq:{name:m.name,ids:q.ids,owned:q.owned,pw:m.pw||gNpcPow(m)},npc:1,m}})}
+ else{const o=D.guilds[w.opp],ow=o&&o.war&&o.war.id===w.id?o.war:null;if(ow)arr=Object.entries(ow.dfs||{}).filter(([k,p])=>warPackOk(p)).map(([k,p])=>({k,name:p.name,lv:p.lv,pw:p.pw||0,sq:warSq(p,p.name),npc:0,m:{k,name:p.name,lv:p.lv}})).sort((a,b)=>b.pw-a.pw)}
+ return arr.map(x=>Object.assign(x,{best:hits[x.k]||null}))}
+function warCanAtk(g,w,now,t){if(!w||w.state!=='active')return'Война не идёт';if(now>=w.end)return'Время войны вышло';const m=g.members[ME];if(!m)return'Вы не в гильдии';if(m.joined>w.start)return'Вы вступили после начала войны';if(accLv()<G_JOIN_LV)return'Нужен '+G_JOIN_LV+' уровень';
+ if((w.att[ME]||0)>=W_ATT)return'Атаки закончились ('+W_ATT+'/'+W_ATT+')';if(w.pend&&w.pend[ME])return'Предыдущая атака ещё не завершена';
+ if(t!=null){const h=w.hits[t];if(h&&(h.st>=3||(h.n||0)>=W_PERT))return h.st>=3?'Цель уже разгромлена':'На эту цель уже потрачено '+W_PERT+' атаки'}return''}
+function warAttackUi(kk){const g=gMine();if(!g||!g.war)return;const w=g.war,t=dk(kk),D=GStore.all(),tg=warEnemyList(D,g,w).find(x=>x.k===t);if(!tg)return gFail('Цель недоступна');const e=warCanAtk(g,w,Date.now(),t),me=warPack();
+ modal(`<h3>⚔ Атака: ${esc(tg.name)}</h3><div class="small">Защитный отряд врага · ур. ${tg.lv} · сила ${gn(tg.pw)}${tg.npc?' · NPC':' · игрок'}</div>
+ <div class="grid" style="grid-template-columns:repeat(3,1fr);margin:8px 0">${tg.sq.ids.map(id=>`<div class="card r${H(id).r}">${portrait(H(id))}<div class="small">ур.${tg.sq.owned[id].lv}</div></div>`).join('')}</div>
+ <div class="small">Ваш боевой отряд (авто-бой, 3 героя):</div><div class="grid" style="grid-template-columns:repeat(3,1fr);margin:6px 0">${me.ids.map(id=>`<div class="card r${H(id).r}">${portrait(H(id))}<div class="small">ур.${S.owned[id].lv}</div></div>`).join('')||'<div class="small">нет героев</div>'}</div>
+ <div class="small">Победа: 100–150 очков (чем больше HP осталось — тем больше), поражение — до 40. Идёт лучший результат на цель (до ${W_PERT} атак). Осталось атак: ${W_ATT-(w.att[ME]||0)}/${W_ATT}. Атака списывается сразу и не отменяется.</div>${e?`<div class="err">${esc(e)}</div>`:''}
+ <div class="row c" style="margin-top:10px"><button class="btn gold" ${e||!me.ids.length?'disabled':''} onclick="warAttack('${kk}')">В бой (авто)</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+async function warAttack(kk){const g=gMine();if(!g||!g.war||GBUSY.war)return;const w0=g.war,t=dk(kk),e=warCanAtk(g,w0,Date.now(),t);if(e)return gFail(e);
+ const me=warPack();if(!me.ids.length)return gFail('Нет героев для атаки');const tg=warEnemyList(GStore.all(),g,w0).find(x=>x.k===t);if(!tg)return gFail('Цель недоступна');
+ GBUSY.war=1;let r;const gb=gBf().hp;
+ try{r=await GStore.txa(['guild:'+g.id],d=>{const x=d.guilds[g.id],y=x&&x.war;if(!y||y.id!==w0.id)return{e:'Война уже не идёт'};const e2=warCanAtk(x,y,Date.now(),t);if(e2)return{e:e2};
+   const n=(y.att[ME]||0)+1;y.att[ME]=n;y.pend[ME]={t,n,ts:Date.now(),sq:me,b:gb};return{n}},{net:true})}
+ catch(er){GBUSY.war=0;return gFail('Нет связи с сервером — атака не начата')}
+ if(r.e){GBUSY.war=0;return gFail(r.e)}
+ try{await warFinish(g.id,w0.id)}finally{GBUSY.war=0}}
+function warAutoResume(g){try{const w=g&&g.war;if(!w||w.state!=='active'||!w.pend||!w.pend[ME]||GBUSY.war)return;GBUSY.war=1;Promise.resolve(warFinish(g.id,w.id,1)).catch(()=>{}).finally(()=>{GBUSY.war=0})}catch(e){GBUSY.war=0}}
+async function warFinish(gid,wid,silent){const D=GStore.all(),g=D.guilds[gid],w=g&&g.war;if(!w||w.id!==wid||!w.pend||!w.pend[ME])return;const p=w.pend[ME],tg=warEnemyList(D,g,w).find(x=>x.k===p.t);
+ const sqm=warPackOk(p.sq)?warSq(p.sq,S.name):null;let out,pts=0,st=0,win=false,fr=0;
+ if(!tg||!sqm){out={rounds:0,ha:0,hb:1,log:['Цель или отряд недоступны — атака засчитана как промах']}}
+ else{out=gDuelSim(warUnits(sqm,Math.min(1.2,Math.max(1,p.b||1))),warUnits(tg.sq,1),gRng(w.id+':'+ME+':'+p.n))}
+ if(tg&&sqm){win=!!out.win;const nm=Math.max(1,sqm.ids.length),nt=Math.max(1,tg.sq.ids.length);fr=Math.max(0,Math.min(1,out.ha/nm));const dmg=Math.max(0,Math.min(1,1-out.hb/nt));
+  if(win){st=fr>=.66?3:fr>=.33?2:1;pts=100+Math.round(50*fr)}else{pts=Math.round(40*dmg)}pts=Math.min(W_MAXP,pts)}
+ let r;try{r=await GStore.txa(['guild:'+gid],d=>{const x=d.guilds[gid],y=x&&x.war;if(!y||y.id!==wid||!y.pend||!y.pend[ME]||y.pend[ME].n!==p.n)return{e:'done'};if(y.state!=='active'){delete y.pend[ME];return{e:'done'}};
+   const h=y.hits[p.t]||(y.hits[p.t]={k:ME,pts:0,st:0,n:0,ts:0});h.n=(h.n||0)+1;if(pts>=(h.pts||0)){h.pts=pts;h.st=st;h.k=ME;h.ts=Math.min(p.ts,y.end)}
+   y.log.unshift({ts:p.ts,k:ME,nm:S.name,t:p.t,tn:tg?tg.name:'—',win,st,pts,n:p.n});if(y.log.length>40)y.log.length=40;delete y.pend[ME];x.score+=Math.round(pts/10);
+   gFeed(x,'⚔ '+S.name+(win?' разгромил(а) ':' атаковал(а) ')+(tg?tg.name:'цель')+(win?' ('+'★'.repeat(st)+')':'')+' · +'+pts+' оч. войны','ev');return{ok:1}},{net:true})}
+ catch(e){if(!silent)toast('Нет связи — результат будет записан при следующем входе');return}
+ if(r.e)return;const ws=warS(),key=wid+':'+ME+':'+p.n;if(ws.done[key])return;ws.done[key]=1;const ks=Object.keys(ws.done);if(ks.length>60)ks.slice(0,ks.length-60).forEach(k=>delete ws.done[k]);
+ const gp=win?15:3,gold=win?gGold(1000):0;ws.st.att++;if(win)ws.st.win++;ws.st.pts+=pts;S.gp=gpS()+gp;S.gold+=gold;addXp(gXp(10));save();
+ modal(`<h2 style="text-align:center">${win?'🏆 Победа в атаке!':'💀 Атака отбита'}</h2><div class="small" style="text-align:center;margin:6px 0">Цель: ${esc(tg?tg.name:'—')} · раундов: ${out.rounds}${win?' · '+'★'.repeat(st):''}<br>Очки войны: <b>+${pts}</b> (идёт лучший результат на цель)<br>Награда: ✦${gp}${gold?' 🪙'+gn(gold):''}</div>
+ <div class="log" style="height:170px">${(out.log||[]).join('<br>')}</div><div class="row c" style="margin-top:10px"><button class="btn gold" onclick="closeM();render()">OK</button></div>`);render()}
+// ---------- защитный отряд ----------
+let WDSEL=[];
+function warDefUi(){const ow=S.owned,ids=Object.keys(ow).filter(warOkH).sort((a,b)=>gHPow(ow[b],b)-gHPow(ow[a],a)).slice(0,30);WDSEL=warMyIds().slice();warDefShow(ids)}
+function warDefShow(ids){ids=ids||Object.keys(S.owned).filter(warOkH).sort((a,b)=>gHPow(S.owned[b],b)-gHPow(S.owned[a],a)).slice(0,30);
+ modal(`<h3>🛡 Защитный отряд</h3><div class="small" style="margin:4px 0">До 3 героев. Этим отрядом вас атакует враг, а также вы идёте в бой на войне. Состав фиксируется в момент начала войны. Скрытые герои не участвуют; у 7★ в войне ограничены статы.</div>
+ <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:6px;max-height:300px;overflow:auto">${ids.map(id=>{const on=WDSEL.includes(id);return `<div class="card r${H(id).r}" style="cursor:pointer;${on?'outline:2px solid #ffd76a':''}" onclick="warDefTog('${id}')">${portrait(H(id))}<div class="small">ур.${S.owned[id].lv} ${on?'✅':''}</div></div>`}).join('')}</div>
+ <div class="row c" style="margin-top:10px"><button class="btn gold" onclick="warDefSave()">Сохранить (${WDSEL.length}/3)</button><button class="btn" onclick="WDSEL=[];warDefSave(1)">Авто</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+function warDefTog(id){const i=WDSEL.indexOf(id);if(i>=0)WDSEL.splice(i,1);else if(WDSEL.length<3)WDSEL.push(id);else toast('Максимум 3 героя');warDefShow()}
+function warDefSave(auto){const ws=warS();ws.def=auto?[]:WDSEL.slice(0,3).filter(id=>S.owned[id]&&warOkH(id));save();warPublish(true);closeM();toast(auto?'Защитный отряд: авто (ваш отряд)':'Защитный отряд сохранён');render()}
+// ---------- сезонный рейтинг ----------
+function warSeasonRew(sn){sn=String(sn);const ws=warS();ws.sc=ws.sc||{};if(ws.sc[sn])return gFail('Уже получено');const D=GStore.all(),x=((D.meta.wsn)||{})[sn];if(!x)return;const t=x.top.find(y=>y.mem.includes(ME));if(!t)return gFail('Вы не состояли в топ-гильдии');
+ ws.sc[sn]=1;const gems=W_SEASON_REW[t.place-1][0],gold=gems*20,gp=Math.round(gems/2);S.gems+=gems;S.gold+=gold;S.gp=gpS()+gp;const its=[];for(let i=0;i<(t.place<=3?2:1);i++){try{const it=plDrop('wboss');if(it)its.push(PL_TPL[it.t].n)}catch(e){}}
+ save();toast('🏆 Награда войны сезона: 💎'+gems+' 🪙'+gn(gold)+' ✦'+gp+(its.length?' · 🎁 '+its.join(', '):''));render()}
+// ---------- интерфейс ----------
+function warBadge(g){try{const w=g.war,r=gRole(g),m=g.members[ME];if(!w)return 0;if(w.state==='invite_in'&&r>=3)return 1;if(w.state==='active'&&m&&m.joined<=w.start&&(w.att[ME]||0)<W_ATT&&Date.now()<w.end)return 1;return 0}catch(e){return 0}}
+function warDeclareUi(){const g=gMine();if(!g)return;if(gRole(g)<3)return gFail('Войну объявляют офицеры и выше');if(!warFree(g))return gFail('У гильдии уже есть война');
+ const D=GStore.all(),my=gRealKeys(g).reduce((s,k)=>s+(g.members[k].pw||0),0),arr=Object.values(D.guilds).filter(x=>x.id!==g.id&&!x.dead&&(x.npc||warFree(x))).sort((a,b)=>(b.npc?0:1)-(a.npc?0:1)||b.score-a.score);
+ modal(`<h3>⚔ Объявить войну</h3><div class="small" style="margin:4px 0">Длительность: <select class="in" id="wd_d" style="width:auto;display:inline-block"><option value="24">24 часа</option><option value="48">48 часов</option></select> · 48 ч — награды ×1.5. Каждый участник — ${W_ATT} атаки.<br>Игровые гильдии получают приглашение (24 ч на ответ), NPC-гильдии принимают сразу.</div>
+ <div style="max-height:320px;overflow:auto">${arr.map(x=>{const pw=Object.values(x.members).reduce((s,m)=>s+(m.npc?(m.pw||0):(m.pw||0)),0);return `<div class="q"><span style="padding:0 4px">${gEmbH(x,30)}</span><div style="min-width:0;flex:1"><b>${esc(x.name)}</b><div class="small">ур. ${x.lv} · 👥 ${Object.keys(x.members).length} · ⚔ ${gn(pw)} ${x.npc?'· NPC':'· игроки'}</div></div><button class="btn sm gold" style="width:auto;margin:0;padding:6px 12px" onclick="warDeclare('${x.id}',Number($('wd_d').value))">⚔</button></div>`}).join('')}</div>
+ <div class="small">Ваша сила: ${gn(my)}</div><div class="row c" style="margin-top:8px"><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+function warStars(n){return n>0?'★'.repeat(n)+'☆'.repeat(3-n):'—'}
+function warV(g,D){const now=Date.now(),w=g.war,r=gRole(g),off=r>=3,wr=g.wr&&g.wr.s===warSeasonIdx(now)?g.wr:{pts:0,w:0,l:0,d:0};warAutoResume(g);
+ const inQ=D.meta.wq&&D.meta.wq[g.id],pk=(g.pend[ME]||[]).filter(x=>x.t==='war').length;
+ const note='<div class="small" style="margin-top:6px;opacity:.75">ℹ️ Бои считаются на устройстве игрока, серверной проверки нет: лимиты атак записываются на сервер до боя, но подделку модифицированным клиентом это полностью не исключает.</div>';
+ let top=`<div class="panel"><h3>⚔ Война гильдий <span class="small" style="opacity:.6">${WAR_MARK.slice(-2)}</span></h3><div class="small" style="line-height:1.5">Гильдия бросает вызов другой гильдии на 24 или 48 ч. Каждый участник делает до ${W_ATT} атак по защитным отрядам врага (авто-бой). Очки — за победы (лучший результат на цель), победитель получает 💎🪙✦ и предметы. Сезонный рейтинг войн — 4 недели.</div>
+ <div class="kv"><span>Рейтинг войн (сезон)</span><b>${wr.pts} · ${wr.w}П/${wr.l}Пр/${wr.d}Н</b></div>${note}</div>`;
+ let body='';
+ if(!w||w.state==='ended'){
+  if(w&&w.state==='ended'){const rs=w.res==='win'?['🏆 Победа','#34d399']:w.res==='lose'?['💀 Поражение','#f43f5e']:['🤝 Ничья','#ffd76a'];
+   body+=`<div class="panel" style="border-color:${rs[1]}"><h3>${rs[0]} · «${esc(w.oppName)}»</h3><div class="kv"><span>Счёт</span><b>${w.sc[0]} : ${w.sc[1]}</b></div><div class="small">Награды участникам (кто сделал хотя бы 1 атаку) — во вкладке «Босс».${pk?' <b>Ждёт наград: '+pk+'</b>':''}</div>${pk?`<button class="btn sm gold" onclick="gClaimRew()">🎁 Забрать награды</button>`:''}</div>`}
+  body+=`<div class="panel"><h3>Новая война</h3>${off?`${inQ?`<div class="small">🕑 Гильдия в очереди (${warLeft(now-inQ.ts)} ожидания; если соперник-игрок не найдётся за ${Math.round(W_QWAIT/6e4)} мин — подберём NPC-гильдию).</div><button class="btn sm" onclick="warQueue(24,1)">Выйти из очереди</button>`:`<div class="row"><button class="btn gold" style="flex:1" onclick="warDeclareUi()">⚔ Объявить войну</button><button class="btn" style="flex:1" onclick="warQueue(24)">🕑 В очередь 24 ч</button><button class="btn" style="flex:1" onclick="warQueue(48)">🕑 В очередь 48 ч</button></div>`}`:'<div class="small">Объявлять войну и вставать в очередь могут офицеры, заместитель и гильдмастер.</div>'}</div>`}
+ else if(w.state==='invite_out')body+=`<div class="panel"><h3>⏳ Вызов отправлен</h3><div class="small">Гильдия «${esc(w.oppName)}» · ${w.dur} ч · осталось на ответ ${warLeft(W_INV-(now-w.ts))}</div>${off?'<button class="btn sm" onclick="warAnswer(0)">Отозвать вызов</button>':''}</div>`;
+ else if(w.state==='invite_in')body+=`<div class="panel" style="border-color:#f43f5e"><h3>⚔ Нам объявили войну!</h3><div class="small">Гильдия «${esc(w.oppName)}» · ${w.dur} ч · осталось на ответ ${warLeft(W_INV-(now-w.ts))}</div>${off?'<div class="row"><button class="btn gold" style="flex:1" onclick="warAnswer(1)">Принять</button><button class="btn" style="flex:1" onclick="warAnswer(0)">Отклонить</button></div>':'<div class="small">Принять или отклонить может офицер.</div>'}</div>`;
+ else{const my=warScoreOf(w,now),th=warThemScore(D,g,w,now),tot=Math.max(1,my+th),left=w.end-now,att=w.att[ME]||0,m=g.members[ME],can=m&&m.joined<=w.start,list=warEnemyList(D,g,w);
+  const npcLog=warNpcEntries(g,w).filter(e=>e.ts<=now),lg=[...(w.log||[]),...npcLog].sort((a,b)=>b.ts-a.ts).slice(0,25);
+  const oppRec=w.npc?null:D.guilds[w.opp],oppN=w.npc?0:Object.keys((oppRec&&oppRec.war&&oppRec.war.att)||{}).length;
+  body+=`<div class="panel" style="border-color:#f43f5e"><h3>⚔ Война: ${esc(g.name)} vs ${esc(w.oppName)}</h3><div class="row sb" style="font-size:20px;font-weight:800"><span style="color:#7cf">${my}</span><span class="small">${left>0?'осталось '+warLeft(left):'идёт подсчёт итогов…'}</span><span style="color:#f87171">${th}</span></div>
+   <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;margin:6px 0;background:#222"><i style="width:${my/tot*100}%;background:#38bdf8"></i><i style="width:${th/tot*100}%;background:#f43f5e"></i></div>
+   <div class="kv"><span>Ваши атаки</span><b>${can?W_ATT-att:0}/${W_ATT}</b></div><div class="small">${w.dur} ч · ${w.npc?'враг — NPC-гильдия':'враг — игровая гильдия'}${can?'':' · вы вступили после начала войны — атаковать нельзя'}</div></div>
+  <div class="panel"><h3>🎯 Цели (${list.length})</h3>${list.map(x=>{const b=x.best,e=warCanAtk(g,w,now,x.k);return `<div class="q"><span style="padding:0 4px 0 5px;flex:none">${pfM(x.m,28)}</span><div style="min-width:0;flex:1"><b>${esc(x.name)}</b><div class="small">ур. ${x.lv} · ⚔ ${gn(x.pw)} · ${warStars(b?b.st:0)}${b?' · '+b.pts+' оч.':''}${b&&b.n?' · атак '+b.n+'/'+W_PERT:''}</div></div><button class="btn sm" style="width:auto;margin:0;padding:6px 12px" ${e?'disabled':''} onclick="warAttackUi('${ek(x.k)}')">⚔</button></div>`}).join('')||'<div class="small">У врага пока нет защитных отрядов (никто не опубликовал отряд)</div>'}</div>
+  <div class="panel"><h3>📜 Лог атак</h3><div class="glog" style="max-height:220px">${lg.map(e=>`<div class="gf ev"><span class="small">${new Date(e.ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span> ${e.k==='npc'?'🟥':'🟦'} ${esc(e.nm||'?')} → ${esc(e.tn||'?')}: ${e.win?'★'.repeat(e.st||1)+' ':''}<b>+${e.pts}</b></div>`).join('')||'<div class="small">Атак пока не было</div>'}</div>${oppN?`<div class="small" style="margin-top:6px">Враги уже сделали атак: ${Object.values(oppRec.war.att).reduce((s,x)=>s+x,0)}</div>`:''}</div>`}
+ const mp=warPack();
+ body+=`<div class="panel"><h3>🛡 Мой защитный отряд</h3><div class="grid" style="grid-template-columns:repeat(3,1fr);margin:6px 0">${mp.ids.map(id=>`<div class="card r${H(id).r}">${portrait(H(id))}<div class="small">ур.${S.owned[id].lv}</div></div>`).join('')||'<div class="small">нет героев</div>'}</div><div class="small">Сила отряда: ${gn(mp.pw)} · ${(warS().def||[]).length?'выбран вручную':'авто (ваш боевой отряд)'}</div><button class="btn sm gold" onclick="warDefUi()">Изменить</button></div>`;
+ body+=warRankV(g,D);
+ return top+body}
+function warRankV(g,D){const now=Date.now(),s=warSeasonIdx(now),rows=Object.values(D.guilds).filter(x=>x.wr&&x.wr.s===s&&x.wr.pts>0).sort((a,b)=>b.wr.pts-a.wr.pts||a.id.localeCompare(b.id)),myp=rows.findIndex(x=>x.id===g.id)+1,end=warSeasonEnd(s),rd=Math.floor((end-now)/G_DAY),rh=Math.floor((end-now)%G_DAY/G_HOUR);
+ const snaps=Object.values(D.meta.wsn||{}).sort((a,b)=>b.s-a.s),cl=[];snaps.forEach(x=>{const t=x.top.find(y=>y.mem.includes(ME));if(t)cl.push({x,t})});const ws=warS();
+ const rew=cl.map(({x,t})=>{const got=(ws.sc||{})[x.s];return `<div class="panel" style="border-color:#ffd76a"><h3>🏆 Награда войн сезона</h3><div class="small">${esc(t.name)} — ${t.place}-е место (${t.pts} оч.). Награда: 💎${W_SEASON_REW[t.place-1][0]} 🪙${gn(W_SEASON_REW[t.place-1][0]*20)} ✦${Math.round(W_SEASON_REW[t.place-1][0]/2)} + предмет</div><button class="btn sm gold" ${got?'disabled':''} onclick="warSeasonRew(${x.s})">${got?'Получено ✔':'Забрать'}</button></div>`}).join('');
+ const hist=(g.whist||[]).map(h=>`<div class="q"><div style="min-width:0;flex:1"><b>${h.res==='win'?'🏆':h.res==='lose'?'💀':'🤝'} «${esc(h.oppName)}»</b><div class="small">${new Date(h.ts).toLocaleDateString('ru-RU')} · ${h.dur} ч</div></div><b>${h.sc[0]} : ${h.sc[1]}</b></div>`).join('');
+ return rew+`<div class="panel"><h3>🏆 Рейтинг войн (сезон, 4 нед.)</h3><div class="small" style="margin-bottom:6px">До конца сезона: ${rd} д ${rh} ч. Победа +25…40, ничья +8, поражение +3. Топ-10 получает награды. Ваше место: <b>${myp?'#'+myp:'—'}</b></div>
+ ${rows.slice(0,10).map((x,i)=>`<div class="q ${x.id===g.id?'gmeRow':''}"><div style="min-width:0;flex:1"><b>${i+1}. ${x.emb} ${esc(x.name)}${x.id===g.id?' (вы)':''}</b><div class="small">${x.wr.w}П · ${x.wr.l}Пр · ${x.wr.d}Н${W_SEASON_REW[i]?' · 🎁 💎'+W_SEASON_REW[i][0]:''}</div></div><b>${x.wr.pts}</b></div>`).join('')||'<div class="small">В этом сезоне войн ещё не было</div>'}</div>${hist?`<div class="panel"><h3>📚 История войн</h3>${hist}</div>`:''}`}
+// ---------- подключение к гильдии ----------
+(function(){try{const t0=gTick;gTick=function(){const r=t0.apply(this,arguments);try{warTick(arguments[0])}catch(e){console.error(e)}return r};
+ const s0=gSyncMe;gSyncMe=function(){const r=s0.apply(this,arguments);try{warPublish()}catch(e){}return r}}catch(e){console.error(e)}})();
+
 // ====== БОЖЕСТВЕННЫЕ 7★ · МИРОВЫЕ БОССЫ · РЕЙД ======
 const DIV_MARK='ASTRAL_DIVINE_V2';
 // ---------- форматирование огромных чисел ----------
