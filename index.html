@@ -15,6 +15,7 @@
 <!-- ASTRAL_ARATA_V5 -->
 <!-- ASTRAL_PLAYER_V3 -->
 <!-- ASTRAL_WAR_V1 -->
+<!-- ASTRAL_ART_V2 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -730,7 +731,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
 function modal(h){$('modal').innerHTML=`<div class="modal" onclick="if(event.target===this)closeM()"><div class="inner">${h}</div></div>`}
 function closeM(){$('modal').innerHTML=''}
-const IMG_V={arata:2,featherine:2};function imgSrc(id){return 'img/'+id+'.jpg'+(IMG_V[id]?'?v='+IMG_V[id]:'')}
+const IMG_V={arata:2,featherine:2,madara_rs:2,tanjiro_sun:2,eren_founder:2,guts_bm:2,asta_dk:2,natsu_end:2,toppo_god:2,broly_lssj:2,sukuna_full:2,meliodas_as:2,ashborn:2,angra:2,ainz_fin:2,lelouch_em:2,kirito_admin:2};function imgSrc(id){return 'img/'+id+'.jpg'+(IMG_V[id]?'?v='+IMG_V[id]:'')}
 function imgTag(h,st,cls){return `<img ${cls?`class="${cls}"`:''} loading="lazy" src="${imgSrc(h.id)}" data-cls="${h.cls}" style="${st||''}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='img/'+this.dataset.cls+'.jpg'}else{this.style.display='none'}">`}
 // неизвестные символы (v4): 3 маленьких слота (12–16px) в углах/у краёв, вне лица; по 3 варианта (виден ровно один, смена шагами); [left%, top%, размер px, длительность, класс, [[текст,цвет],...]]
 const GX_SL=[
