@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <!-- ASTRAL_PLAYER_V1 -->
 <!-- ASTRAL_PLAYER_V2 -->
+<!-- ASTRAL_ARATA_V5 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -929,7 +930,7 @@ function attack(){
  if(same){const u=B.team[B.pick[0].u];if(u.hp>0)hit(u,1.5,'Extra')}
  try{dvExtra()}catch(e){}
  if(!alive(B.en).length)return win();
- alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;if(typeof arSkipEn==='function'&&arSkipEn(e))return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);const d=Math.round(e.atk*cm*(.85+Math.random()*.3)*((v.m&&v.m.dmgTaken)||1)*(B.inv>0?0:1)*(B.shield||1)*(typeof arIn==='function'?arIn(v):1));v.hp-=d;v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
+ alive(B.en).forEach(e=>{const t=alive(B.team);if(!t.length)return;if(typeof arSkipEn==='function'&&arSkipEn(e))return;const v=t[Math.floor(Math.random()*t.length)];const cm=mult(e.cls,v.h.cls);let d=Math.round(e.atk*cm*(.85+Math.random()*.3)*((v.m&&v.m.dmgTaken)||1)*(B.inv>0?0:1)*(B.shield||1)*(typeof arIn==='function'?arIn(v):1));v.hp-=(typeof arHit==='function'?(d=arHit(v,d,e)):d);v.np=Math.min(100,v.np+3);L(`${e.e} ${e.n} → ${v.h.name}: ${d}${v.hp<=0?' ☠':''}`)});
  try{dvRevive()}catch(e){}
  B.team.forEach(u=>{if(u.cd)u.cd--;if(u.buff)u.buff--;if(u.hp>0&&u.m){if(u.m.regen)u.hp=Math.min(u.max,u.hp+Math.round(u.max*u.m.regen));if(u.m.teamNp)B.team.forEach(x=>{if(x.hp>0)x.np=Math.min(100,x.np+u.m.teamNp)})}});
  if(!alive(B.team).length){if(B.guild)return gBossEnd(B);if(B.dg)return dgEnd(0);S.st.battles++;prog('battle');save();B=null;modal(`<h2>💀 Поражение</h2><p style="margin:10px 0">Прокачайте героев или соберите отряд с преимуществом по классу (Saber → Lancer → Archer → Saber, Caster ↔ Rider).</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);return}
@@ -3304,11 +3305,11 @@ function gSquadOf(k,g){const m=g.members[k];if(m.npc){const q=gNpcSquad(m);retur
  const ac=GStore.kv('acct:'+k);if(ac&&ac.team&&ac.team.length){const ow={};ac.team.forEach(x=>ow[x.id]=x.o);const ids=ac.team.map(x=>x.id).filter(id=>H(id));return{name:m.name,ids,owned:ow,pw:ac.pw||m.pw}}
  const u=users()[k];if(u&&u.data){const ids=gTeamOf(u.data);return{name:m.name,ids,owned:u.data.owned,pw:gTeamPow(u.data)}}
  return null}
-function gUnits(sq,b){return sq.ids.map(id=>{const s=gStatsO(sq.owned[id],id),h=H(id),m=h.myth||{};let hp=Math.round(s.hp*(b||1)),ak=Math.round(s.atk*(m.atkMul||1)*(b||1));if(h.secret){hp=Math.min(hp,2e6);ak=Math.min(ak,4e5)}return{id,name:h.name.split(':')[0].split(' ')[0].split(' — ')[0],cls:h.cls,hp,max:hp,atk:ak,np:h.np.n}})}
+function gUnits(sq,b){return sq.ids.map(id=>{const s=gStatsO(sq.owned[id],id),h=H(id),m=h.myth||{};let hp=Math.round(s.hp*(b||1)),ak=Math.round(s.atk*(m.atkMul||1)*(b||1));if(h.secret){hp=Math.min(hp,2e6);ak=Math.min(ak,4e5)}return{id,name:h.name.split(':')[0].split(' ')[0].split(' — ')[0],cls:h.cls,hp,max:hp,atk:ak,np:h.np.n,imm:!!m.ar}})}
 function gDuelSim(A,Bt,rng){const log=[];const al=a=>a.filter(u=>u.hp>0);let rd=0;
  while(al(A).length&&al(Bt).length&&rd<14){rd++;log.push(`<b>Раунд ${rd}</b>`);const ord=[...al(A).map(u=>[u,Bt]),...al(Bt).map(u=>[u,A])].sort(()=>rng()-.5);
-  for(const [u,en] of ord){if(u.hp<=0)continue;const t=al(en);if(!t.length)break;const v=t[Math.floor(rng()*t.length)],np=rd%3===0,cm=mult(u.cls,v.cls),d=Math.round(u.atk*cm*(np?2.6:1.25)*(.85+.3*rng())*(np?1:1));v.hp-=d;
-   log.push(`${A.includes(u)?'🟦':'🟥'} ${esc(u.name)}${np?' «'+esc(u.np)+'»':''} → ${esc(v.name)}: ${d}${cm>1?' 🔺':cm<1?' 🔻':''}${v.hp<=0?' 💥':''}`)}}
+  for(const [u,en] of ord){if(u.hp<=0)continue;const t=al(en);if(!t.length)break;const v=t[Math.floor(rng()*t.length)],np=rd%3===0,cm=mult(u.cls,v.cls),d=Math.round(u.atk*cm*(np?2.6:1.25)*(.85+.3*rng())*(np?1:1));let dd=d;if(v.imm){dd=Math.max(0,Math.min(d,Math.floor(v.max*.005),v.hp-1));v.hp=v.max}v.hp-=dd;
+   log.push(`${A.includes(u)?'🟦':'🟥'} ${esc(u.name)}${np?' «'+esc(u.np)+'»':''} → ${esc(v.name)}: ${dd}${cm>1?' 🔺':cm<1?' 🔻':''}${v.hp<=0?' 💥':''}`)}}
  const ha=A.reduce((s,u)=>s+Math.max(0,u.hp)/u.max,0),hb=Bt.reduce((s,u)=>s+Math.max(0,u.hp)/u.max,0);
  return{win:ha>hb,rounds:rd,ha,hb,log}}
 function gDuelUi(kk){const g=gMine();if(!g)return;const k=dk(kk),m=g.members[k];if(!m)return;const sq=gSquadOf(k,g);if(!sq)return gFail('Нет данных игрока');
@@ -3323,7 +3324,7 @@ function gDuel(kk){const g=gMine();if(!g)return;const k=dk(kk);if(k===ME)return;
  GStore.tx(x=>{const y=x.guilds[g.id];if(!y||!y.members[ME])return 1;const m=y.members[ME];m.dr=Math.max(0,(m.dr||1000)+dr);if(res.win)m.dwin=(m.dwin||0)+1;else m.dlose=(m.dlose||0)+1;
   gFeed(y,'🥊 '+S.name+(res.win?' победил(а) ':' проиграл(а) ')+sq.name+' в дуэли','ev');y.score+=res.win?5:1;return 1});
  S.gp=gpS()+gp;S.gold+=gold;addXp(gXp(10));save();
- modal(`<h2 style="text-align:center">${res.win?'🏆 Победа в дуэли!':'💀 Поражение в дуэли'}</h2><div class="small" style="text-align:center;margin:6px 0">Вы vs ${esc(sq.name)} · раундов: ${res.rounds}<br>Остаток HP: ${Math.round(res.ha/3*100)}% / ${Math.round(res.hb/3*100)}%</div>
+ modal(`<h2 style="text-align:center">${res.win?'🏆 Победа в дуэли!':'💀 Поражение в дуэли'}</h2><div class="small" style="text-align:center;margin:6px 0">Вы vs ${esc(sq.name)} · раундов: ${res.rounds}<br>Остаток HP: ${Math.round(res.ha/Math.max(1,me.ids.length)*100)}% / ${Math.round(res.hb/Math.max(1,sq.ids.length)*100)}%</div>
  <div class="small" style="text-align:center">Награда: ✦${gp}${gold?' 🪙'+gn(gold):''} · рейтинг ${dr>0?'+':''}${dr}</div><div class="log" style="height:180px" id="gduellog">${res.log.join('<br>')}</div>
  <div class="row c" style="margin-top:10px"><button class="btn gold" onclick="closeM();render()">OK</button></div>`);render();}
 // красный пакет
@@ -3531,7 +3532,7 @@ function dvAdj(u,tg,dmg){
  const wb=B.guild&&B.guild.wb,g7=B.guild&&!B.guild.wb,s7=dvTeam7(),me7=u.h.r===7;
  if(wb){const mech=B.guild.mech;dmg*=(B.guild.mult||1)*(B.guild.raid?B.guild.raid.mul:1);
   if(mech==='shield'&&B.turn%2===1)dmg*=.4;
-  if(mech==='reflect'&&u.hp>0&&!(B.inv>0)){u.hp-=Math.round(tg.atk*.25);if(u.hp<=0)u.hp=0}}
+  if(mech==='reflect'&&u.hp>0&&!(B.inv>0)&&!(u.m&&u.m.ar)){u.hp-=Math.round(tg.atk*.25);if(u.hp<=0)u.hp=0}}
  if(!s7.length)return Math.max(0,Math.min(dmg,9e15));
  const lead=Math.max.apply(null,s7.map(x=>(DIV[x.h.id]||{}).lead||1));
  let d=dmg*lead;
@@ -3785,9 +3786,9 @@ function dvSync(force){if(!S||!ME)return Promise.resolve();if(DVSYNC)return DVSY
 setInterval(()=>{try{if(document.hidden||!S||!ME)return;if(tab==='wboss'||Date.now()-WLAST>6e4){WLAST=Date.now();dvSync()}}catch(e){}},15000);
 setTimeout(()=>{try{if(S&&ME)dvSync()}catch(e){}},4000);
 
-// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V4) ======
+// ====== СКРЫТЫЙ ГЕРОЙ 1★ (ЧЁРНАЯ ЗВЕЗДА): КАСУГА АРАТА — ПОВЕЛИТЕЛЬ ДЕМОНОВ (ASTRAL_ARATA_V5) ======
 // Trinity Seven (Тринити: Семеро магов). Тема Imperium/Impero (Господство): копирует и стирает магию. Чёрный Императорский меч Юдекка — Меч Повелителя Демонов.
-const AR_MARK='ASTRAL_ARATA_V4',AR_ID='arata',AR_PRICE=99999;
+const AR_MARK='ASTRAL_ARATA_V5',AR_ID='arata',AR_PRICE=99999;
 function arBz(s){let o='';for(const ch of String(s)){o+=ch;if(/[А-Яа-яЁёA-Za-z0-9]/.test(ch)&&(o.length*7)%5===0)o+='\u0336'}return o}
 const AR_SD='Юдекка — Меч Повелителя Демонов: мгновенный <s>огромный</s> невероятный урон по всем врагам, отряд исцелён и воскрешён на 100%, NP +100%, неуязвимость 2 хода, 2 хода вне очереди, на врагов ложится «Imperium» (безумный дебафф). Мир-босс: ≈5.5% его макс. HP за применение (до ≈8% с баффами), но суммарно за бой — не более 20% макс. HP босса.';
 const AR_D=[
@@ -3819,6 +3820,25 @@ vShop=function(){let vis=false;try{vis=arVisible()}catch(e){}
  if(SHV!=='ar')return tabs+_vShop0();
  return tabs+`<div class="panel" style="text-align:center;border-color:#000"><h3><span class="gxt">${arBz('???')}</span></h3><div class="card r1" style="max-width:190px;margin:8px auto;cursor:default">${portrait(h)}<div class="stars">${stars(1)}</div></div><div class="small gxt" style="margin:6px 0;overflow-wrap:anywhere">Неизвестный герой. Цена — ровно всё, что у тебя есть.</div><button class="btn gold" id="arBuy" onclick="arBuy()">💎${AR_PRICE.toLocaleString('ru-RU')}</button></div>`};
 // ---------- боевая логика ----------
+// ====== ASTRAL_ARATA_V5: АБСОЛЮТНЫЙ ИММУНИТЕТ АРАТЫ ======
+// Единый фильтр arImm(u,kind,val): для Араты любые чужие эффекты обнуляются (дебаффы, контроль, снижение статов, исходящего/входящего урона,
+// %-урон по HP, отражение, DoT, «ломающие» эффекты боссов и пассивки 7★). Обычный входящий удар ограничен AR_IN_CAP от макс. HP (0,5%),
+// в начале каждого хода и после каждого удара arGuard возвращает статы/пассивку и полное HP. Лимит урона по мир-боссу (AR_WB_CAP) и блокировка героев не затронуты.
+const AR_IN_CAP=.005,AR_FLOOR=1;
+function arIsA(u){return !!(u&&((u.m&&u.m.ar)||(u.h&&u.h.id===AR_ID)||u.id===AR_ID))}
+function arImm(u,kind,val){if(!arIsA(u))return val;
+ switch(kind){
+  case 'dmg':{let d=Number(val);if(!isFinite(d)||d<0)d=isFinite(d)?0:u.max;return Math.max(0,Math.min(Math.round(d),Math.floor(u.max*AR_IN_CAP),Math.max(0,u.hp-1)))}
+  case 'mulOut':case 'stat':case 'mulIn':return Math.max(1,Number(val)||1);
+  case 'flag':return false;
+  default:return 0}} // pct, reflect, dot, kill, erase, drain, stun, skip, ...
+const AR_DEB=['debuff','stun','sl','dotT','silence','slow','weak','curse','freeze','bind','poison','burn','bleed','mark','sealed'];
+function arGuard(u){if(!arIsA(u)||!B)return;const ar=B.ar;if(!ar||!ar.base)return;const b=ar.base;
+ if(!(u.atk>=b.atk))u.atk=b.atk;if(!(u.max>=b.max))u.max=b.max;
+ Object.keys(b.m).forEach(k=>{if(u.m[k]!==b.m[k])u.m[k]=b.m[k]});
+ AR_DEB.forEach(k=>{if(u[k])delete u[k]});u.dfm=1;u.blocked=0;
+ if(!(u.hp>=u.max*AR_FLOOR)||u.hp>u.max)u.hp=Math.min(u.max,Math.max(u.hp||0,Math.round(u.max*AR_FLOOR)))}
+function arHit(v,d,e){if(!arIsA(v))return d;try{arInit()}catch(x){}const r=arImm(v,'dmg',d);try{arGuard(v)}catch(x){}return r}
 function arRnd(){const a=B.ar;a.s=(Math.imul(a.s,1664525)+1013904223)>>>0;return a.s/4294967296}
 function arUnit(){return B&&B.team?B.team.find(x=>x.h.id===AR_ID&&!x.blocked&&x.hp>0):null}
 function arIsWb(){return !!(B&&B.guild&&B.guild.wb)}
@@ -3839,6 +3859,7 @@ function arInit(){if(!B)return null;if(B.ar!==undefined)return B.ar||null;
   u.atk=Math.round((u.atk+atkAdd)*atkX);u.max=Math.round(u.max+hpAdd);u.hp=u.max;u.m.regen=regen;u.m.leech=Math.min(1,leech);u.m.teamNp=teamNp;u.m.dmgTaken=dmgT;u.np=Math.min(100,np);
   ar.wbX=Math.min(1.5,1+.1*others.length+.05*leads);ar.atkX=atkX;
   L('🕳 Арата получает баффы заблокированных героев: атака ×'+atkX.toFixed(2)+', урон по боссу ×'+ar.wbX.toFixed(2)+' (потолок 20% макс. HP за бой)')}
+ ar.base={atk:u.atk,max:u.max,m:Object.assign({},u.m)};
  return ar}
 function arWbApply(){const ar=arInit();if(!ar)return;
  // босс бьёт по Арате: пересчёт атаки от его живого отряда
@@ -3860,7 +3881,7 @@ function arDebuff(e){const wb=arIsWb(),boss=!!(B.st&&B.st.boss);
  B.ar.stk=Math.min(200,B.ar.stk+1)}
 function arDot(){const ar=B.ar,wb=arIsWb();B.en.forEach(e=>{if(e.hp<=0||!(e.dotT>0))return;e.dotT--;
   let d=e.max*(wb?.0005*AR_WB_K*ar.wbX:B.st&&B.st.boss?.03:.08);if(wb)d=arWbDmg(e,d);d=Math.max(0,Math.round(d));e.hp-=d;if(B.guild)B.guild.dmg+=d;L('🩸 '+e.e+' '+e.n+' теряет '+fmtHp(d)+' HP (Imperium)')})}
-function arTurn(){if(!B)return;const ar=arInit();if(!ar)return;const u=arUnit();if(!u)return;
+function arTurn(){if(!B)return;const ar=arInit();if(!ar)return;try{B.team.forEach(arGuard)}catch(x){}const u=arUnit();if(!u)return;
  // инверсия HP
  if(u.hp<u.max*.3&&B.turn>1){u.hp=Math.max(1,u.max-u.hp);L('🕳 HP ⇄ ИНВЕРСИЯ: '+fmtHp(u.hp))}
  B.en.forEach(e=>{if(e.hp<=0)return;arDebuff(e)});
@@ -3868,7 +3889,7 @@ function arTurn(){if(!B)return;const ar=arInit();if(!ar)return;const u=arUnit();
  // стирание
  if(!arIsWb()&&!(B.st&&B.st.boss)&&!B.guild){B.en.forEach(e=>{if(e.hp>0&&alive(B.en).length>1&&arRnd()<.35){e.hp=0;L('🕳 '+e.e+' '+e.n+' — <s>удалён</s> ERASED')}})}
  arDot()}
-function arExtra(){if(!B||!B.ar)return;const u=arUnit();if(!u||!alive(B.en).length)return;
+function arExtra(){if(!B||!B.ar)return;try{B.team.forEach(arGuard)}catch(x){}const u=arUnit();if(!u||!alive(B.en).length)return;
  hit(u,1.2,'⚡ вне очереди');
  if(alive(B.en).length&&arRnd()<.5)hit(u,1.5,'⚡⚡ двойной ход');
 }
