@@ -16,6 +16,7 @@
 <!-- ASTRAL_PLAYER_V3 -->
 <!-- ASTRAL_WAR_V1 -->
 <!-- ASTRAL_ART_V2 -->
+<!-- ASTRAL_WBCAP_V1 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -915,7 +916,7 @@ function vBattle(){
  <button class="btn sm gold" ${u.np<100||u.hp<=0||B.pick.length>=3||B.pick.some(p=>p.np&&p.u===i)?'disabled':''} onclick="pickNP(${i})">NP</button></div>`).join('');
  const e=B.en.map((x,i)=>`<div class="f ${x.hp<=0?'dead':''}" style="cursor:pointer;${B.tgt===i&&x.hp>0?'border-color:#f43f5e;box-shadow:0 0 10px #f43f5e':''}" onclick="B.tgt=${i};render()"><div class="pt" style="display:flex;align-items:center;justify-content:center;font-size:38px;background:#2a0f1f">${x.e}</div><b>${x.n}</b> <span class="small">${CLS_IC[x.cls]}</span><div class="bar ehp"><i style="width:${Math.max(0,x.hp)/x.max*100}%"></i></div><div class="small">❤ ${fmtHp(Math.max(0,x.hp))}</div></div>`).join('');
  const cards=B.hand.map((c,i)=>{const u=B.team[c.u],pk=B.pick.findIndex(p=>p.i===i);return `<div class="cc ${c.t} ${pk>=0?'picked':''}" onclick="pickC(${i})">${imgTag(u.h)}${CARD[c.t].n}${pk>=0?'<span>#'+(pk+1)+'</span>':''}</div>`}).join('');
- return `<div class="panel small"><b>${B.st.n}</b> · ход ${B.turn}${B.guild?'/'+B.guild.maxT+' · урон боссу: <b>'+fmtHp(B.guild.dmg)+'</b>':''}. Тап по врагу — цель. Выберите 3 карты или NP, затем «Атака». 3 карты одного героя — доп. удар.</div>
+ return `<div class="panel small"><b>${B.st.n}</b> · ход ${B.turn}${B.guild?'/'+B.guild.maxT+' · урон боссу: <b>'+fmtHp(B.guild.dmg)+'</b>'+(B.guild.cap?' / кап '+fmtHp(B.guild.cap):'')+(B.guild.over>0?' · 🔥 сверх капа: <b>'+fmtHp(B.guild.over)+'</b>':''):''}. Тап по врагу — цель. Выберите 3 карты или NP, затем «Атака». 3 карты одного героя — доп. удар.</div>
  <div class="fighters">${e}</div><div class="cmd">${cards}</div>
  <div class="row c" style="margin-bottom:10px"><button class="btn gold" ${B.pick.length<3?'disabled':''} onclick="attack()">Атака ▶ ${B.pick.length}/3</button><button class="btn" onclick="B.pick=[];render()">Сброс</button><button class="btn" onclick="quitB()">Выход</button></div>
  <div class="fighters">${f}</div><div class="log">${B.log.slice(0,30).join('<br>')}</div>`}
@@ -3761,7 +3762,7 @@ function dvAdj(u,tg,dmg){
  const lead=Math.max.apply(null,s7.map(x=>(DIV[x.h.id]||{}).lead||1));
  let d=dmg*lead;
  if(wb){ // потолок: 7★ бьёт до 1% макс. HP босса за попытку
-  const cap=tg.max*.01;if(me7)d+=tg.max*.00004*(u.m&&u.m.ins?1.5:1);const room=Math.max(0,cap-(B.guild.dmg||0));d=Math.min(d,room)}
+  const cap=tg.max*.01;if(me7)d+=tg.max*.00004*(u.m&&u.m.ins?1.5:1);const room=Math.max(0,cap-(B.guild.dmg||0)),d0=d;d=Math.min(d,room);B.guild.cap=cap;B.guild.over=(B.guild.over||0)+Math.max(0,d0-d)}
  else if(g7){if(me7){const P=(DIV[u.h.id]||{}).pct||.4;d=Math.max(d,tg.max*P*(.9+Math.random()*.2))}}
  else if(me7&&Math.random()<((DIV[u.h.id]||{}).kill||.3))d=Math.max(d,tg.hp);
  return Math.max(0,Math.round(d))}
@@ -3830,12 +3831,21 @@ async function wbEnsure(){
   const p=dvP(),ks=(p.wbn||[]).filter(n=>!(p.cl['wb'+n+':done'])).slice(-8).map(wbKey);if(ks.length)await GStore.fetchKV(ks);
   if(p.room)await GStore.fetchKV(['raid:'+p.room]);
   await wbRetryOut();return true}catch(e){return false}}
-async function wbSend(n,dmg,id){
+// ASTRAL_WBCAP_V1: кап урона за попытку (7★ — 1% макс. HP, Арата — 20% макс. HP), счётчик «сверх капа» (сгоревший урон)
+function wbCapPct(){try{if(S.owned&&S.owned.arata&&S.team.includes('arata'))return{p:typeof AR_WB_CAP==='number'?AR_WB_CAP:.2,w:'Касуга Арата'};if(S.team.some(id=>H(id)&&H(id).r===7))return{p:.01,w:'герой 7★'}}catch(e){}return null}
+function wbCapOf(d){const c=wbCapPct();return c?{cap:d.max*c.p,p:c.p,w:c.w}:null}
+function wbMyStat(d){const p=dvP(),l=(p.wbs||{})[d.n]||{},me=(d.dmgBy&&d.dmgBy[ME])||{};return{tot:me.d||0,over:Math.max(me.o||0,l.over||0),last:l.last||0,lastOver:l.lastOver||0,cap:l.cap||0,att:l.att||0}}
+function wbCapBox(d){const c=wbCapOf(d),s=wbMyStat(d),capv=c?c.cap:s.cap,hit=capv>0&&(s.lastOver>0||s.last>=capv*.9999),pc=capv>0?Math.min(100,s.last/capv*100):0;
+ return `<div class="wbcap" style="margin-top:8px;text-align:left;border:1px solid ${hit?'#f59e0b':'#444'};border-radius:10px;padding:8px"><div class="small"><b>🧱 Кап урона за попытку: ${c?fmtHp(c.cap)+' <span style="opacity:.7">('+(c.p*100)+'% макс. HP · '+c.w+')</span>':'нет (нужен герой 7★ или Арата)'}</b></div>
+ ${c||s.cap?`<div class="small" style="margin-top:4px">Последняя попытка: <b>${fmtHp(s.last)}</b> / Кап: <b>${fmtHp(capv)}</b></div><div class="bar ehp" style="margin:4px 0"><i style="width:${pc}%;${hit?'background:#f59e0b':''}"></i></div>
+ ${hit?'<div class="small" style="color:#f59e0b"><b>⛔ Кап достигнут</b> — урон выше лимита не засчитывается</div>':''}`:''}
+ <div class="small" style="margin-top:4px">Засчитано: <b>${fmtHp(s.tot)}</b> • Сверх капа: <b style="color:${s.over>0?'#f59e0b':'inherit'}">${fmtHp(s.over)}</b>${s.lastOver>0?' <span style="opacity:.7">(в последней попытке: '+fmtHp(s.lastOver)+')</span>':''}</div></div>`}
+async function wbSend(n,dmg,id,over,cap){
  let last=null;for(let t=0;t<5;t++){try{
   const gm=(typeof gMine==='function'&&gMine())||null;
   const r=await GStore.casKV(wbKey(n),cur=>{if(!cur||cur.dead)return{e:'нет босса'};
-   const e=cur.dmgBy[ME]||(cur.dmgBy[ME]={n:S.name,d:0,g:'',gn:'',ids:[]});e.n=S.name;e.a=S.av;e.ic=pfIc();e.lv=accLv();e.g=gm?gm.id:'';e.gn=gm?gm.name:'';
-   if((e.ids||[]).includes(id))return{val:cur,dup:1,real:0};
+   const e=cur.dmgBy[ME]||(cur.dmgBy[ME]={n:S.name,d:0,g:'',gn:'',ids:[]});if(e.o===undefined)e.o=0;e.n=S.name;e.a=S.av;e.ic=pfIc();e.lv=accLv();e.g=gm?gm.id:'';e.gn=gm?gm.name:'';
+   if((e.ids||[]).includes(id))return{val:cur,dup:1,real:0};e.o=(e.o||0)+Math.max(0,Number(over)||0);if(cap>0)e.c=cap;
    if(cur.hp<=0||Date.now()>=cur.end+6e4)return{e:'Босс уже побеждён или ушёл — урон не засчитан'};
    const real=Math.max(0,Math.min(dmg,cur.hp));cur.hp-=real;e.d+=real;e.ids=(e.ids||[]).concat(id).slice(-4);e.t=Date.now();
    if(cur.hp<=0){cur.hp=0;cur.killer=ME;cur.kn=S.name;cur.end=Math.min(cur.end,Date.now())}
@@ -3844,7 +3854,7 @@ async function wbSend(n,dmg,id){
  throw last||new Error('fail')}
 async function wbRetryOut(){const p=dvP();if(!p.out||WBUSY)return;WBUSY=1;try{await wbFlush0()}catch(e){}finally{WBUSY=0}}
 async function wbFlush0(){const p=dvP(),o=p.out;if(!o)return null;
- const r=await wbSend(o.n,o.dmg,o.id);if(r&&r.e){p.out=null;save();toast(r.e);return r}
+ const r=await wbSend(o.n,o.dmg,o.id,o.over,o.cap);if(r&&r.e){p.out=null;save();toast(r.e);return r}
  p.out=null;p.wbn=p.wbn||[];if(!p.wbn.includes(o.n))p.wbn.push(o.n);save();try{evAdd('wdmg',r.real||0)}catch(e){}
  try{await raidAddDmg(o.n,r.real||0)}catch(e){}
  return r}
@@ -3893,7 +3903,7 @@ async function wbStart(){if(B||WBUSY||!wbStartGuard())return;WBUSY=1;WBM.begin()
  finally{WBUSY=0;WBM.done()}}
 function wbEnd(Bx,silent){const g=Bx.guild,dmg=Math.max(0,Math.round(g.dmg)),p=dvP();B=null;WBM.stop();
  const gp=10,gold=5000,gems=150;S.gems+=gems;S.gold+=gold;S.gp=(S.gp||0)+gp;addXp(gXp(15));S.st.battles++;prog('battle');
- p.out={n:g.wb,dmg,id:Date.now().toString(36)+Math.random().toString(36).slice(2,6)};save();tab='wboss';WV='boss';render();
+ const over=Math.max(0,Math.round(g.over||0)),cap=Math.round(g.cap||0);p.out={n:g.wb,dmg,over,cap,id:Date.now().toString(36)+Math.random().toString(36).slice(2,6)};p.wbs=p.wbs||{};{const w=p.wbs[g.wb]||(p.wbs[g.wb]={over:0,att:0});w.over=(w.over||0)+over;w.last=dmg;w.lastOver=over;w.cap=cap||w.cap||0;w.att=(w.att||0)+1}save();tab='wboss';WV='boss';render();
  const pct=Math.max(0,dmg/(wbDoc(g.wb)?wbDoc(g.wb).max:1)*100);
  (async()=>{let r=null;try{WBUSY=1;r=await wbFlush0()}catch(e){}finally{WBUSY=0}
   await wbEnsure();
@@ -3903,7 +3913,7 @@ function wbEnd(Bx,silent){const g=Bx.guild,dmg=Math.max(0,Math.round(g.dmg)),p=d
   if(tab==='wboss')render()})()}
 async function wbBuyTry(){const d=dvS();if((d.bt||0)>=5)return toast('Лимит покупок на сегодня');if(S.gems<300)return toast('Не хватает 💎');S.gems-=300;d.xt++;d.bt=(d.bt||0)+1;save();toast('+1 попытка');render()}
 // ---------- награды (журнал, ровно один раз) ----------
-function wbSorted(d){return Object.entries(d.dmgBy||{}).map(([k,v])=>({k,n:v.n,d:v.d,g:v.g,gn:v.gn,av:v.a,ic:v.ic,lv:v.lv})).sort((a,b)=>b.d-a.d||(a.k<b.k?-1:1))}
+function wbSorted(d){return Object.entries(d.dmgBy||{}).map(([k,v])=>({k,n:v.n,d:v.d,g:v.g,gn:v.gn,av:v.a,ic:v.ic,lv:v.lv,o:v.o||0})).sort((a,b)=>b.d-a.d||(a.k<b.k?-1:1))}
 function wbGuilds(d){const m={};Object.values(d.dmgBy||{}).forEach(v=>{if(!v.g)return;const x=m[v.g]||(m[v.g]={id:v.g,n:v.gn,d:0,c:0});x.d+=v.d;x.c++;x.n=v.gn||x.n});return Object.values(m).sort((a,b)=>b.d-a.d)}
 function wbRewardsFor(d){const out=[],p=dvP(),me=d&&d.dmgBy&&d.dmgBy[ME];if(!me||!(me.d>0))return out;const cl=p.cl,f=1+.25*d.idx,pc=(d.max-d.hp)/d.max*100;
  WB_MS.forEach(m=>{const k='wb'+d.n+':m'+m;if(pc>=m-1e-9&&!cl[k]){const r=WB_REW[m];out.push({k,t:'Веха '+m+'% · '+WB_BOSSES[d.idx].n,gems:Math.round(r.gems*f),gold:Math.round(r.gold*f),gp:Math.round(r.gp*f),tix:r.tix||0,title:m===100?'Убийца Богов':'',fr:m===100})}});
@@ -3970,11 +3980,13 @@ function wbBossV(d){const info=wbInfo(d.n),def=info.def,pc=(d.max-d.hp)/d.max*10
  <div class="row c" style="margin:8px 0;gap:4px">${WB_MS.map(m=>`<span class="small" style="padding:2px 6px;border-radius:8px;border:1px solid ${pc>=m?'#4ade80':'#555'};color:${pc>=m?'#4ade80':'#999'}">${m}%</span>`).join('')}</div>
  <div class="small">⚙ ${def.d}</div>
  <div class="small" style="margin-top:6px">Ваш урон: <b>${fmtHp(me)}</b> · Попыток: <b>${wbTriesLeft()}</b> (${WB_TRIES}/день)</div>
+ ${wbCapBox(d)}
  ${rb?`<div class="small" style="margin-top:4px">🤝 Рейд «${esc(ra.code)}»: ${rb.n} игр. · ${rb.on?'<b style="color:#4ade80">бонус ×'+rb.mul.toFixed(1)+' активен</b>':'бонус ждёт ≥2 бьющих за час'}</div>`:''}
  <div class="row c" style="margin-top:10px"><button class="btn gold" ${ended||!S.team.length||!wbTriesLeft()?'disabled':''} onclick="wbStart()">⚔ В бой (${wbTriesLeft()})</button><button class="btn" onclick="wbBuyTry()">+1 попытка 💎300</button></div>
  <div class="small" style="margin-top:8px">${seven?'✦ Герой 7★ в отряде: до 1% макс. HP за попытку (потолок).'+(S.owned.arata&&S.team.includes('arata')?' 🕳 Касуга Арата: до 20% макс. HP за бой (потолок, остальных двух героев блокирует).':''):'Обычная отряд наносит ≈ 0.00001% макс. HP за попытку — нужны все игроки, рейд и 7★.'}</div></div>`}
+function wbCapFoot(d){const c=wbCapOf(d),s=wbMyStat(d),capv=c?c.cap:s.cap;return `<div class="small wbcapf" style="margin-bottom:8px;padding:6px;border:1px dashed #666;border-radius:8px">Кап: <b>${capv>0?fmtHp(capv):'нет'}</b> • Засчитано: <b>${fmtHp(s.tot)}</b> • Сверх капа: <b>${fmtHp(s.over)}</b>${capv>0&&(s.lastOver>0||s.last>=capv*.9999)?' · <b style="color:#f59e0b">кап достигнут</b>':''}<br><span style="opacity:.7">Кап — за одну попытку; урон выше него не засчитывается боссу.</span></div>`}
 function wbTopV(d){const s=wbSorted(d),rk=s.findIndex(x=>x.k===ME);
- return `<div class="panel"><h3>🏆 Топ урона · ${WB_BOSSES[d.idx].n}</h3><div class="small" style="margin-bottom:6px">Ваше место: ${rk>=0?'#'+(rk+1):'—'} · участников ${s.length}</div>${s.slice(0,50).map((x,i)=>`<div class="q ${x.k===ME?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${pfM(x,24)} ${esc(x.n||x.k)}${x.k===ME?' (вы)':''}${x.gn?'<div class="small">🏰 '+esc(x.gn)+'</div>':''}</div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Пока никто не ударил босса</div>'}${rk>=50?`<div class="q gmeRow"><div>${rk+1}. ${pfMe(24)} ${esc(S.name)} (вы)</div><b>${fmtHp(s[rk].d)}</b></div>`:''}</div>`}
+ return `<div class="panel"><h3>🏆 Топ урона · ${WB_BOSSES[d.idx].n}</h3><div class="small" style="margin-bottom:6px">Ваше место: ${rk>=0?'#'+(rk+1):'—'} · участников ${s.length}</div>${wbCapFoot(d)}${s.slice(0,50).map((x,i)=>`<div class="q ${x.k===ME?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${pfM(x,24)} ${esc(x.n||x.k)}${x.k===ME?' (вы)':''}${x.gn?'<div class="small">🏰 '+esc(x.gn)+'</div>':''}${x.o>0?'<div class="small" style="color:#f59e0b">🔥 сверх капа: '+fmtHp(x.o)+'</div>':''}</div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Пока никто не ударил босса</div>'}${rk>=50?`<div class="q gmeRow"><div>${rk+1}. ${pfMe(24)} ${esc(S.name)} (вы)</div><b>${fmtHp(s[rk].d)}</b></div>`:''}</div>`}
 function wbGuildV(d){const g=wbGuilds(d),my=gMine();
  return `<div class="panel"><h3>🏰 Гильдии · урон по боссу</h3><div class="small" style="margin-bottom:6px">Награда гильдии по месту (топ-3) после конца босса: 💎15K/8K/4K и очки гильдии.</div>${g.slice(0,30).map((x,i)=>`<div class="q ${my&&my.id===x.id?'gmeRow':''}"><div style="min-width:0;flex:1;overflow-wrap:anywhere">${i+1}. ${esc(x.n||'?')}<div class="small">👥 ${x.c} бойцов</div></div><b>${fmtHp(x.d)}</b></div>`).join('')||'<div class="small">Гильдии ещё не били босса</div>'}</div>`}
 function wbRewV(d){const all=wbPending(),tot={g:0,go:0,gp:0,tix:0};all.forEach(r=>{tot.g+=r.gems||0;tot.go+=r.gold||0;tot.gp+=r.gp||0;tot.tix+=r.tix||0});
@@ -4092,7 +4104,7 @@ function arWbApply(){const ar=arInit();if(!ar)return;
 const AR_M=[.5,1,2,3,5,9,.25],AR_MW=[.5,1,1,1.5,2];
 // лимит урона по мир-боссу: 20% макс. HP за бой (было 9%); удары масштабированы ×(20/9), чтобы лимит достижим, но бой не убивает босса
 const AR_WB_CAP=.20,AR_WB_K=20/9;
-function arWbDmg(tg,base){const ar=B.ar;const cap=tg.max*AR_WB_CAP,room=Math.max(0,cap-ar.used),d=Math.min(base,room);ar.used+=d;return d}
+function arWbDmg(tg,base){const ar=B.ar;const cap=tg.max*AR_WB_CAP,room=Math.max(0,cap-ar.used),d=Math.min(base,room);ar.used+=d;if(B.guild){B.guild.cap=cap;B.guild.over=(B.guild.over||0)+Math.max(0,base-d)}return d}
 function arG(tg,d){return d}
 function arAdj(u,tg,dmg){if(!B||!(dmg>0))return 0;const ar=arInit();if(!ar)return Math.max(0,Math.round(dmg));
  if(arIsWb()){const m=AR_MW[Math.floor(arRnd()*AR_MW.length)];return Math.max(0,Math.round(arWbDmg(tg,tg.max*.0025*AR_WB_K*ar.wbX*m)))}
