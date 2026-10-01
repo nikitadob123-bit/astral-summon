@@ -11,6 +11,7 @@
 <meta name="theme-color" content="#0b0a2b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <!-- ASTRAL_PLAYER_V1 -->
+<!-- ASTRAL_PLAYER_V2 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -874,7 +875,8 @@ function vProfile(){const own=Object.keys(S.owned).length,exp=S.xp%250;
  ${typeof dvProfile==='function'?dvProfile():''}
  ${admEntry()}
  <div class="row c"><button class="btn" onclick="logout()">Выйти</button><button class="btn" style="background:#5b1a2a" onclick="delAcc()">Удалить аккаунт</button></div>`}
-function expSave(){const code=btoa(unescape(encodeURIComponent(JSON.stringify({n:S.name,h:users()[ME].h,d:S}))));modal(`<h3>Код сохранения</h3><p class="small" style="margin:6px 0">Скопируйте и сохраните в надёжном месте:</p><textarea id="ex" readonly style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn gold" onclick="navigator.clipboard&&navigator.clipboard.writeText($('ex').value).then(()=>toast('Скопировано'));$('ex').select()">Копировать</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function plkNoImg(k,v){return (k==='cim'||(k==='img'&&typeof v==='string'&&v.slice(0,11)==='data:image/'))?undefined:v}
+function expSave(){const code=btoa(unescape(encodeURIComponent(JSON.stringify({n:S.name,h:users()[ME].h,d:S},plkNoImg))));modal(`<h3>Код сохранения</h3><p class="small" style="margin:6px 0">Скопируйте и сохраните в надёжном месте:</p><textarea id="ex" readonly style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn gold" onclick="navigator.clipboard&&navigator.clipboard.writeText($('ex').value).then(()=>toast('Скопировано'));$('ex').select()">Копировать</button><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
 function impSave(){modal(`<h3>Импорт кода</h3><p class="small" style="margin:6px 0">Вставьте код сохранения. Аккаунт будет создан или заменён на этом устройстве.</p><textarea id="im" style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text"></textarea><div class="err" id="im_e"></div><div class="row c"><button class="btn gold" onclick="doImp()">Загрузить</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
 function doImp(){try{const o=JSON.parse(decodeURIComponent(escape(atob($('im').value.trim()))));if(!o.n||!o.d||!o.d.owned)throw 0;const u=users(),k=o.n.toLowerCase();u[k]={name:o.n,h:o.h,data:o.d};putUsers(u);closeM();login(k);toast('Сохранение загружено')}catch(e){$('im_e').textContent='Неверный код'}}
 function delAcc(){if(!confirm('Удалить аккаунт и весь прогресс НАВСЕГДА?'))return;try{gOnDelete()}catch(e){}const u=users();delete u[ME];putUsers(u);logout()}
@@ -2866,7 +2868,7 @@ function admPass(){const p=document.getElementById('ad_p').value;if(p.length<4)r
 function admRename(){const nm=document.getElementById('ad_nm').value.trim();if(nm.length<2)return toast('Ник — от 2 символов');const u=users(),k=nm.toLowerCase();if(k!==AU&&u[k])return toast('Ник занят');const t=u[AU];delete u[AU];t.name=nm;t.data.name=nm;u[k]=t;if(AU===ME){ME=k;S=t.data;localStorage.setItem(K_CUR,k)}putUsers(u);AU=k;hud();admShow();toast('Ник изменён')}
 function admReset(){if(!confirm('Сбросить весь прогресс этого аккаунта?'))return;const u=users(),t=u[AU],nd=newData(t.name,t.data.av);t.data=nd;putUsers(u);if(AU===ME){S=nd;save()}hud();admShow();if(AU===ME)render()}
 function admDel(){if(AU===ME)return toast('Свой аккаунт здесь не удалить');if(!confirm('Удалить этот аккаунт навсегда?'))return;const u=users();delete u[AU];putUsers(u);AU=ME;admShow()}
-function admExport(){const t=users()[AU],code=btoa(unescape(encodeURIComponent(JSON.stringify({n:t.name,h:t.h,d:t.data}))));modal(`<h3>Код аккаунта: ${esc(t.name)}</h3><textarea readonly style="width:100%;height:140px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn" onclick="admShow()">← Назад</button></div>`)}
+function admExport(){const t=users()[AU],code=btoa(unescape(encodeURIComponent(JSON.stringify({n:t.name,h:t.h,d:t.data},plkNoImg))));modal(`<h3>Код аккаунта: ${esc(t.name)}</h3><textarea readonly style="width:100%;height:140px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text">${code}</textarea><div class="row c" style="margin-top:10px"><button class="btn" onclick="admShow()">← Назад</button></div>`)}
 function admImportUi(){modal(`<h3>Открыть профиль по коду</h3><p class="small" style="margin:6px 0">Игрок присылает вам код из «Профиль → Сохранение → Экспорт кода». Профиль появится в списке, и его можно смотреть и менять.</p><textarea id="ad_c" style="width:100%;height:120px;background:#0a0c26;color:#fff;border-radius:10px;padding:8px;font-size:11px;user-select:text"></textarea><div class="err" id="ad_ce"></div><div class="row c" style="margin-top:8px"><button class="btn gold" onclick="admImport()">Добавить</button><button class="btn" onclick="admShow()">← Назад</button></div>`)}
 function admImport(){try{const o=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('ad_c').value.trim()))));if(!o.n||!o.d||!o.d.owned)throw 0;const u=users(),k=o.n.toLowerCase();if(k===ME)return document.getElementById('ad_ce').textContent='Это ваш аккаунт';if(u[k]&&!confirm('Профиль с таким ником уже есть. Заменить?'))return;u[k]={name:o.n,h:o.h,data:o.d};putUsers(u);AU=k;admShow();toast('Профиль добавлен')}catch(e){document.getElementById('ad_ce').textContent='Неверный код'}}
 function admHtml(){
@@ -3792,6 +3794,10 @@ const AR_D=[
  '🕳 <b>'+arBz('Императорский баг')+'</b> (пассивка): <s>множитель урона</s> = ??? (каждый удар ×0.5…×9), <s>входящий урон</s> иногда ×0, ход дважды — «иногда» (а порой и трижды), враг может быть <s>удалён</s> из боя, HP<30% → HP ⇄ инверсия, дебаффы врагов обращаются в баффы Араты.',
  '🩸 <b>Imperium</b> (дебафф): враги −60…85% атаки, урон по ним растёт с каждым ходом (×1.5 за слой), пропускают ходы, беспощадное «стирание» слабых, теряют до 8% HP за ход (у боссов — 3%), баффы снимаются. Против мир-босса — в пределах разумного, иммунитеты игнорируются.',
  '🔒 Мир-босс: двое других героев заблокированы, но все их баффы достаются Арате на весь бой. Предел урона по боссу — 20% его макс. HP за бой. Играет другая песня.'];
+// КАЛИБРОВКА СИЛЫ (ASTRAL_PLAYER_V2, запрос «Арата ≈ ×10 от полной команды 7★»): отряд = 3 слота; полностью прокачанный 7★ (ур.110, 5 копий, вознесение 5 → b=1+109·.06+5·.05+5·.25=9.04):
+// dio_oh HP 678 000 / АТК 119 328 ×atkMul6 = 715 968; featherine 569 520 / 101 248 ×5 = 506 240; daishinkan 650 880 / 108 480 ×7 = 759 360 ⇒ команда: HP Σ≈1.90e6, эфф. АТК Σ≈1.98e6 (с навыком Rewrite Reality ×12–13 на одного — ≈2.4e7 за удар).
+// Арата (hp 8e8, atk 5e9 при ур.1; 7.23e9 / 4.52e10 на максимуме) УЖЕ превосходит эту команду: по HP ×420…×3 800, по АТК ×2 500…×22 800 (среднее геометрическое ≈ ×9 300 на максимуме, ×1 500 на ур.1) — то есть больше целевых ×10 с огромным запасом, поэтому статы НЕ менялись (нерф секретного героя за 99 999 💎 не делался). Тест test_arata.js проверяет нижнюю границу ≥×10.
+const AR_CAL={team7:{hp:1898400,atk:1981568},target:10};
 (function(){HEROES.push({id:AR_ID,name:'Касуга Арата — Повелитель Демонов',r:1,secret:1,cls:'Saber',hue:0,hp:8e8,atk:5e9,deck:'BBAAQ',
  myth:{ar:1,npStart:100,npGain:3,teamNp:100,regen:.25,leech:.05,dmgTaken:.01,atkMul:1,d:AR_D.join('<br>')},
  skill:{n:'Юдекка',t:'araUp'},np:{n:'Astral Trinity: Повелитель Демонов',t:'B',m:40,aoe:1}})})();
@@ -4010,7 +4016,7 @@ function dgAdmAdd(){admMut(d=>{d.dg=d.dg&&typeof d.dg==='object'?d.dg:{t:0,e:0,w
 function dgAdmReset(){admMut(d=>{d.dg={t:0,e:0,w:0,l:0,p:0}});toast('Данжи сброшены')}
 function dgAdmPanel(){return `<div class="panel"><b>💰 Данжи</b><div class="small">Попыток у выбранного аккаунта: ${(()=>{try{const t=users()[AU];return t&&t.data&&t.data.dg?Math.max(0,t.data.dg.t|0):0}catch(e){return 0}})()}</div><div class="row" style="margin-top:6px"><button class="btn sm" id="admDg5" onclick="dgAdmAdd()">+5 попыток данжа</button><button class="btn sm" onclick="dgAdmReset()">Сбросить данжи</button></div></div>`}
 
-// ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ANIM_V1) ======
+// ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ANIM_V1; ASTRAL_PLAYER_V2: своя картинка на иконку — S.pf.cim, только локально) ======
 // v ANIM_V1: анимации НЕ зависят от prefers-reduced-motion; настройка S.pf.anim (1/undefined=Вкл, 0=Экономный) → класс html.noanim. Маскированные кольца: вращается <u>, маска лежит на статичном <i>.
 // Ступень вознесения игрока зависит от уровня аккаунта (таблица PF_LV). Каждая ступень открывает иконку (рамку-эффект) вокруг аватара.
 // Секретная иконка выдаётся только владельцу Касуги Араты. Всё оформление — на CSS (transform/opacity/steps), без filter.
@@ -4039,8 +4045,8 @@ function pfIc(){try{const p=S&&S.pf;if(p&&p.ic&&pfOpen(p.ic))return p.ic}catch(e
 function pfIcFor(ic,lv){const t=pfTierOf(+lv||1),i=typeof ic==='string'?PF_BY[ic]:null;return i&&(i.sec||i.t<=t)?i.id:'p'+t}
 function pfSafeAv(a){return typeof a==='string'&&/^[A-Za-z0-9_-]{1,40}$/.test(a)?a:AVS[0]}
 function pfAvIdx(s){try{return parseInt(hash(String(s||'x')).slice(0,3),36)%AVS.length}catch(e){return 0}}
-function pfAv(av,ic,sz,cls){const i=PF_BY[ic]||PF_BY.p0;sz=sz||38;return `<span class="pfa pf${i.sec?'v':i.t}${sz<36?' s':''}${cls?' '+cls:''}" style="--s:${sz}px"><img class="av" src="img/${pfSafeAv(av)}.jpg" alt=""><u><i></i></u><u><i></i></u><u><i></i></u></span>`}
-function pfMe(sz,cls){return pfAv(S.av,pfIc(),sz,cls)}
+function pfAv(av,ic,sz,cls,src){const i=PF_BY[ic]||PF_BY.p0;sz=sz||38;return `<span class="pfa pf${i.sec?'v':i.t}${sz<36?' s':''}${cls?' '+cls:''}" style="--s:${sz}px"><img class="av" src="${src&&typeof plkSafeImg==='function'&&plkSafeImg(src,300000)?src:'img/'+pfSafeAv(av)+'.jpg'}" alt=""><u><i></i></u><u><i></i></u><u><i></i></u></span>`}
+function pfMe(sz,cls){return pfAv(S.av,pfIc(),sz,cls,typeof pfCim==='function'?pfCim():'')}
 function pfM(m,sz){const av=(m&&m.av)||AVS[pfAvIdx(m&&(m.k||m.name))];return pfAv(av,pfIcFor(m&&m.ic,m&&m.lv),sz||28)}
 // ---------- настройка «Анимации» (Вкл / Экономный) + версия сборки ----------
 function pfAnimOn(){try{return !(S&&S.pf&&S.pf.anim===0)}catch(e){return true}}
@@ -4093,12 +4099,13 @@ function pfWin(){
  if(!S)return;const p=pfD(),t=pfTier(),cur=pfIc(),nx=t+1<PF_LV.length?PF_LV[t+1]:0;
  const vis=PF_ICONS.filter(i=>!i.sec||pfVoid());
  const cell=i=>{const op=pfOpen(i.id),sel=cur===i.id,hint=i.sec?'Секретная':(op?(i.t?'Вознесение '+i.t:'Ур. 1+'):'Вознесение '+i.t+': ур. '+PF_LV[i.t]);
-  return `<div class="pfc${op?'':' lock'}${sel?' sel':''}" ${op?`onclick="pfPick('${i.id}')"`:`title="${esc(hint)}"`}><div class="pfc-i">${op?pfAv(S.av,i.id,44):pfAv(S.av,'p0',44,'lk')}${op?'':'<em>🔒</em>'}</div><b>${esc(i.n)}</b><small>${sel?'✓ Выбрана':esc(hint)}</small></div>`};
+  return `<div class="pfc${op?'':' lock'}${sel?' sel':''}" ${op?`onclick="pfPick('${i.id}')"`:`title="${esc(hint)}"`}><div class="pfc-i">${op?pfAv(S.av,i.id,44,'',typeof pfCim==='function'?pfCim():''):pfAv(S.av,'p0',44,'lk')}${op?'':'<em>🔒</em>'}</div><b>${esc(i.n)}</b><small>${sel?'✓ Выбрана':esc(hint)}</small></div>`};
  const s=document.querySelector('#modal .inner'),st=s?s.scrollTop:0;
  modal(`<div class="pfp"><div class="row pfh">${pfMe(64)}<div style="flex:1;min-width:0"><h3 style="overflow-wrap:anywhere">${esc(S.name)}</h3><div class="small">Уровень аккаунта ${accLv()}</div><div class="small">${t?'✨ Вознесение '+t:'Вознесения пока нет'}</div></div></div>
  <div class="small" style="margin:10px 0 4px">${nx?'Следующее вознесение '+(t+1)+': ур. '+nx+' (осталось '+Math.max(0,nx-accLv())+')':'Достигнута высшая ступень вознесения'}</div>
  <div class="small" style="margin-bottom:6px">Выберите иконку — она видна в шапке, гильдии, рейтингах и мир-боссе.</div>
  <div class="pfg">${vis.map(cell).join('')}</div>
+ ${typeof pfCimPanel==='function'?pfCimPanel():''}
  <div class="row c" style="margin-top:12px"><button class="btn gold" onclick="closeM()">Закрыть</button></div></div>`);
  const n=document.querySelector('#modal .inner');if(n)n.scrollTop=st}
 // ---------- админ ----------
@@ -5895,11 +5902,12 @@ function harQDone(id){const q=harQuestDef(id),s=romS();if(!q||!s.day.q[id]||s.da
 function romShopPanel(){if(!S)return '';const r=romS();return `<div class="panel"><h3>💝 Подарки для героинь</h3><div class="small" style="margin-bottom:8px">Дарить можно в Гареме. В запасе: ${ROM_GIFTS.map(g=>g.ic+(r.inv[g.id]||0)).join(' ')}</div>${ROM_GIFTS.map(g=>`<div class="q"><div><b>${g.ic} ${esc(g.n)}</b><div class="small">♥ +${g.love}</div></div><button class="btn sm" style="width:auto;margin:0" onclick="harBuy('${g.id}')">${g.gem?'💎'+g.gem:'🪙'+g.gold}</button></div>`).join('')}</div>`}
 (function(){try{const v0=vShop;globalThis.vShop=function(){return v0()+romShopPanel()};const r0=roll;globalThis.roll=function(){const h=r0();try{if(h.r<5&&romRnd()<romLuck()){const p=HEROES.filter(x=>x.r===5);return p[Math.floor(romRnd()*p.length)]||h}}catch(e){}return h}}catch(e){console.error(e)}})();
 
-// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: данные (ASTRAL_PLAYER_V1) ======
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: данные (ASTRAL_PLAYER_V1 / ASTRAL_PLAYER_V2) ======
 // Калибровка (см. pl_core.js → plCalib): при уровне Призывателя 200, «сбалансированной» раскладке очков и топовом снаряжении
 // HP ≈ 42 700 и АТК ≈ 5 600 — это среднее по 17 мифическим 6★ героям на макс. уровне/возвышении
 // (формула героя: b = 1+(lv-1)*.06+dup*.05+asc*.25 = 9.04 при lv110/dup5/asc5; Berserker 6★: 50 624 HP / 6 328 АТК).
 const PL_MARK='ASTRAL_PLAYER_V1';
+const PL_MARK2='ASTRAL_PLAYER_V2';
 const PL_MAX=200;
 const PL_SLOTS=[['head','Голова','🪖'],['chest','Грудь','🥋'],['lh','Левая рука','🛡️'],['rh','Правая рука','⚔️'],['legs','Ноги','👢'],['r1','Кольцо 1','💍'],['r2','Кольцо 2','💍'],['r3','Кольцо 3','💍'],['neck','Ожерелье','📿']];
 const PL_SLOT_W={head:1,chest:1.2,lh:.9,rh:1.5,legs:1,r1:.7,r2:.7,r3:.7,neck:.9};
@@ -5920,6 +5928,7 @@ const PL_SETS={
  ice:{n:'Ледяной Двор',ic:'❄️',b2:{defP:10,hpP:6},b4:{stun:12,dmgRed:6,shield0:10}},
  gems:{n:'Шесть Самоцветов',ic:'💎',b2:{atkP:8,energy:2},b4:{skillDmg:25,revive:25,crit:5}},
  teigu:{n:'Императорский Арсенал',ic:'⚙️',b2:{atkP:6,pierce:10},b4:{burn:20,thorns:15,hpP:10}},
+ infinity:{n:'Шесть Камней',ic:'♾️',b2:{atkP:8,energy:2},b4:{skillDmg:20,dmgRed:8,revive:20}},
  captain:{n:'Вольный Капитан',ic:'🏴‍☠️',b2:{hpP:10,spdP:6},b4:{dmgRed:10,regen:1.5,atkP:8}}
 };
 // предметы: [id, название, эмодзи, слот(head|chest|rh|lh|hand|legs|ring|neck), тип, редкость 0..5, треб. уровень, доли статов, эффекты, сет, описание, флаги]
@@ -6007,6 +6016,38 @@ _I('k_fruit2','Плод вечного пламени','🍎','neck','Артеф
 _I('k_teigu','Ошейник зверя-повелителя','🐺','neck','Артефакт',4,108,{atk:.5,hp:.3,spd:.2},{stun:10},'teigu','Артефакт, подчиняющий себе любых созданий.');
 _I('k_time','Амулет камня времени','🟢','neck','Артефакт',5,165,{hp:.4,def:.3,spd:.3},{revive:40},'gems','Позволяет отмотать собственную смерть — один раз.');
 _I('k_star','Звёздный кулон Призывателя','⭐','neck','Амулет',1,20,{hp:.4,atk:.3,crit:.3},0,0,'Кулон, выданный каждому, кто впервые открыл Врата.');
+
+// ====== АРТЕФАКТЫ (ASTRAL_PLAYER_V2): fl:'art' — не выпадают случайно; продаются в «Зале артефактов» лавки за очень много 💎 или выдаются редкими наградами Арены.
+// act — активное умение в дуэли (отдельная кнопка, откат cd ходов, без затрат энергии); fx — как у навыков (m, h, pierce, crit100, stun, slow, bleed, burn, debuff, heal, shield, buff, cleanse, en, self).
+function _A(id,n,ic,slot,ty,r,req,s,fx,set,d,col,act){_I(id,n,ic,slot,ty,r,req,s,fx,set,d,'art');const t=PL_IT[PL_IT.length-1];t.col=col;if(act)t.act=act}
+// ---- оружие ----
+_A('a_excal','Клинок Утренней Зари','🌅','rh','Меч',5,170,{atk:.7,cdmg:.3},{skillDmg:25,pierce:15,crit:4},0,'Меч света, который король получает из рук озера. Лезвие вспыхивает рассветом и режет саму тьму.','#ffe9a0',{n:'Волна Рассвета',ic:'🌅',cd:5,tell:'вскидывает сияющий клинок',fx:{m:6.2,pierce:35}});
+_A('a_gae','Копьё Неотвратимой Смерти','🩸','rh','Копьё',5,165,{atk:.7,crit:.3},{pierce:30,crit:6,lowAtk:15},0,'Алое копьё охотника из легенд: если удар задуман, цель уже обречена.','#ff3b4e',{n:'Удар, находящий сердце',ic:'🩸',cd:4,fx:{m:4.8,crit100:1,pierce:40}});
+_A('a_ea','Меч Разрыва Первозданного','🌀','rh','Меч',5,185,{atk:.75,cdmg:.25},{pierce:35,skillDmg:30},0,'Спиральный клинок без рукояти и ножен — им делили небо и землю, когда миров ещё не было.','#ff9a3d',{n:'Разрез Мироздания',ic:'🌀',cd:7,fx:{m:8.5,pierce:55,self:5}});
+_A('a_mura','Клинок Проклятой Царапины','☠️','rh','Меч',5,160,{atk:.6,crit:.4},{extra:14,vamp:5,burn:20},'teigu','Тонкий клинок: одной царапины хватает, чтобы проклятие дошло до сердца. Забирает у владельца немного жизни.','#b21f3a',{n:'Проклятие царапины',ic:'☠️',cd:4,fx:{m:1.4,bleed:{p:100,t:5},self:6}});
+_A('a_incur','Копьё Алой Брони','🔱','rh','Копьё',4,140,{atk:.7,hp:.3},{lowAtk:40,vamp:6,hpP:6},'teigu','Живое копьё в багровой чешуе. Чем сильнее ранен хозяин, тем яростнее оно рвётся в бой.','#e0243c',{n:'Режим берсерка',ic:'🔱',cd:6,fx:{buff:{atkP:55,defP:20,t:3},self:8}});
+_A('a_mjol','Молот Громового Владыки','🔨','rh','Молот',5,175,{atk:.8,hp:.2},{stun:16,skillDmg:18,pierce:10},0,'Тяжёлый молот, откликающийся на зов только достойного. Гром идёт следом за каждым ударом.','#7fd6ff',{n:'Удар Грома',ic:'⚡',cd:5,fx:{m:3.6,stun:70}});
+_A('a_shik','Клинок Первого Высвобождения','🌙','hand','Меч',4,130,{atk:.6,spd:.4},{extra:15,crit:5,spdP:8},0,'Меч с живой душой: назови его имя вслух — и он покажет первую форму.','#9fe3ff',{n:'Первое высвобождение',ic:'🌙',cd:3,fx:{m:.85,h:3,slow:{p:70,t:3}}});
+_A('a_bank','Клинок Чёрного Рассвета','🖤','rh','Меч',5,178,{atk:.7,cdmg:.3},{atkP:12,skillDmg:20,dmgRed:5},0,'Вторая, полная форма меча: чёрное лезвие и багровая кромка. Сжимает всю мощь в узкий клинок.','#ff4d7d',{n:'Полное высвобождение',ic:'🖤',cd:6,fx:{m:2.4,buff:{atkP:45,defP:15,t:4}}});
+// ---- левая рука ----
+_A('a_vault','Ключ Золотого Хранилища','🗝️','lh','Ключ',5,150,{atk:.4,crit:.3,hp:.3},{energy:4,firstHit:40,skillDmg:12},0,'Ключ от рябящих золотых врат. За ними — оружие всех эпох, и хозяин решает, что достать.','#ffd76a',{n:'Врата Сокровищ',ic:'🗝️',cd:5,fx:{m:.7,h:5}});
+_A('a_aval','Ножны Вечного Покоя','🛡️','lh','Ножны',5,155,{def:.5,hp:.5},{regen:2.5,dmgRed:8,shield0:15},0,'Ножны из зелёного света. Пока они рядом, раны затягиваются, а смерть откладывается.','#7fe88f',{n:'Покой Авалона',ic:'🌿',cd:5,fx:{heal:30,cleanse:1,shield:10}});
+_A('a_tome','Тетрадь Имён','📓','lh','Фолиант',5,168,{atk:.5,crit:.5},{crit:6,skillDmg:15,firstHit:25},0,'Чёрная тетрадь. Что в ней записано чернилами судьбы, то и случится — иногда с небольшой задержкой.','#c8c8d8',{n:'Запись приговора',ic:'📓',cd:6,fx:{m:3.2,crit100:1,stun:40}});
+_A('a_gaunt','Перчатка Бесконечности','🧤','lh','Перчатка',5,190,{atk:.4,def:.3,hp:.3},{atkP:10,skillDmg:20},'infinity','Золотая перчатка с шестью пустыми гнёздами. Камни не обязательны — но вместе они творят чудеса.','#ffb830',{n:'Щелчок',ic:'🧤',cd:7,fx:{m:4.2,heal:15,stun:35}});
+// ---- кольца ----
+_A('a_st_pow','Камень Силы','🟣','ring','Камень',4,150,{atk:.6,cdmg:.4},{atkP:8,skillDmg:15},'infinity','Фиолетовый самоцвет, в котором бьётся чистая мощь.','#b06bff',{n:'Выброс Силы',ic:'🟣',cd:4,fx:{m:3}});
+_A('a_st_time','Камень Времени','🟢','ring','Камень',4,150,{spd:.5,crit:.3,hp:.2},{energy:4,dodge:8},'infinity','Зелёный самоцвет. Секунда в нём тянется чуть дольше положенного.','#5fd068',{n:'Откат мгновения',ic:'🟢',cd:6,fx:{en:50,shield:8}});
+_A('a_st_soul','Камень Души','🟠','ring','Камень',4,150,{hp:.5,def:.2,atk:.3},{vamp:7,regen:1.5},'infinity','Оранжевый самоцвет: берёт жизнь у врагов и возвращает владельцу.','#ff9a3d');
+_A('a_st_mind','Камень Разума','🟡','ring','Камень',4,150,{crit:.5,atk:.3,spd:.2},{crit:6,energy:3},'infinity','Жёлтый самоцвет. Мысли вспыхивают быстрее, чем враг успевает замахнуться.','#ffe27a');
+_A('a_eye','Кольцо Алого Взора','👁️','ring','Кольцо',5,140,{crit:.6,atk:.4},{crit:8,dodge:10,firstHit:20},0,'Красный глаз с тремя запятыми. Видит движение раньше, чем оно начнётся, и подчиняет волю.','#ff2a4a',{n:'Иллюзия взгляда',ic:'👁️',cd:6,fx:{stun:100,debuff:{atkP:-30,t:3}}});
+_A('a_one','Кольцо Всевластия','💍','ring','Кольцо',5,185,{atk:.5,cdmg:.5},{atkP:14,cdmg:20,skillDmg:15},0,'Простое золотое кольцо с огненной надписью. Власть берёт плату за каждый зов.','#ffd76a',{n:'Зов Власти',ic:'💍',cd:6,fx:{buff:{atkP:50,t:3},en:40,self:8}});
+// ---- ожерелья ----
+_A('a_tomoe','Ожерелье Трёх Томоэ','🔴','neck','Артефакт',5,150,{crit:.5,spd:.3,atk:.2},{crit:6,dodge:7,cdmg:20},0,'Кулон с тремя запятыми. Тот, кто носит его, предугадывает каждый удар.','#ff2a4a');
+_A('a_f_flame','Плод Бушующего Пепла','🔥','neck','Артефакт',4,120,{atk:.6,cdmg:.4},{burn:35,atkP:8},0,'Плод, давший хозяину тело из пламени. Откусишь — и руки раскалятся добела.','#ff7a3d',{n:'Огненный кулак',ic:'🔥',cd:4,fx:{m:2.4,burn:{p:100,t:4}}});
+_A('a_f_ice','Плод Безмолвной Зимы','❄️','neck','Артефакт',4,125,{def:.4,hp:.3,crit:.3},{stun:14,defP:8},0,'Плод тишины и инея: после него вокруг на мгновение замирают даже мысли.','#9fe3ff',{n:'Ледяное безмолвие',ic:'❄️',cd:5,fx:{m:1.8,slow:{p:100,t:3},stun:40}});
+_A('a_f_rubber','Плод Тысячи Форм','🧬','neck','Артефакт',4,118,{hp:.5,def:.3,spd:.2},{dmgRed:10,dodge:7,hpP:10},0,'Странный плод: тело подстраивается под любой удар. Вкус — как у забытого сна.','#7fe88f',{n:'Текучая форма',ic:'🧬',cd:5,fx:{shield:22,heal:10}});
+_A('a_chrono','Часы Хроноса','⏱️','neck','Артефакт',5,172,{hp:.4,def:.3,spd:.3},{revive:50,energy:3},0,'Карманные часы без стрелок. Один раз они отмотают смерть назад — и вам придётся жить дальше.','#cfd8ff');
+const PL_ART=PL_IT.filter(t=>t.fl==='art');
 const PL_TPL={};PL_IT.forEach(t=>{PL_TPL[t.id]=t});
 // ====== НАВЫКИ ======
 // [id, название, эмодзи, ветка, тип(A|P|U), тир, треб.ур., предусл.(id|''), макс. ранг, цена за ранг, энергия, откат, fx(r)]
@@ -6069,7 +6110,9 @@ function plD(d){d=d||S;let p=d.pl;if(!p||typeof p!=='object')p=d.pl={};
  if(!p.init){p.init=1;['w_sword','c_tunic','h_cap','g_boots','k_cord','n_copper'].forEach(t=>{const it={u:p.uid++,t,up:0};p.inv.push(it);const tp=PL_TPL[t];p.eq[tp.slot==='ring'?'r1':tp.slot==='hand'?'rh':tp.slot]=it.u})}
  return p}
 function plS(){return plD(S)}
-function plDay(p){p=p||plS();if(p.day.d!==today())p.day={d:today(),dx:0,b:{},sp:{}};return p.day}
+function plDay(p){p=p||plS();if(p.day.d!==today())p.day={d:today(),dx:0,b:{},sp:{},ar:{}};if(!p.day.ar)p.day.ar={};return p.day}
+// ASTRAL_PLAYER_V2: жёсткого дневного лимита наград за дуэли/спарринги НЕТ. Мягкое затухание наград за повторные победы над одним и тем же противником за день: ×0.85ⁿ, но не ниже ×0.2 (n — число уже полученных наград сегодня).
+function plRepMult(key,peek){const d=plDay(),n=d.ar[key]|0;if(!peek)d.ar[key]=n+1;return Math.max(.2,Math.pow(.85,n))}
 function plNeed(L){return Math.round(60+14*L+.03*Math.pow(L,2.4))}
 function plRewardXp(frac){const p=plS();return Math.max(15,Math.round(plNeed(p.lv)*frac*(p.lv>=100?.8:1)))}
 function plAddXp(n,quiet){const p=plS();if(p.lv>=PL_MAX||!(n>0))return 0;let g=0;p.xp+=Math.round(n);
@@ -6105,7 +6148,7 @@ function plStats(p){p=p||plS();return plStatsFor({lv:p.lv,st:p.st,items:plEqItem
 function plPower(s){return Math.round(s.hp/10+s.atk*3+s.def*2+s.spd+s.crit*8+s.cdmg/2)}
 function plHero6(){const hs=HEROES.filter(h=>h.r===6),b=1+109*.06+5*.05+5*.25;let hp=0,atk=0;hs.forEach(h=>{hp+=h.hp*b;atk+=h.atk*b});return{hp:Math.round(hp/hs.length),atk:Math.round(atk/hs.length),n:hs.length}}
 // эталонный топ-комплект и раскладка — для калибровки
-function plRefGear(up){const best=(f)=>PL_IT.filter(f).sort((a,b)=>b.r-a.r||b.req-a.req);const pick=[];
+function plRefGear(up){const best=(f)=>PL_IT.filter(t=>t.fl!=='art').filter(f).sort((a,b)=>b.r-a.r||b.req-a.req);const pick=[];
  const take=(slot,n)=>best(t=>t.slot===slot).slice(0,n).forEach(t=>pick.push({t:t.id,up}));
  take('head',1);take('chest',1);take('legs',1);take('neck',1);take('ring',3);
  const w=best(t=>t.slot==='rh'||t.slot==='hand')[0];pick.push({t:w.id,up});const l=best(t=>t.slot==='lh')[0];pick.push({t:l.id,up});return pick}
@@ -6135,31 +6178,36 @@ function plSkDesc(s,r){r=Math.max(1,r|0);const f=s.fx(r),o=[];
 function plSell(it){const t=PL_TPL[it.t],rm=PL_RAR[t.r].m;return Math.round((20+t.req*3)*rm*rm*(1+(it.up||0)*.5))}
 function plShards(it){return [1,2,4,8,16,32][PL_TPL[it.t].r]}
 function plUpCost(it){const t=PL_TPL[it.t],rm=PL_RAR[t.r].m,n=(it.up||0)+1;return{gold:Math.round((100+t.req*12)*rm*Math.pow(n,1.5)),sh:n*[1,1,2,3,4,6][t.r]}}
-function plAddItem(tid,quiet){const p=plS();if(!PL_TPL[tid])return null;if(p.inv.length>=PL_INV_MAX){const g=Math.round(plSell({t:tid,up:0})*.5);S.gold+=g;if(!quiet)toast('Инвентарь полон — предмет продан за 🪙'+g);return null}
+function plAddItem(tid,quiet){const p=plS();if(!PL_TPL[tid])return null;if(p.inv.length>=PL_INV_MAX&&PL_TPL[tid].fl!=='art'){const g=Math.round(plSell({t:tid,up:0})*.5);S.gold+=g;if(!quiet)toast('Инвентарь полон — предмет продан за 🪙'+g);return null}
  const it={u:p.uid++,t:tid,up:0};p.inv.push(it);return it}
 function plEquipped(u,p){p=p||plS();return Object.keys(p.eq).find(k=>p.eq[k]===u)||null}
 function plEquip(u,slot){const p=plS(),it=plItem(u,p);if(!it)return false;const t=PL_TPL[it.t];if(p.lv<t.req){toast('Нужен уровень Призывателя '+t.req);return false}
  const ok=plSlotsOf(t);if(!slot||!ok.includes(slot))slot=ok.find(s=>!p.eq[s])||ok[0];
  const cur=plEquipped(u,p);if(cur)delete p.eq[cur];p.eq[slot]=u;save();return true}
 function plUnequip(slot){const p=plS();delete p.eq[slot];save()}
-function plBreak(u){const p=plS(),it=plItem(u,p);if(!it||plEquipped(u,p))return false;const g=plSell(it),sh=plShards(it);p.inv=p.inv.filter(i=>i.u!==u);S.gold+=g;p.sh+=sh;save();return{g,sh}}
+function plBreak(u){const p=plS(),it=plItem(u,p);if(!it||plEquipped(u,p)||PL_TPL[it.t].fl==='art')return false;const g=plSell(it),sh=plShards(it);p.inv=p.inv.filter(i=>i.u!==u);S.gold+=g;p.sh+=sh;save();return{g,sh}}
 function plUpgrade(u){const p=plS(),it=plItem(u,p);if(!it)return false;if((it.up||0)>=10){toast('Максимальное улучшение +10');return false}const c=plUpCost(it);if(S.gold<c.gold||p.sh<c.sh){toast('Не хватает 🪙 или осколков ✦');return false}S.gold-=c.gold;p.sh-=c.sh;it.up=(it.up||0)+1;save();return true}
 // ---------- магазин ----------
 function plPrice(t){const r=t.r;if(r===0)return{gold:250+t.req*50,gems:30};if(r===1)return{gold:1800+t.req*220,gems:200+t.req*8};
  const base=[0,0,3000,18000,80000,300000][r],v=Math.round(base*(.6+t.req/150*.8)/10)*10;return{gems:v}}
 function plMulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function plShopList(){const seed=parseInt(hash('plshop'+today()).slice(0,6),36)||7,R=plMulberry(seed),pick=(r)=>{const a=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq');return a[Math.floor(R()*a.length)]};
+function plShopList(){const seed=parseInt(hash('plshop'+today()).slice(0,6),36)||7,R=plMulberry(seed),pick=(r)=>{const a=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq'&&t.fl!=='art');return a[Math.floor(R()*a.length)]};
  const rs=[0,0,1,1,1,2,2,3,3,4,4,R()<.4?5:4];const seen={};const out=[];
  rs.forEach((r,i)=>{let t,g=0;do{t=pick(r)}while(seen[t.id]&&g++<20);seen[t.id]=1;out.push({i,tid:t.id})});return out}
 function plBuy(i,cur){const p=plS(),day=plDay(p),o=plShopList()[i];if(!o||day.b[i])return;const t=PL_TPL[o.tid],pr=plPrice(t);
  if(cur==='gold'){if(!pr.gold||t.r>1)return;if(S.gold<pr.gold)return toast('Не хватает 🪙');S.gold-=pr.gold}
  else{if(!pr.gems)return;if(S.gems<pr.gems)return toast('Не хватает 💎');S.gems-=pr.gems}
  const it=plAddItem(o.tid);if(!it)return toast('Инвентарь полон');day.b[i]=1;save();toast('Куплено: '+t.n);plRender()}
+// ---------- Зал артефактов (ASTRAL_PLAYER_V2): только за 💎, по одному экземпляру ----------
+function plArtPrice(t){return t.r>=5?Math.round((220000+t.req*1500)/1000)*1000:Math.round((90000+t.req*900)/1000)*1000}
+function plHasArt(id,p){p=p||plS();return p.inv.some(i=>i.t===id)}
+function plBuyArt(id){const p=plS(),t=PL_TPL[id];if(!t||t.fl!=='art')return false;if(plHasArt(id,p)){toast('Артефакт уже у вас');return false}const c=plArtPrice(t);if(S.gems<c){toast('Не хватает 💎 (нужно '+fmtHp(c)+')');return false}
+ S.gems-=c;const it=plAddItem(id,1);save();toast('Получен артефакт: '+t.n);plRender();return it}
 function plBuyPot(k){const p=plS(),day=plDay(p);day.pb=day.pb||{};const lim=6,n=day.pb[k]||0;if(n>=lim)return toast('Лимит на сегодня');const c=k==='hp'?400:600;if(S.gold<c)return toast('Не хватает 🪙');S.gold-=c;day.pb[k]=n+1;p.pot[k]=(p.pot[k]||0)+1;save();plRender()}
 // ---------- дропы и награды ----------
 function plDrop(src){const W={stage:[[0,55],[1,32],[2,12],[3,1]],boss:[[0,20],[1,40],[2,32],[3,8]],dungeon:[[0,30],[1,42],[2,24],[3,4]],wboss:[[1,30],[2,50],[3,20]],duel:[[1,40],[2,45],[3,15]],rom:[[1,40],[2,45],[3,15]]}[src]||[[0,1]];
  const tot=W.reduce((a,x)=>a+x[1],0);let x=plRnd()*tot,r=0;for(const w of W){x-=w[1];if(x<=0){r=w[0];break}}
- const p=plS();let c=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq'&&t.req<=p.lv+20);if(!c.length)c=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq');
+ const p=plS();let c=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq'&&t.fl!=='art'&&t.req<=p.lv+20);if(!c.length)c=PL_IT.filter(t=>t.r===r&&t.fl!=='uniq'&&t.fl!=='art');
  const t=c[Math.floor(plRnd()*c.length)];return plAddItem(t.id,1)}
 // источники: [доля опыта, шанс дропа, тип дропа]
 const PL_SRC={stage:[.10,.06,'stage'],story:[.12,.07,'stage'],storyBoss:[.20,.22,'boss'],dungeon:[.12,.10,'dungeon'],wboss:[.30,.35,'wboss'],rom:[.30,.30,'rom']};
@@ -6207,7 +6255,7 @@ const PL_FOES={
   intro:'Эсдес отбрасывает китель и обнажает саблю. В её глазах — восторг: наконец-то равный.',col:'#9fe3ff'}
 };
 // ---------- логика боя ----------
-function plMe(){const p=plS(),s=plStats(p);return{hp:s.hp,max:s.hp,atk:s.atk,def:s.def,spd:s.spd,crit:s.crit,cdmg:s.cdmg,m:s.m,en:30,sh:0,st:{},cd:{},guard:0,revUsed:0,ds:0,bar:p.bar.filter(id=>PL_SKB[id]&&(p.sk[id]|0)>0),rk:Object.assign({},p.sk),sum:null,pots:0}}
+function plMe(){const p=plS(),s=plStats(p);return{hp:s.hp,max:s.hp,atk:s.atk,def:s.def,spd:s.spd,crit:s.crit,cdmg:s.cdmg,m:s.m,en:30,sh:0,st:{},cd:{},guard:0,revUsed:0,ds:0,bar:p.bar.filter(id=>PL_SKB[id]&&(p.sk[id]|0)>0),rk:Object.assign({},p.sk),sum:null,pots:0,arts:plEqItems(p).map(it=>PL_TPL[it.t]).filter(t=>t.act).map(t=>({id:t.id,n:t.act.n,ic:t.act.ic,cd:t.act.cd,fx:t.act.fx}))}}
 function plDuelNew(did,mode,over){const def=typeof did==='string'?PL_FOES[did]:did;mode=mode||{};const fs=plFoeStats(def,mode),me=plMe();
  if(over&&over.rec){}
  const D={def,id:typeof did==='string'?did:def.id,mode,me,foe:Object.assign({},fs,{max:fs.hp,sh:0,st:{},cd:{},ph:0,buffAtk:1,chg:0}),turn:1,log:[],ev:[],over:0,win:0,seq:def.seq||['a'],si:0,intent:null,first:1,dmgDone:0,dmgTaken:0,foeFirst:false,busy:0};
@@ -6294,6 +6342,7 @@ function plPlayer(D,act){if(D.over||D.turn<0)return false;const me=D.me,p=plS();
   if(k==='hp'){const h=Math.round(me.max*.4);me.hp=Math.min(me.max,me.hp+h);plEv(D,'m','+'+h,'heal');plLog(D,'🧪 Зелье: +'+h+' HP')}else{me.en=Math.min(100,me.en+60);plLog(D,'⚡ Эликсир: +60 энергии')}}
  else if(act.k==='sk'){const s=PL_SKB[act.id],r=me.rk[act.id]|0;if(!s||!r||s.ty==='P')return false;if(me.en<s.en||(me.cd[act.id]|0)>0)return false;me.en-=s.en;me.cd[act.id]=s.cd+1;
   plLog(D,s.ic+' «'+s.n+'» (ур.'+r+')');plHitFoeSk(D,s.fx(r),act.id,r)}
+ else if(act.k==='art'){const a=me.arts.find(x=>x.id===act.id);if(!a||(me.cd[a.id]|0)>0)return false;me.cd[a.id]=a.cd+1;plLog(D,a.ic+' Артефакт «'+a.n+'»');plHitFoeSk(D,a.fx,a.id,1)}
  else return false;
  return true}
 function plRoundEnd(D){if(D.over)return;plCheck(D);if(D.over)return;plTicks(D);if(plCheck(D))return;D.turn++;D.first=0}
@@ -6308,6 +6357,8 @@ function plBot(D){const me=D.me,f=D.foe,p=plS();
  if(me.hp<me.max*.3&&p.pot.hp>0&&me.pots<3)return{k:'item',i:'hp'};
  if(danger&&!me.st.stun&&me.hp<me.max*.85)return{k:'def'};
  let best=null,bv=0;me.bar.forEach(id=>{const s=PL_SKB[id],r=me.rk[id];if(!r||me.en<s.en||(me.cd[id]|0)>0)return;const fx=s.fx(r);let v=(fx.m||0)*(fx.h||1)+(fx.heal&&me.hp<me.max*.5?4:0)+(fx.shield&&me.sh<me.max*.1?2:0)+(fx.buff&&!me.buff?2:0)+(fx.summon&&!(me.sum&&me.sum.t>0)?3:0)+(fx.stun&&fx.stun>=100?2.5:0);if(v>bv){bv=v;best=id}});
+ let ba=null,bav=0;(me.arts||[]).forEach(a=>{if((me.cd[a.id]|0)>0)return;const fx=a.fx;let v=(fx.m||0)*(fx.h||1)+(fx.heal&&me.hp<me.max*.5?4:0)+(fx.shield&&me.sh<me.max*.1?2:0)+(fx.buff&&!me.buff?2.5:0)+(fx.stun&&fx.stun>=100?2.5:0);if(fx.self&&me.hp<me.max*.4)v=0;if(v>bav){bav=v;ba=a.id}});
+ if(ba&&bav>bv)return{k:'art',id:ba};
  if(best)return{k:'sk',id:best};
  if(me.en<25&&me.hp<me.max*.6)return{k:'def'};return{k:'atk'}}
 function plRunAuto(D,maxT){let g=0;while(!D.over&&g++<(maxT||200)){const a=plBot(D);if(!plStep(D,a))plStep(D,{k:'atk'})}return D}
@@ -6335,7 +6386,7 @@ function plDuelRun(o){ // o:{foe,mode,title,reward(D)->html,done(res),sub}
  <div class="pd-arena"><div class="pd-side pd-foe" id="pd_foe"><div class="pd-face" id="pd_ff">${pdFoeFace(D)}</div><div class="pd-info"><b id="pd_fn"></b><div class="pd-hpw"><div class="pd-hp f"><i id="pd_fhp"></i><u id="pd_fsh"></u></div><span id="pd_fhpt"></span></div><div class="pd-st" id="pd_fst"></div></div></div>
   <div class="pd-int" id="pd_int"></div>
   <div class="pd-fl" id="pd_fl"></div><div class="pd-ban" id="pd_ban"></div>
-  <div class="pd-side pd-me" id="pd_me"><div class="pd-face me" id="pd_mf">${plSil(58,PL_RAR[plTopRar()].col)}</div><div class="pd-info"><b>${esc(S.name)} · ур. ${plS().lv}</b><div class="pd-hpw"><div class="pd-hp m"><i id="pd_mhp"></i><u id="pd_msh"></u></div><span id="pd_mhpt"></span></div><div class="pd-hpw"><div class="pd-hp e"><i id="pd_men"></i></div><span id="pd_ment"></span></div><div class="pd-st" id="pd_mst"></div></div></div></div>
+  <div class="pd-side pd-me" id="pd_me"><div class="pd-face me" id="pd_mf">${plLook(96)}</div><div class="pd-info"><b>${esc(S.name)} · ур. ${plS().lv}</b><div class="pd-hpw"><div class="pd-hp m"><i id="pd_mhp"></i><u id="pd_msh"></u></div><span id="pd_mhpt"></span></div><div class="pd-hpw"><div class="pd-hp e"><i id="pd_men"></i></div><span id="pd_ment"></span></div><div class="pd-st" id="pd_mst"></div></div></div></div>
  <div class="pd-log" id="pd_log"></div><div class="pd-acts" id="pd_acts"></div><div class="pd-flash" id="pd_flash"></div>`;
  document.body.appendChild(el);document.body.classList.add('inpd');
  try{AUD.play('start')}catch(e){}
@@ -6358,7 +6409,7 @@ function pdActs(D){const box=pdE('pd_acts'),me=D.me,p=plS();if(D.over){box.inner
  const dis=D.busy?'disabled':'';
  if(D.itemMenu){box.innerHTML=`<button class="btn" ${dis} ${p.pot.hp>0&&me.pots<3?'':'disabled'} onclick="pdAct({k:'item',i:'hp'})">🧪 Зелье +40% HP <small>×${p.pot.hp}</small></button><button class="btn" ${dis} ${p.pot.en>0&&me.pots<3?'':'disabled'} onclick="pdAct({k:'item',i:'en'})">⚡ Эликсир +60 <small>×${p.pot.en}</small></button><button class="btn" onclick="PD.itemMenu=0;pdUpd(PD)">← Назад</button>`;return}
  const sk=me.bar.map(id=>{const s=PL_SKB[id],r=me.rk[id],cd=me.cd[id]|0,ok=me.en>=s.en&&!cd;return `<button class="btn pd-sk ${s.ty==='U'?'ult':''}" ${dis||ok?'':'disabled'} ${D.busy?'disabled':''} onclick="pdAct({k:'sk',id:'${id}'})"><span>${s.ic} ${esc(s.n)}</span><small>${cd?'⏳'+cd:'⚡'+s.en} · ур.${r}</small></button>`}).join('');
- box.innerHTML=`<button class="btn gold" ${dis} onclick="pdAct({k:'atk'})">⚔ Атака</button><button class="btn" ${dis} onclick="pdAct({k:'def'})">🛡 Защита</button><button class="btn" ${dis} ${me.pots>=3?'disabled':''} onclick="PD.itemMenu=1;pdUpd(PD)">🧪 Предмет</button>${sk}`}
+ box.innerHTML=`<button class="btn gold" ${dis} onclick="pdAct({k:'atk'})">⚔ Атака</button><button class="btn" ${dis} onclick="pdAct({k:'def'})">🛡 Защита</button><button class="btn" ${dis} ${me.pots>=3?'disabled':''} onclick="PD.itemMenu=1;pdUpd(PD)">🧪 Предмет</button>${(me.arts||[]).map(a=>{const cd=me.cd[a.id]|0;return `<button class="btn pd-sk pd-art" ${dis||cd?'disabled':''} onclick="pdAct({k:'art',id:'${a.id}'})"><span>${a.ic} ${esc(a.n)}</span><small>${cd?'⏳'+cd:'🏺 артефакт'}</small></button>`}).join('')}${sk}`}
 function pdFloat(side,txt,cls){const L=pdE('pd_fl');if(!L)return;const e=document.createElement('b');e.className='pd-fn '+cls;e.textContent=txt;e.style.left=(side==='f'?50+Math.round((Math.random()-.5)*30):42+Math.round((Math.random()-.5)*30))+'%';e.style.top=(side==='f'?'8%':'70%');L.appendChild(e);setTimeout(()=>{try{e.remove()}catch(x){}},1100)}
 function pdShake(id){const e=pdE(id);if(!e)return;e.classList.remove('shk');void e.offsetWidth;e.classList.add('shk');setTimeout(()=>{try{e.classList.remove('shk')}catch(x){}},420)}
 function pdFlash(cls){const e=pdE('pd_flash');if(!e)return;e.className='pd-flash '+cls;setTimeout(()=>{try{e.className='pd-flash'}catch(x){}},260)}
@@ -6369,7 +6420,7 @@ async function pdAct(act){const D=PD;if(!D||D.over||D.busy)return;D.busy=1;D.ite
  try{
  if(D.foeFirst&&!D.preActed){D.preActed=1;plFoeAct(D);pdFlush(D);pdUpd(D);await pdWait(650);if(plCheck(D)){return pdEnd(D)}}
  D.ev=[];if(!plPlayer(D,act)){D.busy=0;pdUpd(D);return}
- if(act.k==='sk'){try{AUD.play('skill')}catch(e){}}
+ if(act.k==='sk'||act.k==='art'){try{AUD.play('skill')}catch(e){}}
  pdFlush(D);pdUpd(D);await pdWait(650);if(plCheck(D)){return pdEnd(D)}
  if(!D.foeFirst){plFoeAct(D);pdFlush(D);pdUpd(D);await pdWait(650);if(plCheck(D)){return pdEnd(D)}}
  plRoundEnd(D);D.preActed=0;pdFlush(D);D.busy=0;if(D.over){return pdEnd(D)}pdUpd(D)
@@ -6392,10 +6443,10 @@ function plFxText(fx){return Object.keys(fx||{}).map(k=>PL_FXN[k]?PL_FXN[k][0]+'
 function plStatLine(it){const q=plItemPts(it);return Object.keys(q).map(k=>{const s=PL_ST.find(x=>x[0]===k);return s[1]+' '+plReal(k,q[k])}).join('  ')}
 function plSlotName(t){return ({head:'Голова',chest:'Грудь',rh:'Правая рука',lh:'Левая рука',hand:'Одноручное (любая рука)',legs:'Ноги',ring:'Кольцо',neck:'Ожерелье'})[t.slot]}
 function plItemHtml(it,o){o=o||{};const t=PL_TPL[it.t],eq=plEquipped(it.u),low=plS().lv<t.req,set=t.set?PL_SETS[t.set]:null;
- return `<div class="pl-it r${t.r}" style="--rc:${plRc(t.r)}" ${o.click?`onclick="${o.click}"`:''}><div class="pl-ic">${t.ic}</div><div class="pl-tx"><b>${esc(t.n)}${it.up?` <em>+${it.up}</em>`:''}</b><div class="pl-m"><span style="color:${plRc(t.r)}">${PL_RAR[t.r].n}</span> · ${t.ty} · ${low?'<u class="bad">ур. '+t.req+'</u>':'ур. '+t.req}${eq?' · <span class="on">надето</span>':''}</div><div class="pl-s">${plStatLine(it)}</div>${Object.keys(t.fx).length?`<div class="pl-f">✦ ${plFxText(t.fx)}</div>`:''}${set?`<div class="pl-set">${set.ic} ${esc(set.n)}</div>`:''}${o.desc?`<div class="small">${esc(t.d)}</div>`:''}</div></div>`}
+ return `<div class="pl-it r${t.r}" style="--rc:${plRc(t.r)}" ${o.click?`onclick="${o.click}"`:''}><div class="pl-ic">${t.ic}</div><div class="pl-tx"><b>${esc(t.n)}${it.up?` <em>+${it.up}</em>`:''}</b><div class="pl-m"><span style="color:${plRc(t.r)}">${PL_RAR[t.r].n}</span> · ${t.ty} · ${low?'<u class="bad">ур. '+t.req+'</u>':'ур. '+t.req}${eq?' · <span class="on">надето</span>':''}</div><div class="pl-s">${plStatLine(it)}</div>${Object.keys(t.fx).length?`<div class="pl-f">✦ ${plFxText(t.fx)}</div>`:''}${set?`<div class="pl-set">${set.ic} ${esc(set.n)}</div>`:''}${t.fl==='art'?'<div class="pl-art">🏺 Артефакт</div>':''}${o.desc?`<div class="small">${esc(t.d)}</div>`:''}</div></div>`}
 function vHero(){const p=plS(),s=plStats(p),pl=plPtsLeft(p),sp=plSpLeft(p),need=plNeed(p.lv),mx=p.lv>=PL_MAX;
  const tabs=[['ov','🧙 Обзор'],['inv','🎒 Вещи'],['sk','📘 Навыки'],['shop','🛒 Лавка'],['ar','⚔ Арена']];
- const head=`<!-- ${PL_MARK} --><div class="panel pl-head"><div class="pl-port">${plSil(74,plRc(plTopRar(p)))}</div><div class="pl-hi"><h2>${esc(S.name)}</h2><div class="small">Призыватель · ур. <b>${p.lv}</b>/${PL_MAX}</div><div class="bar xp"><i style="width:${mx?100:Math.round(p.xp/need*100)}%"></i></div><div class="small">${mx?'Максимальный уровень':fmtHp(p.xp)+' / '+fmtHp(need)+' опыта'}</div><div class="small">⚡ Сила: <b>${fmtHp(plPower(s))}</b></div></div></div>
+ const head=`<!-- ${PL_MARK} --><!-- ${PL_V2} --><div class="panel pl-head"><div class="pl-port">${plLook(100)}</div><div class="pl-hi"><h2>${esc(S.name)}</h2><div class="small">Призыватель · ур. <b>${p.lv}</b>/${PL_MAX}</div><div class="bar xp"><i style="width:${mx?100:Math.round(p.xp/need*100)}%"></i></div><div class="small">${mx?'Максимальный уровень':fmtHp(p.xp)+' / '+fmtHp(need)+' опыта'}</div><div class="small">⚡ Сила: <b>${fmtHp(plPower(s))}</b></div></div></div>
  <div class="pl-tabs">${tabs.map(t=>`<button class="btn ${PLV.t===t[0]?'gold':''}" onclick="PLV.t='${t[0]}';render()">${t[1]}${t[0]==='ov'&&pl>0||t[0]==='sk'&&sp>0&&PL_SK.some(x=>plCanLearn(x.id)===true)?'<u class="dot"></u>':''}</button>`).join('')}</div>`;
  return head+({ov:plOv,inv:plInv,sk:plSk,shop:plShop,ar:plArena})[PLV.t](p,s)}
 // ---------- обзор ----------
@@ -6406,7 +6457,7 @@ function plOv(p,s){const pl=plPtsLeft(p),sp=plSpLeft(p),its=plEqItems(p),sc=plSe
  const setsH=Object.keys(PL_SETS).filter(k=>sc[k]).map(k=>{const d=PL_SETS[k];return `<div class="pl-setrow"><b>${d.ic} ${esc(d.n)}</b> <span class="small">${sc[k]} шт.</span><div class="small ${sc[k]>=2?'on':''}">2 предм.: ${plFxText(d.b2)}</div><div class="small ${sc[k]>=4?'on':''}">4 предм.: ${plFxText(d.b4)}</div></div>`}).join('');
  const mods=Object.keys(s.m).filter(k=>PL_FXN[k]&&!['hpP','atkP','defP','spdP','crit','cdmg'].includes(k)).map(k=>PL_FXN[k][0]+' '+(Math.round(s.m[k]*10)/10)+PL_FXN[k][1]);
  const pct=['hpP','atkP','defP','spdP','crit','cdmg'].filter(k=>s.m[k]).map(k=>PL_FXN[k][0]+' +'+(Math.round(s.m[k]*10)/10)+PL_FXN[k][1]);
- return `<div class="panel"><div class="row sb" style="margin-bottom:6px"><b>📊 Характеристики</b><span class="pl-pts ${pl>0?'hot':''}">Очков: ${pl}</span></div>${rows}<div class="small" style="margin:6px 0">За уровень +${PL_PTS} оч. статов и +1 оч. навыков (+1 за каждые 10 ур.). Очков навыков: <b>${sp}</b>.</div>
+ return plLookPanel(p)+`<div class="panel"><div class="row sb" style="margin-bottom:6px"><b>📊 Характеристики</b><span class="pl-pts ${pl>0?'hot':''}">Очков: ${pl}</span></div>${rows}<div class="small" style="margin:6px 0">За уровень +${PL_PTS} оч. статов и +1 оч. навыков (+1 за каждые 10 ур.). Очков навыков: <b>${sp}</b>.</div>
  <div class="row"><button class="btn sm" onclick="plResetSt()">↺ Сбросить очки статов (${p.fr.st<2?'бесплатно '+(2-p.fr.st)+'/2':'💎200'})</button></div></div>
  <div class="panel"><b>🎽 Снаряжение</b><div class="pl-eq">${grid}</div>${pct.length||mods.length?`<div class="small" style="margin-top:8px">${pct.concat(mods).join(' · ')}</div>`:''}</div>
  ${setsH?`<div class="panel"><b>🔗 Сеты</b>${setsH}</div>`:''}
@@ -6427,7 +6478,7 @@ function plInv(p){const a=plInvList(p);
  <button class="btn sm" onclick="plBreakLow()">♻ Разобрать все обычные и необычные (не надетые)</button></div>
  <div class="pl-list">${a.map(it=>plItemHtml(it,{click:`plItemUi(${it.u})`})).join('')||'<div class="panel small">Пусто.</div>'}</div>`}
 function plItemUi(u){const p=plS(),it=plItem(u,p);if(!it)return;const t=PL_TPL[it.t],eq=plEquipped(u,p),uc=plUpCost(it),slots=plSlotsOf(t);
- modal(`${plItemHtml(it,{desc:1})}<div class="small" style="margin:6px 0">Слот: ${plSlotName(t)}${it.up<10?` · улучшение до +${it.up+1}: 🪙${fmtHp(uc.gold)} ✦${uc.sh}`:' · максимум'}</div>
+ modal(`${plItemHtml(it,{desc:1})}${t.act?`<div class="small pl-act">⚡ Активное в дуэли: ${esc(plActText(t))}</div>`:''}<div class="small" style="margin:6px 0">Слот: ${plSlotName(t)}${it.up<10?` · улучшение до +${it.up+1}: 🪙${fmtHp(uc.gold)} ✦${uc.sh}`:' · максимум'}</div>
  ${t.set?`<div class="small">${PL_SETS[t.set].ic} ${esc(PL_SETS[t.set].n)}: 2 — ${plFxText(PL_SETS[t.set].b2)}; 4 — ${plFxText(PL_SETS[t.set].b4)}</div>`:''}
  <div class="row c" style="margin-top:10px">${eq?`<button class="btn" onclick="plUneq('${eq}')">Снять</button>`:slots.map(sl=>`<button class="btn gold" onclick="plEq(${u},'${sl}');">Надеть${slots.length>1?' · '+PL_SLOTS.find(x=>x[0]===sl)[1]:''}</button>`).join('')}
  <button class="btn" ${it.up>=10?'disabled':''} onclick="plUpUi(${u})">⬆ Улучшить</button>${eq?'':`<button class="btn" onclick="plBreakUi(${u})">♻ Разобрать · 🪙${plSell(it)} ✦${plShards(it)}</button>`}<button class="btn" onclick="closeM()">Закрыть</button></div>`)}
@@ -6450,25 +6501,29 @@ function plShop(p){const day=plDay(p),list=plShopList();
   return `<div class="pl-shop">${plItemHtml(it,{})}<div class="row" style="margin-top:6px">${bought?'<span class="small">✅ Куплено</span>':`${pr.gold&&t.r<=1?`<button class="btn sm" onclick="plBuy(${o.i},'gold')">🪙 ${fmtHp(pr.gold)}</button>`:''}${pr.gems?`<button class="btn sm gold" onclick="plBuy(${o.i},'gems')">💎 ${fmtHp(pr.gems)}</button>`:''}`}</div></div>`};
  return `<div class="panel"><b>🛒 Лавка снаряжения</b><div class="small" style="margin:4px 0">Ассортимент обновляется каждый день. Обычное и необычное можно купить за 🪙 — остальное продаётся за 💎; топовые вещи очень дороги.</div></div>
  <div class="pl-list">${list.map(card).join('')}</div>
+ ${plArtHall(p)}
  <div class="panel"><b>🧪 Расходники</b><div class="small" style="margin:4px 0">В дуэли — до 3 применений. Лимит 6/день каждого.</div>
  <div class="row sb"><span>🧪 Зелье +40% HP (есть ${p.pot.hp})</span><button class="btn sm" style="width:auto;margin:0" onclick="plBuyPot('hp')">🪙 400</button></div>
  <div class="row sb" style="margin-top:6px"><span>⚡ Эликсир +60 энергии (есть ${p.pot.en})</span><button class="btn sm" style="width:auto;margin:0" onclick="plBuyPot('en')">🪙 600</button></div></div>`}
+function plActText(t){if(!t.act)return '';return t.act.n+' · откат '+t.act.cd+' х.: '+plSkDesc({fx:()=>t.act.fx},1)}
+function plArtHall(p){return `<div class="panel pl-hall"><b>🏺 Зал артефактов</b><div class="small" style="margin:4px 0">Легендарные и мифические реликвии из других миров. Не выпадают случайно — только здесь за очень много 💎 (по одной штуке) или как редкая награда Арены. Некоторые дают активное умение в дуэли.</div></div>
+ <div class="pl-list">${PL_ART.map(t=>{const own=plHasArt(t.id,p),it={u:0,t:t.id,up:0};return `<div class="pl-shop">${plItemHtml(it,{desc:1})}${t.act?`<div class="small pl-act">⚡ ${esc(plActText(t))}</div>`:''}<div class="row" style="margin-top:6px">${own?'<span class="small">✅ В вашей сумке</span>':`<button class="btn sm gold" onclick="plBuyArt('${t.id}')">💎 ${fmtHp(plArtPrice(t))}</button>`}</div></div>`}).join('')}</div>`}
 // ---------- арена ----------
 const PL_ARENA=['dummy','bandit','guard','assassin','knight','frostmage','demon','astral'];
-function plArenaCap(){return 5}
-function plArena(p){const day=plDay(p),left=Math.max(0,plArenaCap()-day.dx);
- return `<div class="panel"><b>⚔ Арена Призывателя</b><div class="small" style="margin:4px 0">Дуэли 1 на 1: атака, защита, предметы и навыки. Над врагом видно его намерение — защита вдвое ослабляет удар. Наград за день: ${left}/${plArenaCap()}. Героини ждут на свидании «Спарринг» в Гареме.</div><div class="small">Побед ${p.stat.w} · поражений ${p.stat.l}</div></div>`+
- PL_ARENA.map(id=>{const d=PL_FOES[id],ok=p.lv+10>=d.rec,first=!(p.duel['a_'+id]);const diff=p.lv>=d.rec+15?'легко':p.lv>=d.rec-3?'на равных':p.lv>=d.rec-15?'сложно':'очень сложно';
-  return `<div class="panel row sb"><div style="min-width:0;flex:1"><b>${d.ic} ${esc(d.n)}</b><div class="small">${esc(d.intro)}</div><div class="small">Рек. уровень: <b style="color:${p.lv>=d.rec?'#7fe88f':'#ffb36a'}">${d.rec}</b> · ${diff}${first?' · 💎 за первую победу: '+plArenaGems(d):''}</div></div><button class="btn ${ok?'gold':''}" onclick="plArenaGo('${id}')">В бой</button></div>`}).join('')}
+function plArenaCap(){return Infinity}   // V2: дневного лимита наград нет
+const PL_ART_REW={frostmage:'a_f_ice',demon:'a_incur',astral:'a_st_time'};   // редкая гарантированная награда за ПЕРВУЮ победу (не случайный дроп)
+function plArena(p){const day=plDay(p);
+ return `<div class="panel"><b>⚔ Арена Призывателя</b><div class="small" style="margin:4px 0">Дуэли 1 на 1: атака, защита, предметы и навыки. Над врагом видно его намерение — защита вдвое ослабляет удар. Дневного лимита наград нет: сражайтесь сколько хотите — за повторные победы над одним врагом за день награда немного уменьшается (×0.85 за каждую, не ниже ×0.2). Героини ждут на свидании «Спарринг» в Гареме.</div><div class="small">Побед ${p.stat.w} · поражений ${p.stat.l}</div></div>`+
+ PL_ARENA.map(id=>{const d=PL_FOES[id],ok=p.lv+10>=d.rec,first=!(p.duel['a_'+id]);const diff=p.lv>=d.rec+15?'легко':p.lv>=d.rec-3?'на равных':p.lv>=d.rec-15?'сложно':'очень сложно';const m=plRepMult('a_'+id,1),ar=PL_ART_REW[id]&&first?PL_TPL[PL_ART_REW[id]]:null;
+  return `<div class="panel row sb"><div style="min-width:0;flex:1"><b>${d.ic} ${esc(d.n)}</b><div class="small">${esc(d.intro)}</div><div class="small">Рек. уровень: <b style="color:${p.lv>=d.rec?'#7fe88f':'#ffb36a'}">${d.rec}</b> · ${diff}${first?' · 💎 за первую победу: '+plArenaGems(d):''}${m<1?' · награда сегодня ×'+m.toFixed(2):''}</div>${ar?`<div class="small" style="color:#ffd76a">🏺 Первая победа: артефакт «${esc(ar.n)}»</div>`:''}</div><button class="btn ${ok?'gold':''}" onclick="plArenaGo('${id}')">В бой</button></div>`}).join('')}
 function plArenaGems(d){return Math.round(10+d.rec*1.2)}
 function plArenaGo(id){const d=PL_FOES[id],p=plS();if(p.inv.length&&!p.eq.rh&&!p.eq.lh&&!confirm('Без оружия бой будет тяжёлым. Всё равно начать?'))return;
  plDuelRun({foe:id,title:'Арена: '+d.n,retry:1,reward:D=>plArenaRw(id,D),done:r=>{render()}})}
-function plArenaRw(id,D){const p=plS(),d=PL_FOES[id],day=plDay(p);if(!D.win)return '<div class="small">Поражение — награды нет. Прокачайте героя, навыки или снаряжение.</div>';
- if(day.dx>=plArenaCap())return '<div class="small">Дневной лимит наград исчерпан — победа засчитана без награды.</div>';
- day.dx++;const gold=Math.round(120+d.rec*14),xp=plRewardXp(.12+Math.min(.12,d.rec/1500));let gem=0;
- if(!p.duel['a_'+id]){p.duel['a_'+id]=1;gem=plArenaGems(d);S.gems+=gem}
- S.gold+=gold;plAddXp(xp,1);let it=null;if(plRnd()<.22)it=plDrop('duel');try{prog('win')}catch(e){}
- return `<div>+${fmtHp(xp)} опыта Призывателя · 🪙${fmtHp(gold)}${gem?' · 💎'+gem:''}${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}</div>`}
+function plArenaRw(id,D){const p=plS(),d=PL_FOES[id];if(!D.win)return '<div class="small">Поражение — награды нет. Прокачайте героя, навыки или снаряжение.</div>';
+ const k=plRepMult('a_'+id),gold=Math.round((120+d.rec*14)*k),xp=Math.max(1,Math.round(plRewardXp(.12+Math.min(.12,d.rec/1500))*k));let gem=0,art=null;
+ if(!p.duel['a_'+id]){p.duel['a_'+id]=1;gem=plArenaGems(d);S.gems+=gem;const aid=PL_ART_REW[id];if(aid&&!p.inv.some(i=>i.t===aid)){art=plAddItem(aid,1)}}
+ S.gold+=gold;plAddXp(xp,1);let it=null;if(plRnd()<.22*Math.max(.35,k))it=plDrop('duel');try{prog('win')}catch(e){}save();
+ return `<div>+${fmtHp(xp)} опыта Призывателя · 🪙${fmtHp(gold)}${gem?' · 💎'+gem:''}${k<1?' <span class="small">(повтор ×'+k.toFixed(2)+')</span>':''}${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}${art?'<br>🏺 <b style="color:#ffd76a">Артефакт: '+PL_TPL[art.t].ic+' '+esc(PL_TPL[art.t].n)+'</b>':''}</div>`}
 // ---------- вход ----------
 (function(){try{
  const p0=vProfile;globalThis.vProfile=function(){const h=p0();return h.replace('<div class="small" style="margin-top:12px">Сменить аватар:</div>',`<button class="btn sm" style="margin-top:10px" onclick="go('hero')">🧙 Герой (Призыватель): уровень ${plS().lv}${plDotOn()?' 🔴':''}</button><div class="small" style="margin-top:12px">Сменить аватар:</div>`)};
@@ -6540,6 +6595,254 @@ body.inpd{overflow:hidden}
 #vn .dpre{display:flex;flex-direction:column;gap:6px}#vn .dpre .info{font-size:12px;text-align:center;background:#0008;padding:6px;border-radius:10px;line-height:1.35}
 @media(max-width:340px){.pd-face{width:56px;height:56px}.pd-emo{font-size:34px}.pl-tabs .btn{font-size:11px}.sk-b{width:74px}}
 `;const s=document.createElement('style');s.id='plcss';s.textContent=css;document.head.appendChild(s)})();
+
+// ====== ИГРОК-ПРИЗЫВАТЕЛЬ: внешность в полный рост и свои картинки (ASTRAL_PLAYER_V2) ======
+// Процедурный (SVG + CSS-слои) Призыватель в полный рост. Цвета плаща/ауры/орбит берутся из выбранной иконки (ступень вознесения 0–7 или «Пустотный круг»),
+// экипировка видна: оружие в руках, щит/фолиант/ключ/ножны, шлем/капюшон/корона/нимб, цвета брони, кулон, кольца, свечение редкости.
+// Свои картинки: S.pf.cim (иконка, JPEG 256×256) и S.pl.look.img (внешность, WebP/PNG/JPEG ≤512×768). Хранятся ТОЛЬКО локально (localStorage), в онлайн-данные (гильдии/Supabase) не уходят.
+// Анимации: только opacity/transform на слоях без box-shadow (WebKit); класс html.noanim их отключает.
+const PL_V2='ASTRAL_PLAYER_V2';
+const PLK_PAL={
+ p0:{a:'#ffd76a',au:'#7c8cff',cl:['#2f3f9a','#141a50'],hair:'#dfe6ff',eye:'#6fb0ff',tr:'#ffd76a'},
+ p1:{a:'#ff4d7d',au:'#ff4d7d',cl:['#5a2a9e','#251050'],hair:'#ffd1e6',eye:'#ff6aa8',tr:'#ff9a00',rb:1},
+ p2:{a:'#ffc2f4',au:'#b15cff',cl:['#7a4ac8','#33186e'],hair:'#fdeaff',eye:'#c58cff',tr:'#ffc2f4'},
+ p3:{a:'#ffd76a',au:'#ffb800',cl:['#a8710f','#43290a'],hair:'#fff2b8',eye:'#ffb800',tr:'#fff2a8',rb:1},
+ p4:{a:'#ffffff',au:'#00cfff',cl:['#274c9e','#0f1f55'],hair:'#e6f7ff',eye:'#22ff77',tr:'#ffe27a',rb:1},
+ p5:{a:'#9db8ff',au:'#4a6cff',cl:['#1b2f8a','#0a1250'],hair:'#cfe0ff',eye:'#dfe8ff',tr:'#cfe0ff'},
+ p6:{a:'#ffd76a',au:'#a855f7',cl:['#6b2bc4','#2a0f5a'],hair:'#f0dcff',eye:'#ffd76a',tr:'#ffd76a'},
+ p7:{a:'#fff8d6',au:'#ffe27a',cl:['#f0e2a8','#a8873a'],hair:'#ffffff',eye:'#ffb800',tr:'#ffffff',rb:1},
+ pv:{a:'#ff00ff',au:'#7c3aed',cl:['#1a0230','#05000d'],hair:'#c9a0ff',eye:'#00ffff',tr:'#00ffff'}};
+const PLK_SET_COL={knights:'#e8c35a',cloud:'#e0243c',shadow:'#8b5cf6',ice:'#9fe3ff',gems:'#5fd068',teigu:'#ff7a3d',captain:'#f59e0b',infinity:'#ffb830'};
+let plkN=0;
+function plkMix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const x=p(a),y=p(b);return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+function plkIcKey(ic){const i=PF_BY[ic];return i?(i.sec?'pv':'p'+i.t):'p0'}
+function plkCol(it){const t=PL_TPL[it.t];return t.col||(t.set&&PLK_SET_COL[t.set])||PL_RAR[t.r].col}
+function plkEq(p){p=p||plS();const g=s=>{const u=p.eq[s];return u?plItem(u,p):null};return{head:g('head'),chest:g('chest'),legs:g('legs'),neck:g('neck'),rh:g('rh'),lh:g('lh'),rings:['r1','r2','r3'].map(g).filter(Boolean)}}
+function plkWeapon(it,id){const t=PL_TPL[it.t],c=plkCol(it),r=t.r,s=t.id;
+ const glow=r>=4||t.fl==='art'?`<ellipse cx="0" cy="-70" rx="${r>=5?26:20}" ry="86" fill="url(#${id}w)"/>`:'';
+ const guard=(w,col)=>`<rect x="${-w}" y="-6" width="${w*2}" height="5" rx="2" fill="${col||'#ffd76a'}"/><rect x="-3" y="-2" width="6" height="26" rx="2" fill="#3a2a1a"/><circle cx="0" cy="25" r="4.5" fill="${col||'#ffd76a'}"/>`;
+ let b;
+ if(s==='a_excal')b=`<path d="M-7 -6L-8 -112L0 -134L8 -112L7 -6Z" fill="url(#${id}x)" stroke="#fff6c0" stroke-width="1.4"/><path d="M0 -8V-124" stroke="#fff" stroke-width="1.2" opacity=".8"/>`+guard(17,'#ffd76a');
+ else if(s==='a_ea')b=`<rect x="-6" y="-48" width="12" height="44" rx="5" fill="#8a1f1f"/><rect x="-7" y="-92" width="14" height="42" rx="6" fill="#ff9a3d"/><rect x="-6" y="-132" width="12" height="42" rx="6" fill="#c0392b"/><path d="M-6 -20L6 -30M-7 -66L7 -76M-6 -108L6 -118" stroke="#ffe27a" stroke-width="1.6"/>`+`<rect x="-3" y="-2" width="6" height="22" rx="2" fill="#3a2a1a"/>`;
+ else if(s==='a_mura')b=`<path d="M-3.5 -4L-3.5 -108L0 -122L3.5 -108L3.5 -4Z" fill="#241018" stroke="#d6283f" stroke-width="1.3"/><path d="M0 -20V-108" stroke="#ff4d6a" stroke-width=".9"/><circle cx="6" cy="-60" r="2" fill="#d6283f"/><circle cx="-5" cy="-84" r="1.6" fill="#d6283f"/>`+guard(11,'#b21f3a');
+ else if(s==='a_bank')b=`<path d="M-5 -4L-6 -106L-2 -112L-4 -130L3 -112L6 -106L5 -4Z" fill="#0b0b14" stroke="#ff4d7d" stroke-width="1.6"/><path d="M-7 -30L-14 -40M7 -52L13 -62M-6 -76L-12 -86" stroke="#ff4d7d" stroke-width="2" stroke-linecap="round"/>`+guard(13,'#ff4d7d');
+ else if(t.ty==='Катана'||s==='a_shik')b=`<path d="M-2.5 -4Q9 -52 1 -118L-3 -112Q3 -60 -4.5 -4Z" fill="${s==='a_shik'?'#e6fbff':'#dfe6f2'}" stroke="${c}" stroke-width="1.2"/><circle cx="0" cy="-5" r="8" fill="none" stroke="${c}" stroke-width="2.4"/><rect x="-3" y="-2" width="6" height="26" rx="2" fill="#2a1a22"/>`;
+ else if(s==='a_gae')b=`<rect x="-2.4" y="-110" width="4.8" height="150" rx="2" fill="#4a1018"/><path d="M0 -158L9 -112L0 -118L-9 -112Z" fill="#ff3b4e" stroke="#ffd0d6" stroke-width="1"/><path d="M0 -150V-118" stroke="#fff" stroke-width="1" opacity=".7"/>`;
+ else if(s==='a_incur')b=`<rect x="-2.6" y="-100" width="5.2" height="140" rx="2" fill="#5a0f1c"/><path d="M0 -150L10 -104L3 -108L0 -112L-3 -108L-10 -104Z" fill="#e0243c" stroke="#ffb3bd" stroke-width="1"/><path d="M-3 -96L-10 -88M3 -84L10 -76M-3 -70L-9 -62" stroke="#ff6a7c" stroke-width="2" stroke-linecap="round"/>`;
+ else if(t.ty==='Копьё')b=`<rect x="-2.3" y="-104" width="4.6" height="144" rx="2" fill="#7a5a3a"/><path d="M0 -144L7 -106L0 -112L-7 -106Z" fill="#e6ecf8" stroke="${c}" stroke-width="1.2"/>`;
+ else if(t.ty==='Лук')b=`<path d="M6 -86Q-36 -14 6 58" fill="none" stroke="${s==='w_storm'?'#7fd6ff':'#8a5a2a'}" stroke-width="4.5" stroke-linecap="round"/><path d="M6 -86L6 58" stroke="#e8e8f0" stroke-width="1"/>`;
+ else if(t.ty==='Посох')b=`<rect x="-2.6" y="-112" width="5.2" height="150" rx="2" fill="#6a4a8a"/><circle cx="0" cy="-122" r="10" fill="${c}" stroke="#fff" stroke-width="1.4"/><circle cx="-3" cy="-125" r="3" fill="#fff" opacity=".8"/><path d="M-12 -122L-18 -128M12 -122L18 -128M0 -134V-142" stroke="${c}" stroke-width="2" stroke-linecap="round"/>`;
+ else if(t.ty==='Молот')b=`<rect x="-3" y="-96" width="6" height="140" rx="2" fill="#6a5a4a"/><rect x="-27" y="-124" width="54" height="30" rx="5" fill="#cfd8e8" stroke="${c}" stroke-width="2"/><path d="M-4 -120L4 -110L-3 -108L5 -98" fill="none" stroke="${c}" stroke-width="2"/><rect x="-27" y="-114" width="54" height="3" fill="${c}" opacity=".6"/>`;
+ else if(t.ty==='Кинжал'||t.ty==='Кунай')b=`<path d="M-3 -4L-3 -46L0 -54L3 -46L3 -4Z" fill="#dfe6f2" stroke="${c}" stroke-width="1.2"/><rect x="-8" y="-6" width="16" height="4" rx="2" fill="${c}"/><rect x="-2.4" y="-2" width="4.8" height="14" rx="2" fill="#2a1a22"/>`;
+ else b=`<path d="M-5.5 -6L-5.5 -100L0 -114L5.5 -100L5.5 -6Z" fill="#e6ecf8" stroke="${c}" stroke-width="1.5"/><path d="M0 -10V-100" stroke="#fff" stroke-width=".9" opacity=".7"/>`+guard(14,c);
+ return glow+b}
+function plkLeft(it,id){const t=PL_TPL[it.t],c=plkCol(it),s=t.id;  // начало координат — левая кисть
+ if(s==='a_vault')return `<ellipse cx="0" cy="-26" rx="26" ry="26" fill="url(#${id}w)"/><circle cx="0" cy="-48" r="10" fill="none" stroke="#ffd76a" stroke-width="4"/><rect x="-2.6" y="-40" width="5.2" height="46" fill="#ffd76a"/><path d="M0 -4h10v6h-10M0 4h7v5h-7" fill="#ffd76a"/><circle cx="0" cy="-48" r="3.6" fill="#fff6c0"/>`;
+ if(s==='a_aval')return `<ellipse cx="0" cy="-16" rx="18" ry="46" fill="url(#${id}w)"/><path d="M-9 -66Q0 -76 9 -66L7 18Q0 26 -7 18Z" fill="#2c7a4a" stroke="#9fffb4" stroke-width="2"/><path d="M0 -62V16" stroke="#cfffd8" stroke-width="1.4" opacity=".7"/>`;
+ if(s==='a_tome')return `<rect x="-18" y="-46" width="36" height="46" rx="4" fill="#15151f" stroke="#d6d6e6" stroke-width="2"/><path d="M-10 -34h20M-10 -26h20M-10 -18h12" stroke="#d6d6e6" stroke-width="1.4"/><path d="M0 -54L4 -48L-4 -48Z" fill="#d6d6e6"/>`;
+ if(s==='a_gaunt')return `<ellipse cx="0" cy="-6" rx="20" ry="18" fill="url(#${id}w)"/><rect x="-10" y="-14" width="20" height="20" rx="6" fill="#ffb830" stroke="#fff0b0" stroke-width="1.6"/><circle cx="-5" cy="-8" r="2.2" fill="#b06bff"/><circle cx="0" cy="-8" r="2.2" fill="#5fd068"/><circle cx="5" cy="-8" r="2.2" fill="#ff9a3d"/><circle cx="-2.5" cy="-2" r="2.2" fill="#ffe27a"/><circle cx="2.5" cy="-2" r="2.2" fill="#ff4d4d"/>`;
+ if(t.ty==='Щит'||s==='l_aegis')return `<path d="M-22 -50H22V-14Q22 12 0 24Q-22 12 -22 -14Z" fill="${plkMix(c,'#0b0d2c',.55)}" stroke="${c}" stroke-width="3"/><path d="M0 -42L6 -30L0 -18L-6 -30Z" fill="${c}" opacity=".9"/><path d="M-22 -36H22" stroke="${c}" stroke-width="1.4" opacity=".6"/>`;
+ if(t.ty==='Фолиант')return `<rect x="-17" y="-44" width="34" height="44" rx="4" fill="${plkMix(c,'#1a1030',.5)}" stroke="${c}" stroke-width="2"/><circle cx="0" cy="-22" r="7" fill="none" stroke="${c}" stroke-width="2"/><circle cx="0" cy="-22" r="2.4" fill="${c}"/>`;
+ if(t.ty==='Кинжал'||t.ty==='Кунай')return `<path d="M-3 4L-3 46L0 54L3 46L3 4Z" fill="#dfe6f2" stroke="${c}" stroke-width="1.2"/><rect x="-8" y="2" width="16" height="4" rx="2" fill="${c}"/>`;
+ return `<path d="M-20 -46H20V-12Q20 10 0 20Q-20 10 -20 -12Z" fill="#5a3a22" stroke="${c}" stroke-width="2.6"/>`}
+function plkHead(it,c,P){ // накладка на голову поверх волос; цвет c
+ const k=it?({h_cap:'cap',h_goggles:'goggles',h_band:'band',h_helm:'helm',h_hood:'hood',h_teigu:'mask',h_straw:'hat',h_mask:'mask2',h_halo:'halo',h_crown:'crown'})[it.t]||'helm':'circlet';
+ const dk=plkMix(c,'#0b0d2c',.5);
+ switch(k){
+  case 'cap':return `<path d="M101 56Q104 28 128 28Q152 28 155 56L146 50Q128 44 110 50Z" fill="${c}" stroke="${dk}" stroke-width="1.4"/><path d="M104 54H152" stroke="${dk}" stroke-width="2"/>`;
+  case 'goggles':return `<path d="M104 46Q128 36 152 46" fill="none" stroke="#3a2a1a" stroke-width="6"/><circle cx="116" cy="44" r="8" fill="${c}" stroke="#2a1a10" stroke-width="2.4"/><circle cx="140" cy="44" r="8" fill="${c}" stroke="#2a1a10" stroke-width="2.4"/><circle cx="113" cy="41" r="2.4" fill="#fff" opacity=".8"/>`;
+  case 'band':return `<path d="M103 52Q128 42 153 52L153 59Q128 49 103 59Z" fill="${c}"/><path d="M153 55L170 64L164 70L153 62Z" fill="${c}"/>`;
+  case 'helm':return `<path d="M101 64Q99 28 128 26Q157 28 155 64L148 52L140 54L136 48H120L116 54L108 52Z" fill="${c}" stroke="${dk}" stroke-width="1.6"/><path d="M128 26V44" stroke="${dk}" stroke-width="2"/><path d="M122 26Q128 12 134 26" fill="${plkMix(c,'#ffffff',.3)}" stroke="${dk}" stroke-width="1.2"/>`;
+  case 'hood':return `<path d="M97 70Q92 20 128 18Q164 20 159 70L152 60Q150 40 128 38Q106 40 104 60Z" fill="${c}" stroke="${dk}" stroke-width="1.6"/><path d="M104 60Q106 80 98 92M152 60Q150 80 158 92" fill="none" stroke="${dk}" stroke-width="2"/>`;
+  case 'mask':return `<path d="M106 64Q128 56 150 64L148 80Q128 90 108 80Z" fill="${c}" opacity=".88" stroke="${dk}" stroke-width="1.4"/><path d="M114 68L122 72M142 68L134 72" stroke="${P.eye}" stroke-width="2.4"/>`;
+  case 'mask2':return `<path d="M105 62H151L149 76Q128 72 107 76Z" fill="#0b0b14" stroke="${c}" stroke-width="1.6"/><circle cx="118" cy="69" r="2" fill="${c}"/><circle cx="138" cy="69" r="2" fill="${c}"/>`;
+  case 'hat':return `<ellipse cx="128" cy="40" rx="42" ry="9" fill="#e8c35a" stroke="#a8873a" stroke-width="1.6"/><path d="M104 38Q106 14 128 14Q150 14 152 38Z" fill="#f2d88a" stroke="#a8873a" stroke-width="1.6"/><path d="M104 34H152V40H104Z" fill="#e0243c"/>`;
+  case 'halo':return `<ellipse cx="128" cy="19" rx="27" ry="7" fill="none" stroke="${c}" stroke-width="4"/><ellipse cx="128" cy="19" rx="27" ry="7" fill="none" stroke="#fff" stroke-width="1.4" opacity=".8"/>`;
+  case 'crown':return `<path d="M104 40L108 18L118 32L128 12L138 32L148 18L152 40Z" fill="${c}" stroke="#fff" stroke-width="1.2"/><circle cx="128" cy="26" r="3" fill="#fff"/><circle cx="110" cy="30" r="2" fill="#fff"/><circle cx="146" cy="30" r="2" fill="#fff"/>`;
+  default:return `<path d="M104 46Q128 36 152 46" fill="none" stroke="${P.a}" stroke-width="3"/><path d="M128 36L133 44L128 52L123 44Z" fill="${P.eye}" stroke="#fff" stroke-width="1"/>`}}
+function plkSvg(key,eq){const P=PLK_PAL[key]||PLK_PAL.p0,id='plk'+(++plkN);
+ const sk='#f7d9c4',skd='#e3b698',a=P.a,tier=key==='pv'?-1:+key.slice(1);
+ const ch=eq.chest?plkCol(eq.chest):null,lg=eq.legs?plkCol(eq.legs):null;
+ const tun=ch?plkMix(ch,'#0b0d2c',.35):plkMix(P.cl[0],'#000000',.15),tun2=ch?plkMix(ch,'#0b0d2c',.7):P.cl[1];
+ const plate=eq.chest&&['c_armor','c_chain','c_teigu','c_astral','c_frost'].includes(eq.chest.t),coat=eq.chest&&['c_cloak','c_coat','c_shadow','c_kimono'].includes(eq.chest.t);
+ const top=Math.max(-1,...[eq.head,eq.chest,eq.legs,eq.neck,eq.rh,eq.lh].filter(Boolean).map(i=>PL_TPL[i.t].r));
+ const rc=top>=0?PL_RAR[top].col:a;
+ let s=`<svg class="plk-svg" viewBox="0 0 256 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.cl[0]}"/><stop offset="1" stop-color="${P.cl[1]}"/></linearGradient>
+  <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${tun}"/><stop offset="1" stop-color="${tun2}"/></linearGradient>
+  <linearGradient id="${id}x" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffe27a"/></linearGradient>
+  <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${a}"/></linearGradient>
+  <radialGradient id="${id}w"><stop offset="0" stop-color="${eq.rh?plkCol(eq.rh):a}" stop-opacity=".55"/><stop offset="1" stop-color="${eq.rh?plkCol(eq.rh):a}" stop-opacity="0"/></radialGradient>
+  <radialGradient id="${id}o"><stop offset="0" stop-color="${a}" stop-opacity=".5"/><stop offset="1" stop-color="${a}" stop-opacity="0"/></radialGradient>
+ </defs>
+ <ellipse cx="128" cy="301" rx="56" ry="9" fill="#000" opacity=".5"/><ellipse cx="128" cy="300" rx="44" ry="6" fill="url(#${id}o)"/>`;
+ // крылья (6–7) и свечение за спиной
+ if(tier>=6){const sc=tier===7?1:.82;s+=`<g opacity="${tier===7?.9:.7}"><g transform="translate(128 120) scale(${sc}) translate(-128 -120)"><path id="${id}wg" d="M150 112Q214 52 248 98Q226 92 220 122Q206 110 200 144Q188 124 180 160Q164 138 154 150Z" fill="${tier===7?'#fff6c8':'#d9b8ff'}" stroke="${a}" stroke-width="1.4"/><g transform="translate(256 0) scale(-1 1)"><path d="M150 112Q214 52 248 98Q226 92 220 122Q206 110 200 144Q188 124 180 160Q164 138 154 150Z" fill="${tier===7?'#fff6c8':'#d9b8ff'}" stroke="${a}" stroke-width="1.4"/></g></g></g>`}
+ if(key==='pv'){s+=`<g opacity=".5"><path d="M96 100Q58 170 64 292L192 292Q198 170 160 100Z" fill="#f0f" transform="translate(-4 0)"/><path d="M96 100Q58 170 64 292L192 292Q198 170 160 100Z" fill="#0ff" transform="translate(4 0)"/></g>`}
+ // плащ
+ const hem='M66 292Q80 300 92 292Q104 300 116 292Q128 300 140 292Q152 300 164 292Q176 300 190 292';
+ s+=`<path d="M97 98Q56 170 64 292${hem.slice(hem.indexOf('Q'))}Q200 170 159 98Z" fill="url(#${id}c)" stroke="${P.tr}" stroke-width="2"/><path d="M110 120Q92 190 96 290M146 120Q164 190 160 290" fill="none" stroke="${P.tr}" stroke-width="1.2" opacity=".35"/><path d="${hem}" fill="none" stroke="${P.tr}" stroke-width="3"/>`;
+ if(tier===5)s+=[[84,170],[172,200],[96,240],[160,250],[110,190]].map(q=>`<path d="M${q[0]} ${q[1]-4}L${q[0]+1.4} ${q[1]-1}L${q[0]+4.4} ${q[1]}L${q[0]+1.4} ${q[1]+1}L${q[0]} ${q[1]+4}L${q[0]-1.4} ${q[1]+1}L${q[0]-4.4} ${q[1]}L${q[0]-1.4} ${q[1]-1}Z" fill="#fff" opacity=".85"/>`).join('');
+ if(tier===6)s+=`<path d="M82 200L94 188L106 200M150 200L162 188L174 200M96 250L108 238L120 250M136 250L148 238L160 250" fill="none" stroke="${a}" stroke-width="1.8" opacity=".7"/>`;
+ if(tier===2)s+=[[84,190],[170,215],[100,250],[158,262],[120,205]].map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="${3+i%2}" fill="${['#ffc2f4','#9ff','#ffe27a','#b15cff','#fff'][i]}" opacity=".75"/>`).join('');
+ // ноги
+ const pants=plkMix(P.cl[1],'#1a2050',.35),boot=lg||'#4a3a3a',bootd=plkMix(boot,'#0b0d2c',.5);
+ s+=`<path d="M107 192L127 192L126 280L106 280Z" fill="${pants}"/><path d="M129 192L149 192L150 280L130 280Z" fill="${pants}"/>
+  <path d="M101 272H128V290Q128 296 120 296H96Q96 280 101 272Z" fill="${boot}" stroke="${bootd}" stroke-width="1.6"/><path d="M128 272H155Q160 280 160 296H136Q128 296 128 290Z" fill="${boot}" stroke="${bootd}" stroke-width="1.6"/><path d="M101 276H128M128 276H155" stroke="${a}" stroke-width="2" opacity=".8"/>`;
+ // торс
+ s+=`<path d="M98 104Q128 92 158 104L154 200Q128 208 102 200Z" fill="url(#${id}b)" stroke="${ch||P.tr}" stroke-width="1.8"/>`;
+ if(coat)s+=`<path d="M102 196L96 250Q128 262 160 250L154 196Z" fill="${tun}" stroke="${ch}" stroke-width="1.6" opacity=".95"/>`;
+ else s+=`<path d="M114 196H142L138 246Q128 252 118 246Z" fill="${P.cl[0]}" stroke="${P.tr}" stroke-width="1.6"/>`;
+ s+=`<rect x="102" y="186" width="52" height="9" rx="3" fill="#2a1a22" stroke="${P.tr}" stroke-width="1.4"/><rect x="121" y="184" width="14" height="13" rx="3" fill="${P.tr}" stroke="#fff" stroke-width="1"/>`;
+ s+=`<path d="M128 124L133 134L144 135L136 142L139 153L128 147L117 153L120 142L112 135L123 134Z" fill="url(#${id}g)" opacity=".92"/>`;
+ if(plate)s+=`<ellipse cx="97" cy="108" rx="15" ry="10" fill="${ch}" stroke="#fff" stroke-width="1.2" opacity=".95"/><ellipse cx="159" cy="108" rx="15" ry="10" fill="${ch}" stroke="#fff" stroke-width="1.2" opacity=".95"/><path d="M106 156H150M108 170H148" stroke="${plkMix(ch,'#ffffff',.4)}" stroke-width="1.8" opacity=".6"/>`;
+ // левая рука (зритель слева)
+ s+=`<path d="M99 106Q80 134 84 178L98 180Q100 148 112 122Z" fill="${coat||plate?tun:P.cl[0]}" stroke="${P.tr}" stroke-width="1.4"/>`;
+ if(eq.lh)s+=`<g transform="translate(91 183)">${plkLeft(eq.lh,id)}</g>`;
+ s+=`<circle cx="91" cy="184" r="8" fill="${sk}" stroke="${skd}" stroke-width="1.2"/>`;
+ // шея, голова
+ s+=`<path d="M121 86H135V104Q128 110 121 104Z" fill="${skd}"/><path d="M110 100Q128 110 146 100L142 112Q128 120 114 112Z" fill="${P.tr}" opacity=".9"/>`;
+ s+=`<path d="M98 66Q92 28 128 26Q164 28 158 66Q162 92 148 102L108 102Q94 92 98 66Z" fill="${plkMix(P.hair,'#000000',.35)}"/>`;
+ s+=`<path d="M105 60Q105 94 128 96Q151 94 151 60Q151 38 128 38Q105 38 105 60Z" fill="${sk}" stroke="${skd}" stroke-width="1.2"/>`;
+ s+=`<path d="M103 60Q103 34 128 32Q153 34 153 60L147 48L140 62L132 44L126 62L118 44L112 60L108 50Z" fill="${P.hair}" stroke="${plkMix(P.hair,'#000000',.35)}" stroke-width="1.2"/><path d="M126 33Q122 16 138 12Q132 24 134 34Z" fill="${P.hair}"/><path d="M104 58L98 92L108 80Z" fill="${P.hair}"/><path d="M152 58L158 92L148 80Z" fill="${P.hair}"/>`;
+ [118,138].forEach((x,i)=>{s+=`<ellipse cx="${x}" cy="70" rx="6.2" ry="7.6" fill="#fff"/><ellipse cx="${x}" cy="71" rx="4.6" ry="6.4" fill="${P.eye}"/><ellipse cx="${x}" cy="72" rx="2.2" ry="3.6" fill="#101028"/><circle cx="${x-1.8}" cy="67.6" r="1.7" fill="#fff"/><path d="M${x-7} ${i?64:63}Q${x} 60 ${x+7} ${i?63:64}" fill="none" stroke="#2a2040" stroke-width="2"/>`});
+ s+=`<path d="M124 84Q128 87 132 84" fill="none" stroke="#b5655a" stroke-width="1.6" stroke-linecap="round"/>`;
+ s+=plkHead(eq.head,eq.head?plkCol(eq.head):a,P);
+ if(tier===7)s+=`<ellipse cx="128" cy="17" rx="27" ry="7" fill="none" stroke="#ffe27a" stroke-width="4"/><ellipse cx="128" cy="17" rx="27" ry="7" fill="none" stroke="#fff" stroke-width="1.4"/>`;
+ else if(tier===6)s+=`<path d="M104 30L110 16L118 28L128 10L138 28L146 16L152 30" fill="none" stroke="#ffd76a" stroke-width="2.4"/>`;
+ // ожерелье и кольца
+ if(eq.neck){const nc=plkCol(eq.neck);s+=`<path d="M114 104Q128 128 142 104" fill="none" stroke="${nc}" stroke-width="1.6"/><circle cx="128" cy="121" r="5.4" fill="${nc}" stroke="#fff" stroke-width="1.2"/><circle cx="126.4" cy="119.4" r="1.6" fill="#fff"/>`}
+ eq.rings.slice(0,3).forEach((it,i)=>{const rcx=[88,95,168][i],rcy=[190,190,176][i];s+=`<circle cx="${rcx}" cy="${rcy}" r="3.4" fill="none" stroke="${plkCol(it)}" stroke-width="2.2"/><circle cx="${rcx}" cy="${rcy-3.6}" r="1.8" fill="#fff"/>`});
+ // правая рука с оружием (зритель справа)
+ s+=`<path d="M157 106Q178 128 182 170L168 174Q166 144 148 122Z" fill="${coat||plate?tun:P.cl[0]}" stroke="${P.tr}" stroke-width="1.4"/>`;
+ if(eq.rh)s+=`<g transform="translate(174 176) rotate(7)">${plkWeapon(eq.rh,id)}</g>`;
+ s+=`<circle cx="174" cy="177" r="8" fill="${sk}" stroke="${skd}" stroke-width="1.2"/>`;
+ // декор: искры/звёзды/кубы
+ if(tier===4)s+=[[60,90],[200,70],[212,200],[48,210]].map(q=>`<path d="M${q[0]} ${q[1]-6}L${q[0]+2} ${q[1]-2}L${q[0]+6} ${q[1]}L${q[0]+2} ${q[1]+2}L${q[0]} ${q[1]+6}L${q[0]-2} ${q[1]+2}L${q[0]-6} ${q[1]}L${q[0]-2} ${q[1]-2}Z" fill="#fff" opacity=".9"/>`).join('');
+ if(tier===5)s+=[[56,70],[204,60],[216,170],[44,170],[196,250]].map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="${i%2?1.6:2.4}" fill="${i%2?'#ffe27a':'#fff'}"/>`).join('');
+ if(key==='pv')s+=[[56,80,12],[204,60,10],[212,210,14],[46,220,9]].map((q,i)=>`<rect x="${q[0]}" y="${q[1]}" width="${q[2]}" height="${q[2]}" fill="#000" stroke="${i%2?'#0ff':'#f0f'}" stroke-width="2"/>`).join('');
+ return s+'</svg>'}
+// ---------- сборка: аура + орбиты + фигура / своя картинка ----------
+function plkSafeImg(u,max){return typeof u==='string'&&u.length<=(max||900000)&&/^data:image\/(jpeg|webp|png);base64,[A-Za-z0-9+\/=]+$/.test(u)?u:''}
+function plLookCfg(){const p=plS();if(!p.look||typeof p.look!=='object')p.look={img:'',z:100,y:0};const l=p.look;if(!(l.z>=40))l.z=100;if(typeof l.y!=='number')l.y=0;return l}
+function plLook(h,o){o=o||{};const p=plS(),ic=o.ic||(typeof pfIc==='function'?pfIc():'p0'),key=plkIcKey(ic),P=PLK_PAL[key]||PLK_PAL.p0,l=plLookCfg(),img=o.noimg?'':plkSafeImg(l.img);
+ const w=Math.round(h*.8),st=`--h:${h}px;--w:${w}px;--pa:${P.au};--pb:${P.a}`;
+ const lay=`<i class="plk-au"></i><u class="plk-o1"><i></i></u><u class="plk-o2"><i></i></u><u class="plk-o3"><i></i></u>`;
+ const body=img?`<div class="plk-cf"><img src="${img}" alt="" style="transform:translateY(${l.y}%) scale(${l.z/100})"></div>`:`<div class="plk-fig">${plkSvg(key,plkEq(p))}</div>`;
+ return `<div class="plk plk-${key}${img?' cust':''}${P.rb?' rb':''}" style="${st}" data-ic="${esc(ic)}">${lay}${body}</div>`}
+// ---------- Загрузка своих картинок ----------
+const PLK_MAXFILE=12*1024*1024, PLK_ICON_MAX=140000, PLK_BODY_MAX=520000, PLK_ICON_PX=256, PLK_BODY_W=512, PLK_BODY_H=768;
+function plkErr(m){try{toast(m)}catch(e){}return false}
+function plkRead(file){return new Promise((res,rej)=>{if(!file)return rej(new Error('Файл не выбран'));if(file.type&&!/^image\//.test(file.type))return rej(new Error('Это не изображение'));if(file.size>PLK_MAXFILE)return rej(new Error('Файл слишком большой (больше 12 МБ)'));
+ const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(url);if(!(im.naturalWidth>0&&im.naturalHeight>0))rej(new Error('Не удалось прочитать изображение'));else res(im)};im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('Не удалось прочитать изображение (формат не поддерживается)'))};im.src=url})}
+function plkHasAlpha(cv){try{const c=cv.getContext('2d'),t=document.createElement('canvas');t.width=Math.min(64,cv.width);t.height=Math.min(96,cv.height);const x=t.getContext('2d');x.drawImage(cv,0,0,t.width,t.height);const d=x.getImageData(0,0,t.width,t.height).data;for(let i=3;i<d.length;i+=4)if(d[i]<250)return true}catch(e){}return false}
+// иконка: квадрат с кадрированием (cx,cy — центр кадра 0..1 по изображению, zoom ≥ 1) → JPEG 256×256
+function plkIconCanvas(im,zoom,ox,oy){const S0=PLK_ICON_PX,cv=document.createElement('canvas');cv.width=cv.height=S0;const c=cv.getContext('2d');c.fillStyle='#12153a';c.fillRect(0,0,S0,S0);
+ const side=Math.min(im.naturalWidth,im.naturalHeight)/zoom,mx=im.naturalWidth-side,my=im.naturalHeight-side,sx=Math.max(0,Math.min(mx,mx/2+ox*mx/2)),sy=Math.max(0,Math.min(my,my/2+oy*my/2));
+ c.drawImage(im,sx,sy,side,side,0,0,S0,S0);return cv}
+function plkEncode(cv,types,q){for(const t of types){const u=cv.toDataURL(t,q);if(u.indexOf('data:'+t)===0)return u}return cv.toDataURL('image/png')}
+// внешность: вписываем в 512×768 с сохранением пропорций, прозрачность сохраняется (WebP/PNG), при превышении лимита уменьшаем
+function plkBodyEncode(im){let sc=Math.min(1,PLK_BODY_W/im.naturalWidth,PLK_BODY_H/im.naturalHeight),best='';
+ for(let i=0;i<6;i++){const w=Math.max(64,Math.round(im.naturalWidth*sc)),h=Math.max(64,Math.round(im.naturalHeight*sc)),cv=document.createElement('canvas');cv.width=w;cv.height=h;const c=cv.getContext('2d');c.drawImage(im,0,0,w,h);
+  const al=plkHasAlpha(cv);let u=al?plkEncode(cv,['image/webp','image/png'],.86):plkEncode(cv,['image/jpeg'],.86);
+  if(al&&u.indexOf('data:image/webp')!==0&&u.length>PLK_BODY_MAX){/* PNG слишком тяжёл — уменьшаем */}
+  best=u;if(u.length<=PLK_BODY_MAX)return u;sc*=.8}
+ return best}
+// запись в S с проверкой квоты localStorage: при ошибке — откат и понятное сообщение
+function plkStore(kind,val){if(!S||!ME)return false;const max=kind==='icon'?PLK_ICON_MAX:PLK_BODY_MAX;
+ if(val){if(!plkSafeImg(val,1e9))return plkErr('Некорректное изображение');if(val.length>max)return plkErr('Картинка слишком большая для сохранения ('+Math.round(val.length/1024)+' КБ, максимум '+Math.round(max/1024)+' КБ). Выберите файл попроще.')}
+ const pf=pfD(),pl=plLookCfg(),prevI=pf.cim,prevB=pl.img;
+ if(kind==='icon'){if(val)pf.cim=val;else delete pf.cim}else pl.img=val||'';
+ try{const u=users();if(!u[ME])throw new Error('no user');u[ME].data=S;putUsers(u)}
+ catch(e){if(prevI===undefined)delete pf.cim;else pf.cim=prevI;pl.img=prevB;return plkErr('Не хватило места в памяти браузера — картинка не сохранена. Освободите место (сбросьте другую картинку) или выберите файл меньше.')}
+ try{hud()}catch(e){}return true}
+function plkRefresh(){try{if(document.querySelector('#modal .pfp'))pfWin();else if(document.querySelector('#modal .pl-crop')){}else if(tab==='hero'||tab==='profile')plRender()}catch(e){console.error(e)}}
+// --- иконка игрока ---
+let PLK_CROP=null;
+function pfFile(inp){const f=inp&&inp.files&&inp.files[0];if(inp)setTimeout(()=>{try{inp.value=''}catch(e){}},0);if(!f)return;
+ plkRead(f).then(im=>{PLK_CROP={im,z:1,x:0,y:0};plkCropUi()}).catch(e=>plkErr(e.message))}
+function plkCropUi(){const c=PLK_CROP;if(!c)return;
+ modal(`<div class="pl-crop"><h3>✂ Своя иконка</h3><div class="small" style="margin:4px 0 8px">Подвигайте ползунки: в круг попадёт то, что видно в центре. Итог — 256×256, сжатие JPEG.</div><div class="pl-cropv"><canvas id="plc_cv" width="256" height="256"></canvas><i class="pl-cropm"></i></div>
+ <label class="pl-sld">Масштаб <input type="range" id="plc_z" min="100" max="400" value="${Math.round(c.z*100)}" oninput="plkCropSet()"></label><label class="pl-sld">Сдвиг по горизонтали <input type="range" id="plc_x" min="-100" max="100" value="${Math.round(c.x*100)}" oninput="plkCropSet()"></label><label class="pl-sld">Сдвиг по вертикали <input type="range" id="plc_y" min="-100" max="100" value="${Math.round(c.y*100)}" oninput="plkCropSet()"></label>
+ <div class="row c" style="margin-top:10px"><button class="btn gold" id="plc_ok" onclick="plkCropOk()">✓ Сохранить</button><button class="btn" onclick="plkCropCancel()">Отмена</button></div></div>`);plkCropDraw()}
+function plkCropSet(){const c=PLK_CROP;if(!c)return;c.z=+$('plc_z').value/100;c.x=+$('plc_x').value/100;c.y=+$('plc_y').value/100;plkCropDraw()}
+function plkCropDraw(){const c=PLK_CROP,cv=$('plc_cv');if(!c||!cv)return;const src=plkIconCanvas(c.im,c.z,c.x,c.y);const x=cv.getContext('2d');x.clearRect(0,0,256,256);x.drawImage(src,0,0)}
+function plkCropCancel(){PLK_CROP=null;pfWin()}
+function plkCropOk(){const c=PLK_CROP;if(!c)return;let cv=plkIconCanvas(c.im,c.z,c.x,c.y),q=.82,u=plkEncode(cv,['image/jpeg'],q);while(u.length>PLK_ICON_MAX&&q>.45){q-=.1;u=plkEncode(cv,['image/jpeg'],q)}
+ if(plkStore('icon',u)){PLK_CROP=null;toast('Своя иконка сохранена');try{gSyncMe()}catch(e){}pfWin();try{if(tab==='profile'||tab==='hero')render()}catch(e){}}}
+function pfCimReset(){if(!S)return;if(!pfD().cim)return toast('Своей картинки нет');plkStore('icon','');toast('Иконка сброшена на стандартную');pfWin();try{if(tab==='profile'||tab==='hero')render()}catch(e){}}
+function pfCim(){try{return S&&S.pf?plkSafeImg(S.pf.cim,PLK_ICON_MAX*2):''}catch(e){return ''}}
+// --- внешность (экран Героя) ---
+function plLookFile(inp){const f=inp&&inp.files&&inp.files[0];if(inp)setTimeout(()=>{try{inp.value=''}catch(e){}},0);if(!f)return;
+ plkRead(f).then(im=>{const u=plkBodyEncode(im);if(plkStore('body',u)){const l=plLookCfg();l.z=100;l.y=0;save();toast('Внешность загружена ('+Math.round(u.length/1024)+' КБ)');plRender()}}).catch(e=>plkErr(e.message))}
+function plLookReset(){const l=plLookCfg();if(!l.img)return toast('Своей картинки нет');plkStore('body','');l.z=100;l.y=0;save();toast('Внешность сброшена на процедурную');plRender()}
+function plLookAdj(){const l=plLookCfg();const z=+$('plk_z').value,y=+$('plk_y').value;l.z=z;l.y=y;const im=document.querySelector('.pl-stage .plk-cf img');if(im)im.style.transform='translateY('+y+'%) scale('+z/100+')';const a=$('plk_zv'),b=$('plk_yv');if(a)a.textContent=z+'%';if(b)b.textContent=y+'%'}
+function plLookAdjEnd(){try{const u=users();u[ME].data=S;putUsers(u)}catch(e){plkErr('Не удалось сохранить сдвиг: память браузера заполнена')}}
+function plLookPanel(p){const l=plLookCfg(),has=!!plkSafeImg(l.img),ic=PF_BY[pfIc()];
+ return `<div class="panel pl-lookp"><div class="row sb"><b>🧍 Внешность</b><span class="small">${has?'своя картинка':'по иконке: '+esc(ic.n)}</span></div>
+ <div class="pl-stage">${plLook(300)}</div>
+ <div class="small" style="text-align:center;margin:2px 0 8px">${has?'Показана ваша картинка в рамке-ауре иконки.':'Цвета плаща, аура и орбиты — от выбранной иконки; на персонаже видно ваше снаряжение.'}</div>
+ <div class="row pl-lb"><label class="btn sm pl-file">📷 Загрузить<input type="file" id="plk_file" accept="image/*" onchange="plLookFile(this)"></label><button class="btn sm" onclick="plLookReset()" ${has?'':'disabled'}>↺ Сбросить</button><button class="btn sm" onclick="pfWin()">🎭 Иконка</button></div>
+ ${has?`<div class="pl-sl2"><label class="pl-sld">Масштаб <b id="plk_zv">${l.z}%</b><input type="range" id="plk_z" min="50" max="200" step="1" value="${l.z}" oninput="plLookAdj()" onchange="plLookAdjEnd()"></label><label class="pl-sld">Сдвиг по вертикали <b id="plk_yv">${l.y}%</b><input type="range" id="plk_y" min="-50" max="50" step="1" value="${l.y}" oninput="plLookAdj()" onchange="plLookAdjEnd()"></label></div>`:''}
+ <div class="small" style="margin-top:6px">Картинка сжимается до ${PLK_BODY_W}×${PLK_BODY_H} (PNG с прозрачностью → WebP) и хранится только на этом устройстве — в сеть не отправляется.</div></div>`}
+// HTML для панели иконки (в окне pfWin)
+function pfCimPanel(){const has=!!pfCim();return `<div class="pfcim"><div class="small" style="margin:8px 0 4px">Своя картинка на иконку (хранится только на этом устройстве, 256×256):</div><div class="row pl-lb"><label class="btn sm pl-file">📷 Загрузить<input type="file" id="pf_file" accept="image/*" onchange="pfFile(this)"></label><button class="btn sm" onclick="pfCimReset()" ${has?'':'disabled'}>↺ Сбросить на стандартную</button></div></div>`}
+// ---------- стили ----------
+(function(){const css=`
+.plk{position:relative;width:var(--w);height:var(--h);flex:none;margin:0 auto;pointer-events:none;-webkit-user-select:none;user-select:none}
+.plk-au{position:absolute;left:-6%;right:-6%;top:6%;bottom:2%;border-radius:50%;background:radial-gradient(ellipse at 50% 52%,var(--pa) 0,var(--pa) 8%,#0000 68%);opacity:.5;animation:plkpulse 3.4s ease-in-out infinite}
+.plk.rb .plk-au{background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(ellipse at 50% 52%,#000 0,#0000 68%);mask:radial-gradient(ellipse at 50% 52%,#000 0,#0000 68%);opacity:.42;animation:plkspin 14s linear infinite}
+.plk>u{position:absolute;display:none;text-decoration:none;left:50%;top:50%;width:var(--w);height:var(--w);margin:calc(var(--w)/-2) 0 0 calc(var(--w)/-2);border-radius:50%;will-change:transform}
+.plk>u>i{position:absolute;left:0;top:0;right:0;bottom:0;border-radius:50%;display:block}
+.plk-fig,.plk-cf{position:absolute;left:0;right:0;top:0;bottom:0}
+.plk-svg{display:block;width:100%;height:100%}
+.plk-fig{animation:plkbob 4.2s ease-in-out infinite}
+.plk-cf{left:9%;right:9%;top:3%;bottom:3%;border-radius:16px;overflow:hidden;border:2px solid var(--pb);background:linear-gradient(#0b0d2c88,#1a1f5766);box-shadow:inset 0 0 14px #0009}
+.plk-cf img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 50%}
+.plk.cust:after{content:'';position:absolute;left:9%;right:9%;top:3%;bottom:3%;border-radius:16px;border:1px solid #fff6;pointer-events:none}
+@keyframes plkpulse{0%,100%{opacity:.34}50%{opacity:.62}}
+@keyframes plkspin{to{transform:rotate(360deg)}}@keyframes plkspinr{to{transform:rotate(-360deg)}}
+@keyframes plkbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2%)}}
+@keyframes plkgl{0%,88%,100%{opacity:1}90%,94%{opacity:.25}}
+.plk-p0>.plk-o1{display:block}.plk-p0>.plk-o1>i{border:1.5px solid #ffd76a88}
+.plk-p1>.plk-o1{display:block;animation:plkspin 6s linear infinite}.plk-p1>.plk-o1>i{background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000)}
+.plk-p2>.plk-o1{display:block;animation:plkspin 12s linear infinite}.plk-p2>.plk-o1>i{background:radial-gradient(circle at 50% 2%,#fff 0 4px,#ffc2f4 5px,#0000 8px),radial-gradient(circle at 96% 62%,#9ff 0 3px,#0000 6px),radial-gradient(circle at 12% 80%,#ffe27a 0 3px,#0000 6px),radial-gradient(circle at 5% 30%,#b15cff 0 4px,#0000 7px)}
+.plk-p2>.plk-o2{display:block;animation:plkspinr 19s linear infinite;width:calc(var(--w)*.8);height:calc(var(--w)*.8);margin:calc(var(--w)*-.4) 0 0 calc(var(--w)*-.4)}.plk-p2>.plk-o2>i{background:radial-gradient(circle at 50% 3%,#ff9ae8 0 3px,#0000 5px),radial-gradient(circle at 94% 70%,#fff 0 3px,#0000 5px),radial-gradient(circle at 20% 90%,#00cfff 0 3px,#0000 5px)}
+.plk-p3>.plk-o1{display:block;animation:plkspin 7s linear infinite}.plk-p3>.plk-o1>i{background:conic-gradient(#fff2a8,#ffb800,#a3700c,#ffe27a,#ffb800,#fff2a8);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
+.plk-p3>.plk-o2{display:block;animation:plkspinr 4s linear infinite;width:calc(var(--w)*.9);height:calc(var(--w)*.9);margin:calc(var(--w)*-.45) 0 0 calc(var(--w)*-.45)}.plk-p3>.plk-o2>i{background:conic-gradient(#ff004c55,#f6ff00cc,#22ff7755,#00cfffcc,#ff3df255,#ff004ccc,#ff004c55);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000)}
+.plk-p4>.plk-o1{display:block;animation:plkspin 4s linear infinite}.plk-p4>.plk-o1>i{background:conic-gradient(#ff004c,#ff9a00,#f6ff00,#22ff77,#00cfff,#7a5cff,#ff3df2,#ff004c);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
+.plk-p4>.plk-o2{display:block;animation:plkspinr 9s linear infinite;width:calc(var(--w)*1.02);height:calc(var(--w)*1.02);margin:calc(var(--w)*-.51) 0 0 calc(var(--w)*-.51)}.plk-p4>.plk-o2>i{background:radial-gradient(circle at 50% 2%,#fff 0 2px,#0000 4px),radial-gradient(circle at 92% 28%,#ffe27a 0 2px,#0000 4px),radial-gradient(circle at 80% 90%,#9ff 0 2px,#0000 4px),radial-gradient(circle at 18% 86%,#fff 0 2px,#0000 4px),radial-gradient(circle at 4% 38%,#ffe27a 0 2px,#0000 4px)}
+.plk-p5>.plk-o1{display:block;animation:plkspin 14s linear infinite}.plk-p5>.plk-o1>i{background:conic-gradient(#0b1b5e,#4a6cff,#dfe8ff,#4a6cff,#0b1b5e,#2a1a7a,#8fb0ff,#0b1b5e);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000)}
+.plk-p5>.plk-o2{display:block;animation:plkspinr 20s linear infinite;width:calc(var(--w)*1.02);height:calc(var(--w)*1.02);margin:calc(var(--w)*-.51) 0 0 calc(var(--w)*-.51)}.plk-p5>.plk-o2>i{background:radial-gradient(circle at 50% 2%,#fff 0 3px,#0000 5px),radial-gradient(circle at 93% 27%,#cfe0ff 0 2px,#0000 4px),radial-gradient(circle at 93% 73%,#fff 0 3px,#0000 5px),radial-gradient(circle at 50% 98%,#cfe0ff 0 2px,#0000 4px),radial-gradient(circle at 7% 73%,#fff 0 3px,#0000 5px),radial-gradient(circle at 7% 27%,#cfe0ff 0 2px,#0000 4px)}
+.plk-p6>.plk-o1{display:block;animation:plkspin 9s linear infinite}.plk-p6>.plk-o1>i{background:conic-gradient(#ffd76a,#a855f7,#5b21b6,#ffe9a0,#c084fc,#ffd76a);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
+.plk-p6>.plk-o2{display:block;animation:plkspinr 14s linear infinite;width:calc(var(--w)*1.04);height:calc(var(--w)*1.04);margin:calc(var(--w)*-.52) 0 0 calc(var(--w)*-.52);opacity:.85}.plk-p6>.plk-o2>i{background:repeating-conic-gradient(#ffd76a 0 8deg,#0000 8deg 20deg);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 calc(100% - 1.5px),#0000)}
+.plk-p7>.plk-o1{display:block;animation:plkspin 10s linear infinite}.plk-p7>.plk-o1>i{background:conic-gradient(#fff,#ffe27a,#fff,#ffb800,#fff);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 6px),#000 calc(100% - 4px),#0000)}
+.plk-p7>.plk-o2{display:block;animation:plkspin 18s linear infinite;width:calc(var(--w)*1.12);height:calc(var(--w)*1.12);margin:calc(var(--w)*-.56) 0 0 calc(var(--w)*-.56)}.plk-p7>.plk-o2>i{background:repeating-conic-gradient(#fff6 0 3deg,#0000 3deg 15deg);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 12px),#000 calc(100% - 8px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 12px),#000 calc(100% - 8px),#0000)}
+.plk-p7>.plk-o3{display:block;animation:plkspinr 7s linear infinite;width:calc(var(--w)*.94);height:calc(var(--w)*.94);margin:calc(var(--w)*-.47) 0 0 calc(var(--w)*-.47)}.plk-p7>.plk-o3>i{background:conic-gradient(#ff004c55,#f6ff0055,#22ff7755,#00cfff55,#7a5cff55,#ff3df255,#ff004c55);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 5px),#000 calc(100% - 3px),#0000)}
+.plk-pv>.plk-o1{display:block;animation:plkspin 7s linear infinite,plkgl 3.7s steps(1) infinite}.plk-pv>.plk-o1>i{background:conic-gradient(#000,#3b0764,#000,#1e1b4b,#6d28d9,#000,#0c0a2a,#000);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 7px),#000 calc(100% - 5px),#0000);mask:radial-gradient(farthest-side,#0000 calc(100% - 7px),#000 calc(100% - 5px),#0000)}
+.plk-pv>.plk-o2{display:block;animation:plkspinr 11s linear infinite;width:calc(var(--w)*.98);height:calc(var(--w)*.98);margin:calc(var(--w)*-.49) 0 0 calc(var(--w)*-.49)}.plk-pv>.plk-o2>i{background:linear-gradient(#000,#000) 50% 2%/9% 9% no-repeat,linear-gradient(#000,#000) 90% 62%/7% 7% no-repeat,linear-gradient(#000,#000) 8% 74%/8% 8% no-repeat;border:1px dashed #f0f8}
+.plk-pv .plk-au{background:radial-gradient(ellipse at 50% 52%,#7c3aed 0,#3b0764aa 28%,#0000 68%);animation:plkpulse 2.1s steps(2) infinite}
+.plk-pv>.plk-o2>i:after{content:'';position:absolute;left:12%;top:12%;right:12%;bottom:12%;border:1px solid #0ff6;border-radius:50%}
+.plk-pv .plk-cf{border-color:#f0f}
+html.noanim .plk-au,html.noanim .plk>u,html.noanim .plk-fig{animation:none!important}
+.pl-head .pl-port{width:84px;height:104px;overflow:hidden;background:none}
+.pl-head .plk{margin:0}
+.pl-stage{display:flex;justify-content:center;align-items:flex-end;overflow:hidden;border-radius:14px;background:radial-gradient(circle at 50% 70%,#2a2f8c55,#0000 70%),linear-gradient(#0b0d2c,#141a50);padding:10px 0 4px;margin:8px 0}
+.pl-lb{gap:6px;flex-wrap:wrap}.pl-lb .btn{width:auto;flex:1 1 30%;margin:0;min-width:96px;text-align:center}
+.pl-file{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.pl-file input{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.pl-sld{display:block;font-size:12px;margin-top:8px}.pl-sld b{float:right;color:#ffe9a8}.pl-sld input{display:block;width:100%;margin-top:4px;height:28px}
+.pl-cropv{position:relative;width:min(256px,100%);aspect-ratio:1;margin:0 auto;background:#000;border-radius:12px;overflow:hidden}.pl-cropv canvas{width:100%;height:100%;display:block}
+.pl-cropm{position:absolute;left:0;top:0;right:0;bottom:0;border-radius:12px;background:radial-gradient(circle at 50% 50%,#0000 0,#0000 49.5%,#ffd76a 50%,#000b 50.6%);pointer-events:none}
+.pfcim{border-top:1px solid #ffffff22;margin-top:10px}
+.pl-art{font-size:11px;color:#ffd76a;margin-top:2px}.pl-act{color:#9fe3ff;margin-top:4px;overflow-wrap:anywhere}
+.pl-hall{border-color:#ffd76a88;background:linear-gradient(135deg,#2a1d0acc,#1a1250cc)}
+.pd-face.me{width:78px;height:98px;overflow:hidden;background:none;border:0;padding:0}
+.pd-face.me .plk{margin:0 auto}
+.pd-art{background:linear-gradient(#7a5a12,#3a2a08);border-color:#ffd76a}
+.pd-vsrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0}.pd-vsrow .vs{font-weight:900;color:#ffd76a;font-size:18px}.pd-vsrow .pl-fc{width:80px;height:80px;border-radius:14px;overflow:hidden;border:2px solid #fff3;background:#20124a;display:flex;align-items:center;justify-content:center;font-size:44px}.pd-vsrow .pl-fc img{width:100%;height:100%;object-fit:cover;object-position:top}
+@media(max-width:340px){.pl-head .pl-port{width:70px}.pd-face.me{width:64px;height:80px}.pl-lb .btn{min-width:80px}}
+`;const s=document.createElement('style');s.id='plkcss';s.textContent=css;document.head.appendChild(s)})();
 
 // ====== ДУЭЛИ В РОМАНТИКЕ: поле duel у глав (ASTRAL_PLAYER_V1) ======
 // duel:{foe (ключ PL_FOES), rec (рек. ур. Призывателя), min (мин. ур. для допуска), at (после скольки узлов главы; по умолчанию — в конце),
@@ -6740,7 +7043,7 @@ function plVnGo(){const v=VN,h=ROM_H[v.hid],d=plVnDuel(),H0=romH(v.hid),dd=plDd(
  if(dd.w){plVnAfter(true,true);return}
  const fd=PL_FOES[d.foe],easy=plDuelEasy(dd),low=p.lv<(d.min||1);
  const est=plStatsFor({lv:p.lv,st:p.st,items:plEqItems(p),sk:p.sk});
- plVnPanel(`<h2>⚔ Дуэль</h2><div class="pd-vs"><b>${fd.ic} ${esc(fd.n)}</b></div><div class="small" style="margin:6px 0;line-height:1.4">${esc(fd.intro||'')}</div>
+ plVnPanel(`<h2>⚔ Дуэль</h2><div class="pd-vsrow"><div class="pl-me">${plLook(110)}</div><span class="vs">VS</span><div class="pl-fc">${fd.img?`<img src="img/${fd.img}.jpg" alt="" onerror="this.style.display='none'">`:fd.ic}</div></div><div class="pd-vs"><b>${fd.ic} ${esc(fd.n)}</b></div><div class="small" style="margin:6px 0;line-height:1.4">${esc(fd.intro||'')}</div>
   <div class="kv"><span>Рекомендуемый уровень</span><b>${d.rec}</b></div><div class="kv"><span>Минимальный уровень</span><b style="color:${low?'#ff8a8a':'#7fe88f'}">${d.min||1}</b></div><div class="kv"><span>Ваш уровень Призывателя</span><b>${p.lv}</b></div><div class="kv"><span>Ваша сила</span><b>${fmtHp(plPower(est))}</b></div>
   ${easy?`<div class="small" style="margin-top:6px;color:#7fe88f">Противник ослаблен на ${Math.round(easy*100)}% (прошлые попытки${dd.adv?' и совет':''}).</div>`:''}
   ${d.hint?`<div class="small" style="margin-top:6px">💡 ${esc(d.hint)}</div>`:''}
@@ -6775,14 +7078,14 @@ const PL_SPAR_KEY=id=>id==='esdeath'?'esdeath_mid':id;
 function plSparLeft(id){const d=romS().day;d.spar=d.spar||{};return Math.max(0,1-(d.spar[id]||0))}
 function plSparUi(id){const h=ROM_H[id],p=plS(),left=plSparLeft(id),fk=PL_SPAR_KEY(id);if(!PL_FOES[fk])return toast('Героиня не готова к спаррингу');
  const opts=[[-8,'Лёгкий','♥ +2'],[0,'Обычный','♥ +3'],[8,'Сложный','♥ +4']];
- modal(`<h3>⚔ Тренировка · ${esc(h.name)}</h3><div class="small" style="margin:6px 0">Спарринг 1 на 1 в вашем уровне. Раз в день с каждой героиней (осталось: ${left}). Победа — симпатия, 🪙 и опыт Призывателя; поражение тоже даёт немного симпатии.</div><div class="small">Ваш уровень: ${p.lv}</div>
- <div class="rm-sc">${opts.map(o=>{const rec=Math.max(1,Math.min(PL_MAX,p.lv+o[0]));return `<button class="btn ${o[0]===0?'gold':''}" ${left?'':'disabled'} onclick="plSparGo('${id}',${o[0]})">${o[1]} · ур. ${rec} · ${o[2]}</button>`}).join('')}</div><div class="row c" style="margin-top:10px"><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
-function plSparGo(id,off){if(!plSparLeft(id))return toast('Сегодня тренировка уже была');const h=ROM_H[id],p=plS(),fk=PL_SPAR_KEY(id),fd=PL_FOES[fk],rec=Math.max(1,Math.min(PL_MAX,p.lv+off));closeM();
+ modal(`<h3>⚔ Тренировка · ${esc(h.name)}</h3><div class="small" style="margin:6px 0">Спарринг 1 на 1 в вашем уровне. Лимита наград нет: 🪙, опыт и дроп — за каждый бой (повторы за день чуть слабее). Симпатия ♥ — за первый бой дня с героиней (${left?'доступна':'уже получена'}).</div><div class="small">Ваш уровень: ${p.lv}</div>
+ <div class="rm-sc">${opts.map(o=>{const rec=Math.max(1,Math.min(PL_MAX,p.lv+o[0]));return `<button class="btn ${o[0]===0?'gold':''}" onclick="plSparGo('${id}',${o[0]})">${o[1]} · ур. ${rec} · ${o[2]}</button>`}).join('')}</div><div class="row c" style="margin-top:10px"><button class="btn" onclick="closeM()">Закрыть</button></div>`)}
+function plSparGo(id,off){const loveOk=plSparLeft(id)>0;const h=ROM_H[id],p=plS(),fk=PL_SPAR_KEY(id),fd=PL_FOES[fk],rec=Math.max(1,Math.min(PL_MAX,p.lv+off));closeM();
  const d=romS().day;d.spar=d.spar||{};d.spar[id]=(d.spar[id]||0)+1;save();
  plDuelRun({foe:Object.assign({},fd,{id:fk,rec}),mode:{},title:'Спарринг: '+fd.n,retry:0,reward:D=>{
-   const idx=off<0?0:off===0?1:2,lw=D.win?[2,3,4][idx]:1,got=romLove(id,lw);romMoodSet(id,D.win?12:5);const gold=D.win?Math.round(100+rec*9):Math.round(40+rec*3),xp=plRewardXp(D.win?.1:.04);S.gold+=gold;plAddXp(xp,1);let it=null;if(D.win&&plRnd()<.18)it=plDrop('duel');try{prog('win')}catch(e){}
+   const idx=off<0?0:off===0?1:2,lw=D.win?[2,3,4][idx]:1,got=loveOk?romLove(id,lw):0;if(loveOk)romMoodSet(id,D.win?12:5);const k=plRepMult('sp_'+id),gold=Math.round((D.win?100+rec*9:40+rec*3)*k),xp=Math.max(1,Math.round(plRewardXp(D.win?.1:.04)*k));S.gold+=gold;plAddXp(xp,1);let it=null;if(D.win&&plRnd()<.18*Math.max(.35,k))it=plDrop('duel');try{prog('win')}catch(e){}
    const say=(PL_SPAR[id]||{})[D.win?'win':'lose']||'…';harSay(id,D.win?'s':'p',romTx(say));save();
-   return `<div class="small" style="font-style:italic;margin-bottom:4px">${esc(h.short||h.name)}: «${esc(say)}»</div>♥ +${got} · 🪙${fmtHp(gold)} · ✦ +${fmtHp(xp)}${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}`},done:r=>{if(tab==='harem')render()}})}
+   return `<div class="small" style="font-style:italic;margin-bottom:4px">${esc(h.short||h.name)}: «${esc(say)}»</div>${loveOk?'♥ +'+got:'♥ — (уже было сегодня)'} · 🪙${fmtHp(gold)}${k<1?' (×'+k.toFixed(2)+')':''} · ✦ +${fmtHp(xp)}${it?'<br>🎁 '+PL_TPL[it.t].ic+' '+esc(PL_TPL[it.t].n):''}`},done:r=>{if(tab==='harem')render()}})}
 // ---------- админ ----------
 function plAdmPanel(){const d=(typeof AU!=='undefined'&&AU&&users()[AU])?(AU===ME?S:users()[AU].data):S,p=plD(d);
  return `<div class="panel"><b>🧙 Игрок (Призыватель)</b><div class="small" style="margin:4px 0">Ур. ${p.lv}/${PL_MAX} · предметов ${p.inv.length}. Число берётся из поля выше.</div>
