@@ -18,6 +18,7 @@
 <!-- ASTRAL_ART_V2 -->
 <!-- ASTRAL_WBCAP_V1 -->
 <!-- ASTRAL_GEARDUN_V1 -->
+<!-- ASTRAL_CLOUD_V1 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -101,7 +102,7 @@ html.noprop .r6{animation:glow6 2s ease-in-out infinite}
 #auth .box{width:100%;max-width:400px;background:#0f1230e6;border:1px solid #ffd76a88;border-radius:18px;padding:20px;box-shadow:0 0 40px #a855f766;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 #auth h1{text-align:center;font-size:30px;background:linear-gradient(90deg,#ffd76a,#ff7ad9);-webkit-background-clip:text;color:transparent;margin-bottom:4px}
 input.in{width:100%;padding:13px;border-radius:12px;border:1px solid #4b52b0;background:#0a0c26;color:#fff;font-size:16px;margin:6px 0}
-.tabs2{display:flex;gap:6px;margin:14px 0 6px}.tabs2 button{flex:1}
+.tabs2{display:flex;gap:6px;margin:14px 0 6px}.tabs2 button{flex:1}.tabs2 button{min-width:0;padding-left:4px;padding-right:4px;overflow-wrap:anywhere}#clPanel{overflow-wrap:anywhere}#clPanel .kv b{min-width:0}
 .avs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
 .avs img{width:100%;aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:top;border:3px solid transparent;cursor:pointer}
 .avs img.sel{border-color:#ffd76a;box-shadow:0 0 10px #ffd76a}
@@ -758,16 +759,17 @@ let authMode='reg',authAv='av_m1';
 function vAuth(){
  $('game').style.display='none';$('auth').style.display='flex';
  $('auth').innerHTML=`<div class="box"><h1>✦ Astral Summon</h1><p class="small" style="text-align:center;margin-bottom:6px">Аниме гача-RPG для своих</p>
- <div class="tabs2"><button class="btn ${authMode==='reg'?'gold':''}" onclick="authMode='reg';vAuth()">Регистрация</button><button class="btn ${authMode==='in'?'gold':''}" onclick="authMode='in';vAuth()">Вход</button></div>
+ <div class="tabs2"><button class="btn ${authMode==='reg'?'gold':''}" onclick="authMode='reg';vAuth()">Регистрация</button><button class="btn ${authMode==='in'?'gold':''}" onclick="authMode='in';vAuth()">Вход</button><button class="btn ${authMode==='cloud'?'gold':''}" id="au_tabc" onclick="authMode='cloud';vAuth()">☁ Облако</button></div>
  <input class="in" id="au_n" placeholder="Никнейм" maxlength="16" autocomplete="username">
  <input class="in" id="au_p" type="password" placeholder="Пароль (от 4 символов)" autocomplete="${authMode==='reg'?'new-password':'current-password'}">
  ${authMode==='reg'?`<input class="in" id="au_p2" type="password" placeholder="Повторите пароль" autocomplete="new-password">
  <div class="small" style="margin-top:6px">Выберите аватар:</div><div class="avs">${AVS.map(a=>`<img src="img/${a}.jpg" class="${a===authAv?'sel':''}" onclick="authAv='${a}';vAuthKeep()">`).join('')}</div>`:''}
  <div class="err" id="au_e"></div>
- <button class="btn gold" style="width:100%" onclick="doAuth()">${authMode==='reg'?'Создать аккаунт и играть':'Войти'}</button>
+ <button class="btn gold" style="width:100%" onclick="doAuth()">${authMode==='reg'?'Создать аккаунт и играть':authMode==='cloud'?'Войти из облака':'Войти'}</button>${authMode==='cloud'?'<p class="small" style="margin-top:8px">Введите ник и пароль облачного профиля (создаётся в Профиле → ☁ Облачный профиль). Прогресс загрузится на это устройство.</p>':''}
  <p class="small" style="margin-top:12px;text-align:center">Аккаунт и прогресс хранятся на этом устройстве. Перенос на другое — Профиль → Сохранение.</p></div>`}
 function vAuthKeep(){const n=$('au_n').value,p=$('au_p').value,p2=$('au_p2')?$('au_p2').value:'';vAuth();$('au_n').value=n;$('au_p').value=p;if($('au_p2'))$('au_p2').value=p2}
 function doAuth(){
+ if(authMode==='cloud')return clAuthLogin();
  const name=$('au_n').value.trim(),p=$('au_p').value,err=m=>$('au_e').textContent=m,key=name.toLowerCase(),u=users();
  if(name.length<2)return err('Ник — минимум 2 символа');
  if(p.length<4)return err('Пароль — минимум 4 символа');
@@ -898,6 +900,7 @@ function vProfile(){const own=Object.keys(S.owned).length,exp=S.xp%250;
  <div class="kv"><span>Героев в коллекции</span><b>${own}/${heroTot()}</b></div><div class="kv"><span>Призывов</span><b>${S.st.summons}</b></div><div class="kv"><span>5★ получено</span><b>${S.st.fives}</b></div><div class="kv"><span>6★ мификов</span><b>${S.st.sixes||0}</b></div><div class="kv"><span>Боёв / побед</span><b>${S.st.battles} / ${S.st.wins}</b></div><div class="kv"><span>Пройдено этапов</span><b>${S.cleared}/${STAGES.length}</b></div><div class="kv"><span>Гарант 5★ через</span><b>${90-S.pity} круток</b></div><div class="kv"><span>Гарант 6★ через</span><b>${300-(S.pity6||0)} круток</b></div><div class="kv"><span>Дата регистрации</span><b>${new Date(S.created).toLocaleDateString('ru-RU')}</b></div></div>
  <div class="panel"><h3>💾 Сохранение</h3><div class="small" style="margin-bottom:8px">Прогресс хранится в браузере этого устройства. Чтобы перенести на другой телефон — скопируйте код и вставьте на втором.</div>
  <div class="row"><button class="btn" onclick="expSave()">Экспорт кода</button><button class="btn" onclick="impSave()">Импорт кода</button></div></div>
+ ${typeof cloudPanel==='function'?cloudPanel():''}
  ${typeof dvProfile==='function'?dvProfile():''}
  ${admEntry()}
  <div class="row c"><button class="btn" onclick="logout()">Выйти</button><button class="btn" style="background:#5b1a2a" onclick="delAcc()">Удалить аккаунт</button></div>`}
@@ -4372,6 +4375,191 @@ function gqView(){const d=gqS(),T=gqTier(GQV.tier),slot=GQ_SLOTS.some(x=>x[0]===
  ${!d.t&&!can?`<div class="small" style="margin-top:6px;color:#f9a8a8">Не хватает 💎 (нужно ${fmt(c)}).</div>`:''}${d.t>0?'<div class="small" style="margin-top:6px">Новый комплект — после того как израсходуете попытки.</div>':''}${!S.team.length?'<div class="small" style="margin-top:6px">Соберите отряд во вкладке «Герои».</div>':''}</div>
  ${d.last.length?`<div class="panel small" id="gqLast"><b>Последняя добыча</b><div style="margin-top:4px;line-height:1.7;overflow-wrap:anywhere">${d.last.slice().reverse().map(x=>{const t=PL_TPL[x.t];return `<div style="color:${t.col||PL_RAR[t.r].col}">${t.ic} ${esc(t.n)} <span style="opacity:.7">· ${PL_RAR[t.r].n}</span></div>`}).join('')}</div></div>`:''}
  <div class="panel small" id="gqHint" style="line-height:1.5;overflow-wrap:anywhere">ℹ️ Победа в бою даёт <b>1 предмет снаряжения</b> Героя-Призывателя. Чем выше сложность, тем лучше редкость. Враги сильнее, чем в данже золота. Поражение или отступление — попытка сгорает. Дубликаты — отдельные экземпляры (можно улучшать/разбирать); артефакт хранится в единственном экземпляре, повторный заменяется другим. Если инвентарь полон — предмет автоматически продаётся.</div>`}
+
+// ====== ОБЛАЧНЫЙ ПРОФИЛЬ (ASTRAL_CLOUD_V1) ======
+// Хранение: Supabase (тот же проект, что и гильдии), таблица public.cloud_profiles — прямого доступа anon нет (RLS без политик),
+// только RPC cloud_create / cloud_info / cloud_get / cloud_put / cloud_del (SECURITY DEFINER; проверка пароля на сервере, блокировка 10 мин после 8 неудач).
+// Пароль → PBKDF2-SHA256 (150 000 итераций, соль 'astral:'+ник в нижнем регистре) в браузере; на сервер уходит только хеш, в БД — sha256 от него.
+// Состояние: JSON {v,n,ts,lv,d:S,ls} → gzip (CompressionStream) → base64, префикс 'g1:' (или 'j1:' без сжатия). Картинки data: > 60 КБ не сохраняются.
+// Запись — compare-and-swap по rev: чужая/более новая версия не перезаписывается без подтверждения.
+const CL_MARK='ASTRAL_CLOUD_V1',CL_ITER=150000,CL_IMG=60000,CL_DEB=30000,CL_MAXB=1500000,CL_SK='as_cloud_s_',CL_BK='as_cloud_bak_';
+let CLS={st:'off',msg:'',dropped:0,sz:0},CLT=0,CLBusy=0,CLP=null,CLDirty=0,CLSkip=0;
+const clSes=()=>{try{if(!ME)return null;const s=JSON.parse(localStorage.getItem(CL_SK+ME)||'null');return s&&typeof s==='object'&&typeof s.nick==='string'&&/^[0-9a-f]{64}$/.test(s.ph||'')?s:null}catch(e){return null}};
+const clSesPut=s=>{try{if(s)localStorage.setItem(CL_SK+ME,JSON.stringify(s));else localStorage.removeItem(CL_SK+ME)}catch(e){}};
+const clFmt=t=>{try{return t>0?new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—'}catch(e){return '—'}};
+const clErrT={bad:'Некорректные данные',auth:'Неверный пароль',none:'Облачный профиль с таким ником не найден',locked:'Слишком много неверных попыток — подождите 10 минут',exists:'Такой ник уже занят в облаке. Если это ваш профиль — нажмите «Войти»',big:'Сохранение слишком большое для облака',full:'Облако временно переполнено'};
+function clStSet(st,msg){CLS.st=st;CLS.msg=msg||'';try{const e=document.getElementById('clSt');if(e)e.innerHTML=clStHtml()}catch(x){}}
+function clStHtml(){const m={off:['⚪','не подключено'],ok:['🟢','сохранено'],pend:['🟡','ждёт автосохранения'],busy:['🔄','синхронизация…'],err:['🔴','нет связи / ошибка'],conf:['🟠','конфликт: в облаке другая версия']}[CLS.st]||['⚪',''];
+ return m[0]+' '+m[1]+(CLS.msg?' · <span style="opacity:.8">'+esc(CLS.msg)+'</span>':'')}
+// ---------- крипто и упаковка ----------
+async function clDerive(nick,pw){const sub=(typeof crypto!=='undefined'&&crypto.subtle);if(!sub)throw new Error('nocrypto');
+ const enc=new TextEncoder(),k=await sub.importKey('raw',enc.encode(String(pw)),'PBKDF2',false,['deriveBits']),
+  b=await sub.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:enc.encode('astral:'+String(nick).toLowerCase()),iterations:CL_ITER},k,256);
+ return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+function clB64(u8){let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)}
+function clUnB64(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function clPack(json){const u8=new TextEncoder().encode(json);
+ if(typeof CompressionStream!=='undefined'){try{const ab=await new Response(new Blob([u8]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();return 'g1:'+clB64(new Uint8Array(ab))}catch(e){}}
+ return 'j1:'+clB64(u8)}
+async function clUnpack(str){str=String(str||'');const t=str.slice(0,3),body=str.slice(3);
+ if(t==='j1:')return new TextDecoder().decode(clUnB64(body));
+ if(t==='g1:'){if(typeof DecompressionStream==='undefined')throw new Error('nodecomp');const ab=await new Response(new Blob([clUnB64(body)]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();return new TextDecoder().decode(ab)}
+ throw new Error('badfmt')}
+// ---------- снимок состояния ----------
+function clSnapJson(){let dropped=0;const rep=function(k,v){if(typeof v==='string'&&v.length>CL_IMG&&/^data:/.test(v)){dropped++;return undefined}return v};
+ const ls={};['as_mus','as_sfx'].forEach(k=>{try{const v=localStorage.getItem(k);if(v==='0'||v==='1')ls[k]=v}catch(e){}});
+ const body=JSON.stringify(S,rep);
+ return{body,dropped,lv:accLv(),ls}}
+async function clSnap(){const s=clSnapJson(),ts=Date.now(),json='{"v":1,"n":'+JSON.stringify(S.name)+',"ts":'+ts+',"lv":'+s.lv+',"ls":'+JSON.stringify(s.ls)+',"d":'+s.body+'}';
+ return{blob:await clPack(json),ts,lv:s.lv,dropped:s.dropped,sig:hash(s.body)}}
+// ---------- санитизация загруженного ----------
+function clParse(json,name){const o=JSON.parse(json,(k,v)=>(k==='__proto__'||k==='constructor'||k==='prototype')?undefined:v);
+ if(!o||typeof o!=='object'||!o.d||typeof o.d!=='object'||Array.isArray(o.d))throw new Error('badstate');
+ if((o.v|0)>1)throw new Error('newver');
+ const d=o.d;if(!d.owned||typeof d.owned!=='object'||Array.isArray(d.owned))throw new Error('badstate');
+ const base=newData(name,AVS.includes(d.av)?d.av:'av_m1'),data=Object.assign(base,d);data.name=name;
+ ['gems','gold','xp','cleared','pity'].forEach(k=>{const v=Number(data[k]);data[k]=isFinite(v)&&v>=0?Math.floor(v):base[k]||0});
+ if(!AVS.includes(data.av)&&typeof data.av!=='string')data.av='av_m1';
+ const ow={};Object.keys(data.owned).forEach(id=>{const v=data.owned[id];if(v&&typeof v==='object'&&H(id))ow[id]=v});data.owned=ow;
+ data.team=(Array.isArray(data.team)?data.team:[]).filter(id=>typeof id==='string'&&ow[id]).slice(0,3);
+ ['daily','q','st'].forEach(k=>{if(!data[k]||typeof data[k]!=='object'||Array.isArray(data[k]))data[k]=base[k]});
+ const strip=x=>{if(x&&typeof x==='object'){for(const k of Object.keys(x)){const v=x[k];if(typeof v==='string'&&v.length>CL_IMG&&/^data:/.test(v))delete x[k];else if(v&&typeof v==='object')strip(v)}}};strip(data);
+ const ls={};if(o.ls&&typeof o.ls==='object')['as_mus','as_sfx'].forEach(k=>{if(o.ls[k]==='0'||o.ls[k]==='1')ls[k]=o.ls[k]});
+ return{data,ls,ts:Number(o.ts)||0,lv:Number(o.lv)||1}}
+// ---------- сеть ----------
+async function clRpc(fn,args,keep){if(typeof window!=='undefined'&&typeof window.CL_NET==='function')return window.CL_NET(fn,args);
+ const C=GStore.CFG,ac=new AbortController(),t=setTimeout(()=>ac.abort(),20000);
+ try{const r=await fetch(C.url+'/rest/v1/rpc/'+fn,{method:'POST',signal:ac.signal,keepalive:!!keep,headers:{apikey:C.anon,Authorization:'Bearer '+C.anon,'Content-Type':'application/json'},body:JSON.stringify(args)});
+  if(!r.ok)throw new Error('http '+r.status);return await r.json()}catch(e){throw{offline:1,m:String(e&&e.message||e)}}finally{clearTimeout(t)}}
+function clNetErr(e){return e&&e.offline?'нет связи с сервером':(e&&e.message==='nocrypto'?'нужен HTTPS (защищённое соединение)':String(e&&e.message||e))}
+// ---------- операции ----------
+async function clCreate(pw){if(CLBusy)return;pw=String(pw||'');
+ if(pw.length<4){toast('Пароль — минимум 4 символа');return false}
+ CLBusy=1;clStSet('busy','создание…');
+ try{const nick=S.name,ph=await clDerive(nick,pw),sn=await clSnap();
+  if(sn.blob.length>CL_MAXB){clStSet('err','слишком большое');toast(clErrT.big);return false}
+  const r=await clRpc('cloud_create',{p_nick:nick,p_ph:ph,p_blob:sn.blob,p_ts:sn.ts,p_lv:sn.lv});
+  if(!r||!r.ok){clStSet('off','');toast(clErrT[r&&r.e]||'Ошибка');return false}
+  clSesPut({nick,ph,rev:r.rev||1,ts:sn.ts,sig:sn.sig,lv:sn.lv,at:Date.now(),sz:sn.blob.length});CLS.dropped=sn.dropped;CLS.sz=sn.blob.length;
+  clStSet('ok','');toast('☁ Облачный профиль создан');render();return true}
+ catch(e){clStSet('off','');toast(clNetErr(e));return false}finally{CLBusy=0}}
+async function clLogin(pw){if(CLBusy)return;pw=String(pw||'');
+ if(!pw){toast('Введите пароль');return false}
+ CLBusy=1;clStSet('busy','вход…');
+ try{const nick=S.name,ph=await clDerive(nick,pw),r=await clRpc('cloud_info',{p_nick:nick,p_ph:ph});
+  if(!r||!r.ok){clStSet('off','');toast(clErrT[r&&r.e]||'Ошибка');return false}
+  clStSet('off','');CLP={nick,ph,info:r};clChoiceModal();return true}
+ catch(e){clStSet('off','');toast(clNetErr(e));return false}finally{CLBusy=0}}
+function clLocalInfo(){let sig='';try{sig=hash(clSnapJson().body)}catch(e){}return{lv:accLv(),sig,own:Object.keys(S.owned).length}}
+function clChoiceModal(){const p=CLP,i=p.info,L=clLocalInfo(),cloudNewer=(i.ts||0)>(Number(localStorage.getItem('as_cloud_lts_'+ME))||0);
+ modal(`<h3>☁ Профиль «${esc(p.nick)}» найден</h3><div class="panel small" style="line-height:1.6"><div>☁ Облако: сохранено <b>${clFmt(i.ts)}</b> · ур. <b>${i.lv}</b> ${cloudNewer?'<span style="color:#4ade80">(новее)</span>':''}</div><div>📱 Здесь: ур. <b>${L.lv}</b>, героев <b>${L.own}</b> ${cloudNewer?'':'<span style="color:#f59e0b">(возможно, новее)</span>'}</div></div>
+ <div class="small" style="margin:6px 0">Что сделать? Выбранное действие заменит данные с другой стороны.</div>
+ <div class="row c" style="flex-direction:column;gap:6px"><button class="btn gold" id="clBDown" onclick="clChoice('down')">⬇ Загрузить из облака (заменить локальные)</button><button class="btn" id="clBUp" onclick="clChoice('up')">⬆ Перезаписать облако локальными</button><button class="btn" onclick="CLP=null;closeM()">Отмена</button></div>`)}
+async function clChoice(w){const p=CLP;if(!p)return;closeM();
+ if(w==='up'){clSesPut({nick:p.nick,ph:p.ph,rev:p.info.rev,ts:p.info.ts,sig:'',lv:p.info.lv,at:0});CLP=null;await clSave(true,true)}
+ else{clSesPut({nick:p.nick,ph:p.ph,rev:p.info.rev,ts:p.info.ts,sig:'',lv:p.info.lv,at:0});CLP=null;await clLoad(true)}}
+// сохранить в облако; manual — по кнопке; force — перезаписать при конфликте без вопроса (после подтверждения)
+async function clSave(manual,force,keep){const s=clSes();if(!s){if(manual)toast('Сначала войдите в облачный профиль');return 'off'}
+ if(CLBusy)return 'busy';CLBusy=1;clStSet('busy','сохранение…');
+ try{const sn=await clSnap();
+  if(!force&&s.sig&&sn.sig===s.sig){CLDirty=0;clStSet('ok','без изменений');if(manual)toast('Нет изменений с последнего сохранения');return 'same'}
+  if(sn.blob.length>CL_MAXB){clStSet('err','слишком большое');if(manual)toast(clErrT.big);return 'err'}
+  s.pend=sn.ts;clSesPut(s);
+  let r=await clRpc('cloud_put',{p_nick:s.nick,p_ph:s.ph,p_blob:sn.blob,p_ts:sn.ts,p_lv:sn.lv,p_rev:s.rev},keep);
+  if(r&&r.e==='rev'&&r.ts===s.pend&&s.pend!==sn.ts){s.rev=r.rev;clSesPut(s);r=await clRpc('cloud_put',{p_nick:s.nick,p_ph:s.ph,p_blob:sn.blob,p_ts:sn.ts,p_lv:sn.lv,p_rev:s.rev},keep)}
+  if(r&&r.ok){s.rev=r.rev;s.ts=sn.ts;s.sig=sn.sig;s.lv=sn.lv;s.at=Date.now();s.sz=sn.blob.length;delete s.pend;clSesPut(s);CLS.dropped=sn.dropped;CLS.sz=sn.blob.length;CLDirty=0;
+   clStSet('ok',clFmt(sn.ts));if(manual){toast('☁ Сохранено в облако'+(sn.dropped?' (без '+sn.dropped+' больших картинок)':''));try{if(tab==='profile')render()}catch(e){}}return 'ok'}
+  if(r&&r.e==='rev'){clStSet('conf','в облаке версия от '+clFmt(r.ts));CLP={cloud:r};if(manual)clConflictModal(r);return 'conf'}
+  clStSet(r&&(r.e==='auth'||r.e==='none')?'off':'err',clErrT[r&&r.e]||'');if(manual)toast(clErrT[r&&r.e]||'Ошибка сохранения');return 'err'}
+ catch(e){clStSet('err',clNetErr(e));if(manual)toast('Не удалось сохранить: '+clNetErr(e));clSchedule(60000);return 'err'}finally{CLBusy=0}}
+function clConflictModal(r){const L=clLocalInfo(),ln=Number(localStorage.getItem('as_cloud_lts_'+ME))||0;
+ modal(`<h3>⚠ В облаке другая версия</h3><div class="panel small" style="line-height:1.6"><div>☁ Облако: <b>${clFmt(r.ts)}</b> · ур. <b>${r.lv}</b> ${r.ts>ln?'<span style="color:#f59e0b">(новее локального!)</span>':''}</div><div>📱 Здесь: последнее изменение <b>${clFmt(ln)}</b> · ур. <b>${L.lv}</b></div></div>
+ <div class="small" style="margin:6px 0">Кто-то (вы с другого браузера) уже сохранил прогресс. Перезапись затрёт ту версию.</div>
+ <div class="row c" style="flex-direction:column;gap:6px"><button class="btn gold" onclick="closeM();clLoad(false)">⬇ Загрузить облачную версию</button><button class="btn" style="background:#5b1a2a" id="clBForce" onclick="clForce()">⬆ Всё равно перезаписать облако</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+async function clForce(){const s=clSes(),c=CLP&&CLP.cloud;closeM();if(!s||!c)return;s.rev=c.rev;clSesPut(s);await clSave(true,true)}
+// загрузить из облака (confirmed — без второго вопроса, после выбора в модалке)
+async function clLoad(confirmed){const s=clSes();if(!s){toast('Сначала войдите в облачный профиль');return false}
+ if(CLBusy)return false;CLBusy=1;const prev={st:CLS.st==='busy'?'ok':CLS.st,msg:CLS.msg};clStSet('busy','загрузка…');
+ try{const r=await clRpc('cloud_get',{p_nick:s.nick,p_ph:s.ph});
+  if(!r||!r.ok){clStSet('err',clErrT[r&&r.e]||'');toast(clErrT[r&&r.e]||'Ошибка');return false}
+  let json,P;try{json=await clUnpack(r.blob);P=clParse(json,S.name)}catch(e){clStSet('err','облачные данные повреждены');toast('Облачные данные повреждены или от новой версии игры');return false}
+  CLP={s,r,P};clStSet(prev.st,prev.msg);
+  if(confirmed)return clApply();
+  const L=clLocalInfo(),ln=Number(localStorage.getItem('as_cloud_lts_'+ME))||0,unsynced=!s.sig||L.sig!==s.sig,older=(r.ts||0)<ln&&unsynced;
+  modal(`<h3>⬇ Загрузить из облака?</h3><div class="panel small" style="line-height:1.6"><div>☁ Облако: сохранено <b>${clFmt(r.ts)}</b> · ур. <b>${r.lv}</b></div><div>📱 Здесь: изменено <b>${clFmt(ln)}</b> · ур. <b>${L.lv}</b></div></div>
+   ${older?'<div class="small" style="color:#f87;margin:6px 0"><b>⚠ Облачная версия СТАРШЕ локальной.</b> Загрузка может откатить прогресс.</div>':''}${unsynced&&!older?'<div class="small" style="color:#f59e0b;margin:6px 0">⚠ В локальном прогрессе есть несохранённые в облако изменения — они будут заменены.</div>':''}
+   <div class="small" style="margin:6px 0">Текущий локальный прогресс будет заменён. Копия перед заменой сохраняется на этом устройстве.</div>
+   <div class="row c"><button class="btn gold" id="clBOk" onclick="closeM();clApply()">Заменить</button><button class="btn" onclick="CLP=null;closeM()">Отмена</button></div>`);return true}
+ catch(e){clStSet('err',clNetErr(e));toast('Не удалось загрузить: '+clNetErr(e));return false}finally{CLBusy=0}}
+function clApply(){const c=CLP;if(!c||!c.P)return false;const {s,r,P}=c;CLP=null;
+ try{try{localStorage.setItem(CL_BK+ME,JSON.stringify({ts:Date.now(),d:S}))}catch(e){}
+  const u=users();if(!u[ME])return false;u[ME].data=P.data;putUsers(u);
+  Object.keys(P.ls).forEach(k=>{try{localStorage.setItem(k,P.ls[k])}catch(e){}});
+  try{localStorage.setItem('as_cloud_lts_'+ME,String(r.ts||Date.now()))}catch(e){}
+  const keep=ME;B=null;CLSkip=1;login(keep);CLSkip=0;
+  const sig=hash(clSnapJson().body);clSesPut({nick:s.nick,ph:s.ph,rev:r.rev,ts:r.ts,sig,lv:r.lv,at:Date.now(),sz:(r.blob||'').length});CLDirty=0;
+  clStSet('ok','загружено '+clFmt(r.ts));toast('☁ Загружено из облака');return true}
+ catch(e){console.error(e);toast('Ошибка применения данных');return false}}
+function clLogout(){const s=clSes();if(!s)return;clSesPut(null);clearTimeout(CLT);CLT=0;clearTimeout(CLChk);CLChk=0;CLDirty=0;clStSet('off','');toast('Вы вышли из облака (сохранение осталось на сервере)');render()}
+function clDelUi(){if(!clSes())return;modal(`<h3>🗑 Удалить облачный профиль?</h3><p class="small" style="margin:8px 0">Облачная копия будет удалена с сервера НАВСЕГДА. Локальный прогресс на этом устройстве останется.</p><div class="row c"><button class="btn" style="background:#5b1a2a" id="clBDel" onclick="clDel()">Удалить</button><button class="btn" onclick="closeM()">Отмена</button></div>`)}
+async function clDel(){const s=clSes();closeM();if(!s)return false;
+ try{const r=await clRpc('cloud_del',{p_nick:s.nick,p_ph:s.ph});if(r&&r.ok){clSesPut(null);clearTimeout(CLT);CLT=0;clearTimeout(CLChk);CLChk=0;CLDirty=0;clStSet('off','');toast('Облачный профиль удалён');render();return true}toast(clErrT[r&&r.e]||'Ошибка')}
+ catch(e){toast('Не удалось удалить: '+clNetErr(e))}return false}
+// ---------- автосохранение ----------
+function clSchedule(ms){if(!clSes()||CLS.st==='conf')return;if(CLT)return;CLT=setTimeout(clAuto,ms||CL_DEB);if(CLS.st==='ok'||CLS.st==='off')clStSet('pend','')}
+async function clAuto(){CLT=0;const s=clSes();if(!s||CLS.st==='conf'||CLBusy){if(s&&CLBusy)clSchedule(5000);return}
+ if(B)return clSchedule(CL_DEB);
+ await clSave(false,false)}
+// save() вызывается часто: проверяем реальное изменение (по хешу) не чаще раза в 1,5 с и только тогда планируем автосохранение
+let CLChk=0;
+function clPendCheck(){clearTimeout(CLChk);CLChk=0;const s=clSes();if(!s||CLS.st==='conf'||CLBusy)return;
+ let sig='';try{sig=hash(clSnapJson().body)}catch(e){return}
+ if(sig!==s.sig){CLDirty=1;clSchedule()}else CLDirty=0}
+function clMark(){if(!ME)return;try{localStorage.setItem('as_cloud_lts_'+ME,String(Date.now()))}catch(e){}if(clSes()&&!CLChk)CLChk=setTimeout(clPendCheck,1500)}
+function clFlush(){try{const s=clSes();if(!s||!ME||!S||CLS.st==='conf'||CLBusy)return;if(CLChk)clPendCheck();if(!CLDirty)return;clearTimeout(CLT);CLT=0;clSave(false,false,true)}catch(e){}}
+(function(){try{const s0=save;globalThis.save=function(){const r=s0.apply(this,arguments);try{clMark()}catch(e){}return r};
+ const l0=login;globalThis.login=function(k){const r=l0.apply(this,arguments);try{if(CLSkip)CLSkip=0;else clOnLogin()}catch(e){console.error(e)}return r};
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)clFlush()});window.addEventListener('pagehide',clFlush);
+ setInterval(()=>{try{if(!document.hidden&&clSes()&&!CLT&&!CLChk)clPendCheck()}catch(e){}},60000)}catch(e){console.error(e)}})();
+async function clOnLogin(){CLDirty=0;clearTimeout(CLT);CLT=0;clearTimeout(CLChk);CLChk=0;CLBusy=0;const s=clSes();if(!s){clStSet('off','');return}
+ clStSet('busy','проверка…');
+ try{const r=await clRpc('cloud_info',{p_nick:s.nick,p_ph:s.ph});
+  if(!r||!r.ok){clStSet(r&&(r.e==='auth'||r.e==='none')?'off':'err',clErrT[r&&r.e]||'');if(r&&(r.e==='auth'||r.e==='none')){clSesPut(null);toast('Облачный профиль недоступен: '+(clErrT[r.e]))}return}
+  if(r.rev!==s.rev&&!(s.pend&&r.ts===s.pend)){clStSet('conf','в облаке версия от '+clFmt(r.ts)+' (ур. '+r.lv+')');toast('☁ В облаке более новое сохранение — откройте Профиль');return}
+  if(r.rev!==s.rev){s.rev=r.rev;s.ts=r.ts;delete s.pend;clSesPut(s)}
+  const sig=hash(clSnapJson().body);if(sig!==s.sig){clStSet('pend','');CLDirty=1;clSchedule()}else clStSet('ok','')}
+ catch(e){clStSet('err',clNetErr(e))}}
+// ---------- вход с другого браузера (экран авторизации) ----------
+async function clAuthLogin(){const err=m=>{const e=$('au_e');if(e)e.textContent=m},name=($('au_n').value||'').trim(),pw=$('au_p').value;
+ if(name.length<2)return err('Ник — минимум 2 символа');if(pw.length<4)return err('Пароль — минимум 4 символа');
+ err('Проверка…');
+ try{const ph=await clDerive(name,pw),r=await clRpc('cloud_get',{p_nick:name,p_ph:ph});
+  if(!r||!r.ok)return err(clErrT[r&&r.e]||'Ошибка');
+  let P;try{P=clParse(await clUnpack(r.blob),r.nm||name)}catch(e){return err('Облачные данные повреждены или от новой версии игры')}
+  const key=name.toLowerCase(),u=users();CLP={auth:1,key,nm:r.nm||name,ph,pw,r,P};
+  if(u[key]){const ld=u[key].data||{},ll=1+Math.floor((Number(ld.xp)||0)/250);
+   err('');modal(`<h3>На этом устройстве уже есть «${esc(u[key].name)}»</h3><div class="panel small" style="line-height:1.6"><div>☁ Облако: <b>${clFmt(r.ts)}</b> · ур. <b>${r.lv}</b></div><div>📱 Локально: ур. <b>${ll}</b>, героев <b>${Object.keys(ld.owned||{}).length}</b></div></div><div class="small" style="margin:6px 0">Локальный аккаунт будет заменён облачным.</div><div class="row c"><button class="btn gold" id="clBAuthOk" onclick="closeM();clAuthApply()">Заменить</button><button class="btn" onclick="CLP=null;closeM()">Отмена</button></div>`);return}
+  err('');clAuthApply()}
+ catch(e){err(clNetErr(e))}}
+function clAuthApply(){const c=CLP;if(!c||!c.auth)return;CLP=null;const u=users();
+ if(u[c.key]){try{localStorage.setItem(CL_BK+c.key,JSON.stringify({ts:Date.now(),d:u[c.key].data}))}catch(e){}}
+ u[c.key]={name:c.nm,h:hash(c.pw),data:c.P.data};putUsers(u);Object.keys(c.P.ls).forEach(k=>{try{localStorage.setItem(k,c.P.ls[k])}catch(e){}});
+ try{localStorage.setItem(CL_SK+c.key,JSON.stringify({nick:c.nm,ph:c.ph,rev:c.r.rev,ts:c.r.ts,sig:'',lv:c.r.lv,at:Date.now()}));localStorage.setItem('as_cloud_lts_'+c.key,String(c.r.ts||Date.now()))}catch(e){}
+ CLSkip=1;login(c.key);CLSkip=0;
+ try{const s=clSes();if(s){s.sig=hash(clSnapJson().body);clSesPut(s);clStSet('ok','загружено '+clFmt(c.r.ts))}}catch(e){}
+ toast('☁ Профиль загружен из облака')}
+// ---------- UI профиля ----------
+function cloudPanel(){const s=clSes(),note=`<div class="small" style="margin-top:8px;color:#f9c97a;line-height:1.5">⚠ Безопасность паролей базовая: пароль хешируется в браузере (PBKDF2-SHA256, соль — ваш ник), на сервер уходит только хеш; сервер блокирует перебор на 10 минут после 8 неудач, но восстановления пароля нет. Не используйте пароль от важных сервисов.</div>`;
+ if(!s)return `<div class="panel" id="clPanel" style="border-color:#4aa8ff"><h3>☁ Облачный профиль</h3><div class="small" style="line-height:1.5;margin-bottom:8px">Храните прогресс на сервере и заходите с любого браузера: ник «<b style="overflow-wrap:anywhere">${esc(S.name)}</b>» + пароль. Сохраняется всё состояние игры (герои, Призыватель, романтика, прогресс), включая автосохранение.</div>
+  <input class="in" id="cl_pw" type="password" placeholder="Пароль облачного профиля (от 4 символов)" autocomplete="new-password" style="width:100%">
+  <div class="row c" style="margin-top:8px"><button class="btn gold" id="clBCreate" onclick="clCreate($('cl_pw').value)">Создать облачный профиль</button><button class="btn" id="clBLogin" onclick="clLogin($('cl_pw').value)">Войти</button></div>
+  <div class="small" style="margin-top:6px">Уже сохраняли с другого браузера? Нажмите «Войти». На новом устройстве: экран входа → вкладка «☁ Облако».</div>${note}</div>`;
+ return `<div class="panel" id="clPanel" style="border-color:#4aa8ff"><h3>☁ Облачный профиль</h3>
+  <div class="kv"><span>Профиль</span><b>${esc(s.nick)}</b></div><div class="kv"><span>Статус</span><b id="clSt" style="font-weight:600;text-align:right;overflow-wrap:anywhere">${clStHtml()}</b></div>
+  <div class="kv"><span>Последнее сохранение</span><b id="clLast">${clFmt(s.ts)}${s.lv?' · ур. '+s.lv:''}</b></div>${s.sz?`<div class="kv"><span>Размер</span><b>${Math.max(1,Math.round(s.sz/1024))} КБ</b></div>`:''}
+  <div class="row c" style="margin-top:8px;gap:6px"><button class="btn gold" id="clBSave" onclick="clSave(true)">⬆ Сохранить в облако</button><button class="btn" id="clBLoad" onclick="clLoad(false)">⬇ Загрузить из облака</button></div>
+  <div class="row c" style="margin-top:6px"><button class="btn sm" id="clBOut" onclick="clLogout()">Выйти из облака</button><button class="btn sm" style="background:#5b1a2a" id="clBDelUi" onclick="clDelUi()">🗑 Удалить</button></div>
+  <div class="small" style="margin-top:8px;line-height:1.5">Автосохранение: через ~30 с после изменений и при сворачивании/закрытии вкладки. Если в облаке окажется более новая версия, перезапись произойдёт только после вашего подтверждения.${CLS.dropped?` Не сохранено больших картинок: ${CLS.dropped}.`:''}</div>${note}</div>`}
 
 // ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ANIM_V1; ASTRAL_PLAYER_V2: своя картинка на иконку — S.pf.cim, только локально) ======
 // v ANIM_V1: анимации НЕ зависят от prefers-reduced-motion; настройка S.pf.anim (1/undefined=Вкл, 0=Экономный) → класс html.noanim. Маскированные кольца: вращается <u>, маска лежит на статичном <i>.
