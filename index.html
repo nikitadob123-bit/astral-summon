@@ -17,6 +17,7 @@
 <!-- ASTRAL_WAR_V1 -->
 <!-- ASTRAL_ART_V2 -->
 <!-- ASTRAL_WBCAP_V1 -->
+<!-- ASTRAL_GEARDUN_V1 -->
 <title>Astral Summon</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -4274,7 +4275,7 @@ function dgEnd(win,quit){if(!B||!B.dg||B.dg.done)return;B.dg.done=1;const d=dgS(
  modal(win?`<h2 style="text-align:center">🏆 Победа в данже!</h2><p style="margin:10px 0;text-align:center;overflow-wrap:anywhere">Награда: 🪙<b>${g.toLocaleString('ru-RU')}</b><br>Попыток осталось: ${d.t}</p><div class="row c"><button class="btn gold" onclick="closeM();render()">${d.t>0?'Дальше':'OK'}</button></div>`
   :`<h2 style="text-align:center">${quit?'🏳 Отступление':'💀 Поражение'}</h2><p style="margin:10px 0;text-align:center;overflow-wrap:anywhere">Попытка потрачена, награды нет.<br>Попыток осталось: ${d.t}</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);
  render()}
-function dgNav(){return `<div class="gnav" id="dgNav"><button id="dgTabC" class="${BV==='camp'?'on':''}" onclick="BV='camp';render()"><i>⚔</i>Кампания</button><button id="dgTabD" class="${BV==='dg'?'on':''}" onclick="BV='dg';render()"><i>💰</i>Данжи${dgS().t>0?'<span class="dot"></span>':''}</button></div>`}
+function dgNav(){return `<div class="gnav" id="dgNav"><button id="dgTabC" class="${BV==='camp'?'on':''}" onclick="BV='camp';render()"><i>⚔</i>Кампания</button><button id="dgTabD" class="${BV==='dg'?'on':''}" onclick="BV='dg';render()"><i>💰</i>Данжи${dgS().t>0?'<span class="dot"></span>':''}</button>${typeof gqS==='function'?`<button id="dgTabG" class="${BV==='gd'?'on':''}" onclick="BV='gd';render()"><i>🛡</i>Снаряжение${gqS().t>0?'<span class="dot"></span>':''}</button>`:''}</div>`}
 function dgView(){const d=dgS(),can0=!d.t&&Number.isInteger(S.gems)&&S.gems>=DG_PRICE,fmt=x=>x.toLocaleString('ru-RU');
  return `<div class="panel" id="dgPanel" style="border-color:#ffd76a"><h3 style="overflow-wrap:anywhere">💰 Данжи золота</h3>
  <div class="kv"><span>🎟 Попыток осталось</span><b id="dgTries">${d.t}</b></div><div class="kv"><span>🪙 Всего заработано</span><b id="dgEarn">${fmt(d.e)}</b></div><div class="kv"><span>Побед / поражений</span><b>${d.w} / ${d.l}</b></div>
@@ -4282,11 +4283,95 @@ function dgView(){const d=dgS(),can0=!d.t&&Number.isInteger(S.gems)&&S.gems>=DG_
  ${!d.t&&!can0?`<div class="small" style="margin-top:6px;color:#f9a8a8">Не хватает 💎 (нужно ${fmt(DG_PRICE)}).</div>`:''}${!S.team.length?'<div class="small" style="margin-top:6px">Соберите отряд во вкладке «Герои».</div>':''}</div>
  <div class="panel small" id="dgHint" style="line-height:1.5;overflow-wrap:anywhere">ℹ️ Заплатите 💎${fmt(DG_PRICE)} — получите ${DG_TRIES} попыток. Каждая — несложный бой со слабыми врагами. <b>Победа: 🪙${fmt(DG_MIN)}–${fmt(DG_MAX)}</b> (случайно, поровну). Поражение или отступление — попытка тратится без награды. Попытки хранятся, пока не потрачены; новый комплект можно купить, когда попыток 0. Бои засчитываются в заданиях и ивентах как обычные.<br>Средний доход: ≈🪙${fmt((DG_MIN+DG_MAX)/2)} за победу.</div>`}
 const _vBattle0=vBattle;
-vBattle=function(){if(B)return _vBattle0();return dgNav()+(BV==='dg'?dgView():_vBattle0())};
+vBattle=function(){if(B)return _vBattle0();return dgNav()+(BV==='dg'?dgView():BV==='gd'&&typeof gqView==='function'?gqView():_vBattle0())};
 // ---------- админ ----------
 function dgAdmAdd(){admMut(d=>{d.dg=d.dg&&typeof d.dg==='object'?d.dg:{t:0,e:0,w:0,l:0,p:0};d.dg.t=(Number(d.dg.t)>0?Math.floor(d.dg.t):0)+5});toast('+5 попыток данжа')}
 function dgAdmReset(){admMut(d=>{d.dg={t:0,e:0,w:0,l:0,p:0}});toast('Данжи сброшены')}
 function dgAdmPanel(){return `<div class="panel"><b>💰 Данжи</b><div class="small">Попыток у выбранного аккаунта: ${(()=>{try{const t=users()[AU];return t&&t.data&&t.data.dg?Math.max(0,t.data.dg.t|0):0}catch(e){return 0}})()}</div><div class="row" style="margin-top:6px"><button class="btn sm" id="admDg5" onclick="dgAdmAdd()">+5 попыток данжа</button><button class="btn sm" onclick="dgAdmReset()">Сбросить данжи</button></div></div>`}
+
+// ====== ДАНЖ СНАРЯЖЕНИЯ (ASTRAL_GEARDUN_V1) ======
+// Третья вкладка в «Бой → Данжи». Комплект из GQ_TRIES попыток за 💎 (цена зависит от сложности; выбор слота +50%).
+// Сложность и слот фиксируются при покупке комплекта. Победа = 1 предмет Героя-Призывателя (pl_data.js) через plAddItem
+// (новый экземпляр, как в лавке/дропе; при переполнении инвентаря — авто-продажа; артефакт — один экземпляр: повтор заменяется).
+// Поражение / отступление: награды нет, попытка сгорает. Артефакты — только на «Бездне», не чаще GQ_ART_DAY в сутки.
+const GQ_MARK='ASTRAL_GEARDUN_V1',GQ_TRIES=5,GQ_SLOT_X=1.5,GQ_ART_DAY=1;
+// веса редкости [c,u,r,e,l,m] в %, шанс артефакта на победу (только Бездна)
+const GQ_T=[
+ {k:1,n:'Подвал',ic:'🕳',price:600,w:[45,38,15,2,0,0],art:0,foes:[['Крыса-падальщик','🐀','Archer',2600,85],['Гоблин-мародёр','👺','Saber',3000,95],['Крыса-падальщик','🐀','Archer',2600,85]]},
+ {k:2,n:'Крепость',ic:'🏯',price:1800,w:[12,36,36,15,1,0],art:0,foes:[['Страж ворот','🛡','Lancer',8000,170],['Рыцарь-вор','🗡','Saber',9000,185],['Лучник бастиона','🏹','Archer',7000,180]]},
+ {k:3,n:'Кошмар',ic:'😈',price:5000,w:[0,12,40,38,9.5,.5],art:0,foes:[['Тень кошмара','👤','Assassin',22000,330],['Демон-кузнец','👹','Berserker',26000,350],['Тень кошмара','👤','Assassin',22000,330]]},
+ {k:4,n:'Бездна',ic:'🌌',price:15000,w:[0,0,24,56,18.3,1.7],art:.008,foes:[['Страж Бездны','🗿','Lancer',60000,600],['Владыка Пустоты','👁','Caster',75000,650],['Страж Бездны','🗿','Lancer',60000,600]]}];
+const GQ_SLOTS=[['any','Любой','🎲'],['head','Голова','🪖'],['chest','Грудь','🥋'],['lh','Л. рука','🛡️'],['rh','П. рука','⚔️'],['legs','Ноги','👢'],['ring','Кольцо','💍'],['neck','Ожерелье','📿']];
+const GQ_GRP={head:['head'],chest:['chest'],legs:['legs'],neck:['neck'],ring:['ring'],lh:['lh','hand'],rh:['rh','hand']};
+let GQV={tier:1,slot:'any'};
+function gqTier(k){return GQ_T[(k|0)-1]||GQ_T[0]}
+function gqPrice(tier,slot){const b=gqTier(tier).price;return slot&&slot!=='any'?Math.round(b*GQ_SLOT_X):b}
+function gqS(){if(!S)return {t:0,tier:1,slot:'any',w:0,l:0,p:0,got:[0,0,0,0,0,0],art:0,ad:'',an:0,last:[]};let d=S.gd;if(!d||typeof d!=='object'||Array.isArray(d))d=S.gd={};
+ ['t','w','l','p','art','an'].forEach(k=>{const v=Number(d[k]);d[k]=isFinite(v)&&v>0?Math.floor(v):0});d.t=Math.min(GQ_TRIES,d.t);
+ d.tier=GQ_T.some(x=>x.k===d.tier)?d.tier:1;if(!GQ_SLOTS.some(x=>x[0]===d.slot))d.slot='any';if(typeof d.ad!=='string')d.ad='';
+ if(!Array.isArray(d.got))d.got=[];const g=[];for(let i=0;i<6;i++){const v=Number(d.got[i]);g.push(isFinite(v)&&v>0?Math.floor(v):0)}d.got=g;
+ d.last=(Array.isArray(d.last)?d.last:[]).filter(x=>x&&typeof x.t==='string'&&PL_TPL[x.t]).slice(-5);return d}
+function gqRnd(){return (typeof window!=='undefined'&&typeof window.GQ_RNG==='function')?window.GQ_RNG():Math.random()}
+// пул обычных предметов: слот-группа + редкость; без uniq/art; с запасом по уровню как у plDrop; если пусто — ближайшая редкость
+function gqPool(r,slot){const p=plS(),sl=slot==='any'?null:GQ_GRP[slot];
+ const base=PL_IT.filter(t=>t.fl!=='uniq'&&t.fl!=='art'&&(!sl||sl.includes(t.slot)));
+ const tryR=x=>{let c=base.filter(t=>t.r===x&&t.req<=p.lv+20);if(!c.length)c=base.filter(t=>t.r===x);return c};
+ for(let d=0;d<6;d++){for(const x of [r-d,r+d]){if(x<0||x>5||(d===0&&x!==r))continue;const c=tryR(x);if(c.length)return c}}return base}
+function gqArtPool(slot){const p=plS(),sl=slot==='any'?null:GQ_GRP[slot];return PL_IT.filter(t=>t.fl==='art'&&(!sl||sl.includes(t.slot))&&!plHasArt(t.id,p))}
+function gqRarity(w){const tot=w.reduce((a,x)=>a+x,0);let x=gqRnd()*tot;for(let i=0;i<w.length;i++){x-=w[i];if(x<0&&w[i]>0)return i}for(let i=w.length-1;i>=0;i--)if(w[i]>0)return i;return 0}
+// бросок награды (без записи в инвентарь): {tid, art}
+function gqRoll(tier,slot){const T=gqTier(tier),d=gqS();slot=GQ_SLOTS.some(x=>x[0]===slot)?slot:'any';
+ if(T.art>0&&d.ad===today()&&d.an>=GQ_ART_DAY){}
+ else if(T.art>0&&gqRnd()<T.art){const ap=gqArtPool(slot);if(ap.length)return{tid:ap[Math.floor(gqRnd()*ap.length)].id,art:1}}
+ const r=gqRarity(T.w),pool=gqPool(r,slot);return{tid:pool[Math.floor(gqRnd()*pool.length)].id,art:0}}
+function gqBuy(){if(!S)return false;const d=gqS(),T=gqTier(GQV.tier),slot=GQ_SLOTS.some(x=>x[0]===GQV.slot)?GQV.slot:'any',c=gqPrice(T.k,slot);
+ if(B){toast('Сначала завершите бой');return false}
+ if(d.t>0){toast('Сначала потратьте оставшиеся попытки ('+d.t+')');return false}
+ if(!Number.isInteger(S.gems)||S.gems<c){toast('Не хватает 💎 — нужно '+c);return false}
+ S.gems-=c;d.t=GQ_TRIES;d.tier=T.k;d.slot=slot;d.p++;save();toast('Куплено: '+GQ_TRIES+' попыток · '+T.n+' (−💎'+c+')');render();return true}
+function gqStart(){if(!S||B)return false;const d=gqS();
+ if(d.t<=0){toast('Нет попыток — купите комплект');return false}
+ if(!S.team.length){toast('Соберите отряд во вкладке «Герои»');return false}
+ d.t--;save();const T=gqTier(d.tier),gb=gBf(),foes=T.foes,st={n:T.ic+' Данж снаряжения · '+T.n,en:foes};
+ B={si:-1,dg:{n:d.p,gear:T.k,slot:d.slot},st,turn:1,tgt:0,pick:[],log:['⚔ Данж снаряжения · '+T.n+'! Победите врагов — получите предмет Героя-Призывателя'],
+  team:S.team.map(id=>{const s=stats(id),h=H(id),o=S.owned[id],m=h.myth||{};return{h,o,hp:Math.round(s.hp*gb.hp),max:Math.round(s.hp*gb.hp),atk:Math.round(s.atk*gb.atk*(m.atkMul||1)),np:m.npStart||0,cd:0,buff:0,m}}),
+  en:foes.map(e=>({n:e[0],e:e[1],cls:e[2],hp:e[3],max:e[3],atk:e[4]}))};
+ tab='battle';deal();render();window.scrollTo(0,0);return true}
+// выдача предмета: возвращает {it,t,art,sold,gold,dupRerolled}
+function gqGive(tier,slot){const T=gqTier(tier);let r=gqRoll(T.k,slot),t=PL_TPL[r.tid],art=r.art;
+ const it=plAddItem(r.tid,1);let sold=0,gold=0;
+ if(!it){sold=1;gold=Math.round(plSell({t:r.tid,up:0})*.5)}
+ const d=gqS();d.got[t.r]++;if(art){d.art++;if(d.ad!==today()){d.ad=today();d.an=0}d.an++}
+ if(it)d.last=d.last.concat({t:r.tid}).slice(-5);
+ return{it,t,tid:r.tid,art,sold,gold}}
+function gqEnd(win,quit){if(!B||!B.dg||B.dg.done)return;B.dg.done=1;const d=gqS(),tier=B.dg.gear,slot=B.dg.slot;let res=null;
+ if(win){res=gqGive(tier,slot);d.w++;S.st.battles++;S.st.wins++;prog('battle');prog('win');try{plAddXp(plRewardXp(.1))}catch(e){}}
+ else{d.l++;if(!quit){S.st.battles++;prog('battle')}}
+ B=null;save();
+ if(win){const t=res.t,col=t.col||PL_RAR[t.r].col;
+  modal(`<h2 style="text-align:center">🏆 Победа в данже!</h2><div id="gqDrop" style="margin:8px 0;padding:8px;border:2px solid ${col};border-radius:12px;box-shadow:0 0 14px ${col}55;overflow-wrap:anywhere">
+   <div class="small" style="text-align:center;color:${col};font-weight:700;letter-spacing:.5px">${res.art?'✦ АРТЕФАКТ ✦':'✨ Добыча'} · ${PL_RAR[t.r].n} · ${plSlotName(t)}</div>
+   ${res.it?plItemHtml(res.it,{desc:1}):`<div style="font-size:34px;text-align:center">${t.ic}</div><b style="color:${col}">${esc(t.n)}</b>`}
+   ${res.sold?`<div class="small" style="margin-top:6px;color:#f59e0b">🎒 Инвентарь полон — предмет продан за 🪙${res.gold}</div>`:'<div class="small" style="margin-top:6px">🎒 Лежит в инвентаре во вкладке «Герой».</div>'}</div>
+   <p class="small" style="text-align:center">Попыток осталось: ${d.t}</p><div class="row c"><button class="btn gold" onclick="closeM();render()">${d.t>0?'Дальше':'OK'}</button></div>`);
+  }
+ else modal(`<h2 style="text-align:center">${quit?'🏳 Отступление':'💀 Поражение'}</h2><p style="margin:10px 0;text-align:center;overflow-wrap:anywhere">Попытка потрачена, награды нет.<br>Попыток осталось: ${d.t}</p><div class="row c"><button class="btn" onclick="closeM();render()">Назад</button></div>`);
+ render()}
+(function(){const d0=dgEnd;globalThis.dgEnd=function(win,quit){if(B&&B.dg&&B.dg.gear&&!B.dg.done)return gqEnd(win,quit);return d0.apply(this,arguments)}})();
+function gqPick(k,v){if(k==='tier')GQV.tier=GQ_T.some(x=>x.k===v)?v:1;else GQV.slot=GQ_SLOTS.some(x=>x[0]===v)?v:'any';render()}
+function gqOdds(T){const tot=T.w.reduce((a,x)=>a+x,0),fm=x=>(Math.round(x/tot*1000)/10).toString().replace('.',',');
+ return T.w.map((w,i)=>w>0?`<span style="color:${PL_RAR[i].col}">${PL_RAR[i].n} ${fm(w)}%</span>`:'').filter(Boolean).join(' · ')+(T.art>0?` · <span style="color:#ff4d7d">✦ Артефакт ${fm(T.art*100).replace(/,0$/,'')}% (≤${GQ_ART_DAY}/сутки)</span>`:'')}
+function gqView(){const d=gqS(),T=gqTier(GQV.tier),slot=GQ_SLOTS.some(x=>x[0]===GQV.slot)?GQV.slot:'any',c=gqPrice(T.k,slot),fmt=x=>x.toLocaleString('ru-RU'),cur=d.t>0?gqTier(d.tier):null,cs=GQ_SLOTS.find(x=>x[0]===d.slot);
+ const can=!d.t&&Number.isInteger(S.gems)&&S.gems>=c;
+ return `<div class="panel" id="gqPanel" style="border-color:#b06bff"><h3 style="overflow-wrap:anywhere">🛡 Данж снаряжения</h3>
+ <div class="kv"><span>🎟 Попыток осталось</span><b id="gqTries">${d.t}</b></div>${cur?`<div class="kv"><span>Текущий комплект</span><b id="gqCur">${cur.ic} ${cur.n} · ${cs[2]} ${cs[1]}</b></div>`:''}<div class="kv"><span>Побед / поражений</span><b>${d.w} / ${d.l}</b></div><div class="kv"><span>✦ Артефактов добыто</span><b>${d.art}</b></div>
+ <div class="small" style="margin:8px 0 4px">Сложность:</div><div class="row" style="gap:4px;flex-wrap:wrap" id="gqTiers">${GQ_T.map(x=>`<button class="btn sm ${x.k===T.k?'gold':''}" style="width:auto;flex:1 1 40%" onclick="gqPick('tier',${x.k})">${x.ic} ${x.n}</button>`).join('')}</div>
+ <div class="small" style="margin:8px 0 4px">Слот (выбор слота: цена ×${GQ_SLOT_X}):</div><div class="row" style="gap:4px;flex-wrap:wrap" id="gqSlots">${GQ_SLOTS.map(x=>`<button class="btn sm ${x[0]===slot?'gold':''}" style="width:auto;flex:1 1 22%;padding:6px 4px" onclick="gqPick('slot','${x[0]}')">${x[2]}<br><span style="font-size:11px">${x[1]}</span></button>`).join('')}</div>
+ <div class="small" id="gqOdds" style="margin-top:8px;line-height:1.6;overflow-wrap:anywhere">Шансы награды (${T.n}): ${gqOdds(T)}</div>
+ <div class="row c" style="margin-top:10px"><button class="btn gold" id="gqBuy" ${d.t>0||S.gems<c?'disabled':''} onclick="gqBuy()">Комплект ${GQ_TRIES} попыток · 💎${fmt(c)}</button><button class="btn" id="gqGo" ${d.t<=0||!S.team.length?'disabled':''} onclick="gqStart()">⚔ В бой (${d.t})</button></div>
+ ${!d.t&&!can?`<div class="small" style="margin-top:6px;color:#f9a8a8">Не хватает 💎 (нужно ${fmt(c)}).</div>`:''}${d.t>0?'<div class="small" style="margin-top:6px">Новый комплект — после того как израсходуете попытки.</div>':''}${!S.team.length?'<div class="small" style="margin-top:6px">Соберите отряд во вкладке «Герои».</div>':''}</div>
+ ${d.last.length?`<div class="panel small" id="gqLast"><b>Последняя добыча</b><div style="margin-top:4px;line-height:1.7;overflow-wrap:anywhere">${d.last.slice().reverse().map(x=>{const t=PL_TPL[x.t];return `<div style="color:${t.col||PL_RAR[t.r].col}">${t.ic} ${esc(t.n)} <span style="opacity:.7">· ${PL_RAR[t.r].n}</span></div>`}).join('')}</div></div>`:''}
+ <div class="panel small" id="gqHint" style="line-height:1.5;overflow-wrap:anywhere">ℹ️ Победа в бою даёт <b>1 предмет снаряжения</b> Героя-Призывателя. Чем выше сложность, тем лучше редкость. Враги сильнее, чем в данже золота. Поражение или отступление — попытка сгорает. Дубликаты — отдельные экземпляры (можно улучшать/разбирать); артефакт хранится в единственном экземпляре, повторный заменяется другим. Если инвентарь полон — предмет автоматически продаётся.</div>`}
 
 // ====== ВОЗНЕСЕНИЕ ИГРОКА: ИКОНКИ-РАМКИ (ASTRAL_ANIM_V1; ASTRAL_PLAYER_V2: своя картинка на иконку — S.pf.cim, только локально) ======
 // v ANIM_V1: анимации НЕ зависят от prefers-reduced-motion; настройка S.pf.anim (1/undefined=Вкл, 0=Экономный) → класс html.noanim. Маскированные кольца: вращается <u>, маска лежит на статичном <i>.
@@ -7713,7 +7798,7 @@ function plReward(k,bossy){const p=plS();const c=PL_SRC[bossy?'storyBoss':k]||PL
  setTimeout(()=>{try{toast('🧙 +'+xp+' опыта Призывателя'+(it?' · 🎁 '+PL_TPL[it.t].n:''))}catch(e){}},1600);return{xp,it}}
 (function(){try{
  const w0=winStory;globalThis.winStory=function(){let boss=false,ok=false;try{boss=!!(B&&B.st&&B.st.boss);ok=!!B}catch(e){}const r=w0.apply(this,arguments);try{if(ok)plReward('story',boss)}catch(e){console.error(e)}return r};
- const d0=dgEnd;globalThis.dgEnd=function(win,quit){let ok=false;try{ok=!!(B&&B.dg&&!B.dg.done&&win)}catch(e){}const r=d0.apply(this,arguments);try{if(ok)plReward('dungeon')}catch(e){console.error(e)}return r};
+ const d0=dgEnd;globalThis.dgEnd=function(win,quit){let ok=false;try{ok=!!(B&&B.dg&&!B.dg.gear&&!B.dg.done&&win)}catch(e){}const r=d0.apply(this,arguments);try{if(ok)plReward('dungeon')}catch(e){console.error(e)}return r};
  const k0=win;globalThis.win=function(){let ok=false;try{ok=!!(B&&!B.dg&&!B.guild&&!B.story)}catch(e){}const r=k0.apply(this,arguments);try{if(ok)plReward('stage')}catch(e){console.error(e)}return r};
  const e0=wbEnd;globalThis.wbEnd=function(){const r=e0.apply(this,arguments);try{plReward('wboss')}catch(e){console.error(e)}return r};
  const v0=vnFinish;globalThis.vnFinish=function(){let first=false;try{first=!!(VN&&!VN.rp&&!(romH(VN.hid).ch[VN.ci]&&romH(VN.hid).ch[VN.ci].d))}catch(e){}const r=v0.apply(this,arguments);try{if(first)plReward('rom')}catch(e){console.error(e)}return r};
